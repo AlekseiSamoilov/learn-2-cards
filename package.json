@@ -1,0 +1,20 @@
+{
+  "name": "learn-2-cards",
+  "version": "1.0.0",
+  "description": "Flashcards application with Nest.js backend and React frontend",
+  "main": "index.js",
+  "scripts": {
+    "start:backend": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=frontend",
+    "start": "npm run start:backend & npm run start:frontend",
+    "test": "npm run test --workspaces",
+    "install:all": "npm install && npm install --workspaces"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}
