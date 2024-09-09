@@ -6,13 +6,13 @@ export class User {
     id: ObjectId;
 
     @Column({ unique: true })
-    username: string;
-
-    @Column({ unique: true })
     login: string;
 
     @Column()
     password: string;
+
+    @Column()
+    recoveryCode: string;
 
     @CreateDateColumn()
     createdAt: Date;
