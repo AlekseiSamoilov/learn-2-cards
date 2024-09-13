@@ -33,5 +33,10 @@ describe('UsersService', () => {
 
     it('should be defined', async () => {
         expect(service).toBeDefined();
+    });
+
+    describe('create', () => {
+
     })
+
 })
