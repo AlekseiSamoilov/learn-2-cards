@@ -5,8 +5,9 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateUserDto } from "./dto";
 import * as bcrypt from 'bcrypt';
-import { InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { model } from "mongoose";
+import { ObjectId } from "mongodb";
 
 jest.mock('bcrypt');
 
@@ -116,4 +117,30 @@ describe('UsersService', () => {
             expect(mockRepository.find).toHaveBeenCalled();
         });
     });
+
+    describe('findOne', () => {
+        it('should return one user by id', async () => {
+            const mockUser = {
+                id: new ObjectId('507f1f77bcf86cd799439011'),
+                login: 'user1',
+                password: 'hash1',
+                recoveryCode: 'code1'
+            };
+            mockRepository.findOne.mockResolvedValue(mockUser);
+
+            const result = await service.findOne(mockUser.id.toHexString());
+
+            expect(result).toEqual(mockUser);
+            expect(mockRepository.findOne).toHaveBeenCalledWith({
+                where: { id: expect.any(ObjectId) }
+            });
+        });
+
+        it('should throw NotFoundException if user not found', async () => {
+            mockRepository.findOne.mockResolvedValue(null);
+
+            await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(NotFoundException);
+        });
+    })
+
 });
