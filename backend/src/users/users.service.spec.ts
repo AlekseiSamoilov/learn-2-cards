@@ -136,10 +136,66 @@ describe('UsersService', () => {
             });
         });
 
-        it('should throw NotFoundException if user not found', async () => {
+        it('should throw NotFoundException if user not found by id', async () => {
             mockRepository.findOne.mockResolvedValue(null);
 
             await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('findByLogin', () => {
+        it('should return one user by login', async () => {
+            const mockUser = {
+                id: new ObjectId('507f1f77bcf86cd799439011'),
+                login: 'user1',
+                password: 'hash1',
+                recoveryCode: 'code1'
+            };
+
+            mockRepository.findOne.mockResolvedValue(mockUser);
+
+            const result = await service.findByLogin(mockUser.login);
+
+            expect(result).toEqual(mockUser);
+            expect(mockRepository.findOne).toHaveBeenCalledWith({
+                where: { login: expect.any(String) }
+            });
+        });
+
+        it('should throw NotFoundException if user not found by login', async () => {
+            mockRepository.findOne.mockResolvedValue(null);
+
+            await expect(service.findByLogin('user1')).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('update', () => {
+        it('should update user', async () => {
+            const mockUser = {
+                id: new ObjectId('507f1f77bcf86cd799439011'),
+                login: 'user1',
+                password: 'hash1',
+                recoveryCode: 'code1',
+                name: 'Test User1',
+                createdAt: new Date,
+                updatedAt: new Date,
+            };
+
+            const updateUserDto = {
+                login: 'Test User2'
+            };
+
+            const updatedUser = { ...mockUser, ...updateUserDto };
+
+            jest.spyOn(service, 'findOne').mockResolvedValue(mockUser);
+
+            mockRepository.findOne.mockResolvedValue(updatedUser);
+
+            const result = await service.update(mockUser.id.toHexString(), updateUserDto);
+
+            expect(result).toEqual(updatedUser);
+            expect(mockRepository.findOne).toHaveBeenCalledWith(mockUser.id.toHexString());
+            expect(mockRepository).toHaveBeenCalledWith(updatedUser);
         });
     })
 
