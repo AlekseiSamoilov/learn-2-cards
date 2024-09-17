@@ -178,7 +178,7 @@ describe('UsersService', () => {
                 recoveryCode: 'code1',
                 name: 'Test User1',
                 createdAt: new Date,
-                updatedAt: new Date,
+                updatedAt: new Date
             };
 
             const updateUserDto = {
