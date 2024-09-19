@@ -182,20 +182,23 @@ describe('UsersService', () => {
             };
 
             const updateUserDto = {
-                login: 'Test User2'
+                login: 'newuser2'
             };
 
             const updatedUser = { ...mockUser, ...updateUserDto };
 
             jest.spyOn(service, 'findOne').mockResolvedValue(mockUser);
 
-            mockRepository.findOne.mockResolvedValue(updatedUser);
+            mockRepository.save.mockResolvedValue(updatedUser);
 
             const result = await service.update(mockUser.id.toHexString(), updateUserDto);
 
             expect(result).toEqual(updatedUser);
-            expect(mockRepository.findOne).toHaveBeenCalledWith(mockUser.id.toHexString());
-            expect(mockRepository).toHaveBeenCalledWith(updatedUser);
+            expect(service.findOne).toHaveBeenCalledWith(mockUser.id.toHexString());
+            expect(mockRepository.save).toHaveBeenCalledWith(expect.objectContaining({
+                ...mockUser,
+                ...updateUserDto
+            }));
         });
     })
 
