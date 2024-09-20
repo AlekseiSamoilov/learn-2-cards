@@ -6,8 +6,8 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateUserDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { model } from "mongoose";
 import { ObjectId } from "mongodb";
+import e from "express";
 
 jest.mock('bcrypt');
 
@@ -200,6 +200,38 @@ describe('UsersService', () => {
                 ...updateUserDto
             }));
         });
-    })
+
+        it('should throw NotFoundException if user was not found', async () => {
+            jest.spyOn(mockRepository, 'update').mockReturnValue({
+            } as any);
+
+            await expect(service.update('507f1f77bcf86cd799439011', {})).rejects.toThrow(NotFoundException);
+        });
+    });
+
+    describe('remove', () => {
+        it('should remove a user', async () => {
+            const mockId = new ObjectId().toHexString();
+            mockRepository.delete.mockResolvedValue({ affected: 1 });
+
+            await expect(service.remove(mockId)).resolves.not.toThrow();
+            expect(mockRepository.delete).toHaveBeenCalledWith(new ObjectId(mockId));
+        });
+
+        it('should throw NotFoundException if user not found', async () => {
+            const mockId = new ObjectId().toHexString();
+            mockRepository.delete.mockResolvedValue({ affected: 0 });
+
+            await expect(service.remove(mockId)).rejects.toThrow(NotFoundException);
+        });
+
+        it('should throw InternalErrorException on unexpected error', async () => {
+            const mockId = new ObjectId().toHexString();
+            mockRepository.delete.mockRejectedValue(new Error('Unexpected error'));
+
+            await expect(service.remove(mockId)).rejects.toThrow(InternalServerErrorException)
+        });
+    });
 
 });
+
