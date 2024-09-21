@@ -38,7 +38,7 @@ export class UsersService {
         try {
             return this.userRepository.find();
         } catch (error) {
-            throw new InternalServerErrorException('Failed to find users')
+            throw new InternalServerErrorException(`Failed to find users ${error.message}`)
         }
     }
 

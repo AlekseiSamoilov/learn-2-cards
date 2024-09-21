@@ -5,7 +5,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateUserDto } from "./dto";
 import * as bcrypt from 'bcrypt';
-import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ObjectId } from "mongodb";
 import e from "express";
 
@@ -233,5 +233,58 @@ describe('UsersService', () => {
         });
     });
 
+    describe('resetPassword', () => {
+        it('should reset password', async () => {
+            const mockUser = {
+                login: 'testUser',
+                recoveryCode: '123456',
+                password: 'oldpassword',
+            };
+            const newPassword = 'newpassword';
+
+            jest.spyOn(service, 'findByLogin').mockResolvedValue(mockUser as User);
+            jest.spyOn(service, 'generateRecoveryCode').mockResolvedValue('NEW1234');
+            jest.spyOn(bcrypt, 'hash').mockImplementation(() => Promise.resolve('hashedPassword' as never));
+
+            await expect(service.resetPassword(mockUser.login, mockUser.recoveryCode, newPassword)).resolves.not.toThrow();
+            expect(mockRepository.save).toHaveBeenCalledWith(({
+                ...mockUser,
+                password: 'hashedPassword',
+                recoveryCode: 'NEW1234',
+            })
+            );
+        });
+
+        it('should throw NotFoundException if user not found', async () => {
+            jest.spyOn(service, 'findByLogin').mockResolvedValue(null);
+
+            await expect(service.resetPassword('nonexistent', 'ABC123', 'newPassword')).rejects.toThrow(NotFoundException);
+        });
+
+        it('should throw BadRequestException if recovery code is invalid', async () => {
+            const mockUser = {
+                login: 'testUser',
+                recoveryCode: 'ABC123',
+            };
+
+            jest.spyOn(service, 'findByLogin').mockResolvedValue(mockUser as User);
+
+            await expect(service.resetPassword(mockUser.login, 'WRONG123', 'newPassword')).rejects.toThrow(BadRequestException);
+        });
+
+        it('should throw InternalSErverErrorException on unexpected error', async () => {
+            jest.spyOn(service, 'findByLogin').mockRejectedValue(new Error('Unexpected Error'));
+
+            await expect(service.resetPassword('testUser', 'ABC123', 'newPassword')).rejects.toThrow(InternalServerErrorException);
+        });
+    });
+
+    describe('generateRecoveryCode', () => {
+        it('should generate unique codes on subsequent calls', async () => {
+            const code1 = await service.generateRecoveryCode();
+            const code2 = await service.generateRecoveryCode();
+            expect(code1).not.toEqual(code2);
+        });
+    });
 });
 
