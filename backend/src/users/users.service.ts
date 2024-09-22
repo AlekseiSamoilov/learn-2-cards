@@ -76,7 +76,7 @@ export class UsersService {
         try {
             const user = await this.findOne(id);
             if (!user) {
-                throw new NotFoundException(`User with ${id} not find`);
+                throw new NotFoundException(`User with ${id} not found`);
             }
             if (updateUserDto.password) {
                 updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
