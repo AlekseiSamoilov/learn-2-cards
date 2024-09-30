@@ -23,7 +23,7 @@ export class CategoriesService {
 
     async findAll(): Promise<Category[]> {
         try {
-            return this.categoryRepository.find();
+            return await this.categoryRepository.find();
         } catch (error) {
             throw new InternalServerErrorException(`Failed to find categories ${error.message}`);
         }

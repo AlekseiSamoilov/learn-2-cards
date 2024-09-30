@@ -7,7 +7,7 @@ import { CreateUserDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ObjectId } from "mongodb";
-import e from "express";
+
 
 jest.mock('bcrypt');
 
@@ -22,7 +22,6 @@ describe('UsersService', () => {
         findOne: jest.fn(),
         update: jest.fn(),
         delete: jest.fn(),
-        fidByLogin: jest.fn(),
     };
 
     beforeEach(async () => {

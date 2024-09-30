@@ -1,12 +1,11 @@
 import { Repository } from "typeorm";
 import { CategoriesService } from "./categories.service"
 import { Category } from "./category.entity";
-import { find } from "rxjs";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateCategoryDto } from "./dto/create-categoty.dto";
-import { create } from "domain";
 import { InternalServerErrorException } from "@nestjs/common";
+import { ObjectId } from "mongodb";
 
 describe('CategoriesService', () => {
     let service: CategoriesService;
@@ -15,10 +14,8 @@ describe('CategoriesService', () => {
     const mockRepository = {
         create: jest.fn(),
         save: jest.fn(),
-        findAll: jest.fn(),
+        find: jest.fn(),
         findOne: jest.fn(),
-        findByNameAndUserId: jest.fn(),
-        findAllByUserId: jest.fn(),
         update: jest.fn(),
         remove: jest.fn(),
     };
@@ -73,7 +70,50 @@ describe('CategoriesService', () => {
 
             mockRepository.save.mockRejectedValue(new Error('Database error'));
             await expect(service.create(createCategoryDto)).rejects.toThrow(InternalServerErrorException);
-        })
-    })
+        });
+    });
+
+    describe('findAll', () => {
+        it('should return an array of categories', async () => {
+            const mockCategories = [
+                { id: '1', name: 'category 1' },
+                { id: '2', name: 'category 2' }
+            ];
+
+            mockRepository.find.mockResolvedValue(mockCategories);
+
+            const result = await service.findAll();
+
+            expect(result).toEqual(mockCategories);
+            expect(mockRepository.find).toHaveBeenCalled();
+        });
+
+        it('should throw InternalServerErrorException if find fails', async () => {
+            const mockCategories = [
+                { id: '1', name: 'category 1' },
+                { id: '2', name: 'category 2' }
+            ];
+
+            mockRepository.find.mockRejectedValue(new Error('Database error'));
+            await expect(service.findAll()).rejects.toThrow(InternalServerErrorException);
+        });
+    });
+    describe('findOne', () => {
+        it('should return one category by id', async () => {
+            const mockId = '507f1f77bcf86cd799439011';
+            const mockCategory = {
+                id: new ObjectId(mockId),
+                name: 'test category'
+            };
+            mockRepository.findOne.mockResolvedValue(mockCategory);
+
+            const result = await service.findOne(mockId);
+
+            expect(result).toEqual(mockCategory);
+            expect(mockRepository.findOne).toHaveBeenCalledWith({
+                where: { id: expect.any(ObjectId) }
+            });
+        });
+    });
 
 })
