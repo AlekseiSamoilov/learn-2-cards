@@ -4,7 +4,7 @@ import { Category } from "./category.entity";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateCategoryDto } from "./dto/create-categoty.dto";
-import { InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ObjectId } from "mongodb";
 
 describe('CategoriesService', () => {
@@ -89,31 +89,41 @@ describe('CategoriesService', () => {
         });
 
         it('should throw InternalServerErrorException if find fails', async () => {
-            const mockCategories = [
-                { id: '1', name: 'category 1' },
-                { id: '2', name: 'category 2' }
-            ];
 
             mockRepository.find.mockRejectedValue(new Error('Database error'));
             await expect(service.findAll()).rejects.toThrow(InternalServerErrorException);
         });
     });
+
     describe('findOne', () => {
         it('should return one category by id', async () => {
-            const mockId = '507f1f77bcf86cd799439011';
+
             const mockCategory = {
-                id: new ObjectId(mockId),
+                id: new ObjectId('507f1f77bcf86cd799439011'),
                 name: 'test category'
             };
             mockRepository.findOne.mockResolvedValue(mockCategory);
 
-            const result = await service.findOne(mockId);
+            const result = await service.findOne(mockCategory.id.toHexString());
 
             expect(result).toEqual(mockCategory);
             expect(mockRepository.findOne).toHaveBeenCalledWith({
                 where: { id: expect.any(ObjectId) }
             });
         });
+    });
+
+    it('should throw NotFoundException if category not found by id', async () => {
+        mockRepository.findOne.mockResolvedValue(null);
+
+        await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(NotFoundException)
+    });
+
+    it('should throw InternalServerExceptionError if find fails', async () => {
+
+        const mockCategoryId = '507f1f77bcf86cd799439011';
+        mockRepository.findOne.mockRejectedValue(new Error('Server error'));
+        await expect(service.findOne(mockCategoryId)).rejects.toThrow(InternalServerErrorException)
     });
 
 })

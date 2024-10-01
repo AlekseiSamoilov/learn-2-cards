@@ -1,9 +1,10 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Category } from "./category.entity";
-import { ObjectId, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { CreateCategoryDto } from "./dto/create-categoty.dto";
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class CategoriesService {
