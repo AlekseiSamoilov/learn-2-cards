@@ -7,6 +7,7 @@ import { CreateCategoryDto } from "./dto/create-categoty.dto";
 import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ObjectId } from "mongodb";
 
+
 describe('CategoriesService', () => {
     let service: CategoriesService;
     let repo: Repository<Category>
@@ -125,5 +126,43 @@ describe('CategoriesService', () => {
         mockRepository.findOne.mockRejectedValue(new Error('Server error'));
         await expect(service.findOne(mockCategoryId)).rejects.toThrow(InternalServerErrorException)
     });
+
+    describe('findByTitleAndUserId', () => {
+        const mockUserId = '507f1f77bcf86cd799439011';
+        const mockName = 'testCategory';
+
+        it('should return category by name and user id', async () => {
+            const mockCategory = {
+                id: new ObjectId('60731f77bcf86cd799439022'),
+                userId: new ObjectId(mockUserId),
+                name: mockName,
+            };
+
+            mockRepository.findOne.mockResolvedValue(mockCategory)
+
+            const result = await service.findByTitleAndUserId(mockName, mockUserId);
+            expect(result).toEqual(mockCategory);
+            expect(mockRepository.findOne).toHaveBeenCalledWith({
+                where: {
+                    name: mockName,
+                    userId: expect.any(ObjectId)
+                }
+            });
+        });
+
+        it('should throw NotFoundException if category not found', async () => {
+            mockRepository.findOne.mockResolvedValue(null);
+
+            await expect(service.findByTitleAndUserId(mockName, mockUserId)).rejects.toThrow(NotFoundException);
+        });
+
+        it('should throw InternalServerExceptionError if find fails', async () => {
+
+            mockRepository.findOne.mockRejectedValue(new Error('Server error'));
+
+            await expect(service.findByTitleAndUserId(mockName, mockUserId)).rejects.toThrow(InternalServerErrorException);
+        })
+    })
+
 
 })

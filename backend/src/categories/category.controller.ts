@@ -28,7 +28,7 @@ export class CategoriesController {
     @Get(':name/:userId')
     @UseGuards(JwtAuthGuard)
     findByNameAndUserId(@Param('name') name: string, userId: string) {
-        return this.categoryService.findByNameAndUserId(name, userId);
+        return this.categoryService.findByTitleAndUserId(name, userId);
     }
 
     @Get(':id')

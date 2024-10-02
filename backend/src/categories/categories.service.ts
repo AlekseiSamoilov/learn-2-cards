@@ -45,7 +45,7 @@ export class CategoriesService {
         }
     }
 
-    async findByNameAndUserId(name: string, userId: string): Promise<Category> {
+    async findByTitleAndUserId(name: string, userId: string): Promise<Category> {
         try {
             const category = await this.categoryRepository.findOne({ where: { name, userId: new ObjectId(userId) } });
             if (!category) {
