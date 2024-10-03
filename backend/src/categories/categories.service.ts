@@ -49,7 +49,7 @@ export class CategoriesService {
         try {
             const category = await this.categoryRepository.findOne({ where: { name, userId: new ObjectId(userId) } });
             if (!category) {
-                throw new NotFoundException(`Category with ${name} not found`)
+                throw new NotFoundException(`Category with ${name} was not found`)
             }
             return category;
         } catch (error) {
@@ -62,7 +62,7 @@ export class CategoriesService {
 
     async findAllByUserId(userId: string): Promise<Category[]> {
         try {
-            return this.categoryRepository.find({ where: { userId: new ObjectId(userId) } })
+            return await this.categoryRepository.find({ where: { userId: new ObjectId(userId) } })
         } catch (error) {
             throw new InternalServerErrorException(`Failed to found categories for user ${error.message}`)
         }
@@ -72,7 +72,10 @@ export class CategoriesService {
         try {
             const category = await this.findOne(id);
             Object.assign(category, updateCategoryDto)
-            return this.categoryRepository.save(category);
+            if (!category) {
+                throw new NotFoundException(`Category with ${id} was not found`)
+            }
+            return await this.categoryRepository.save(category);
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error

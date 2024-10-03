@@ -138,7 +138,7 @@ describe('CategoriesService', () => {
                 name: mockName,
             };
 
-            mockRepository.findOne.mockResolvedValue(mockCategory)
+            mockRepository.findOne.mockResolvedValue(mockCategory);
 
             const result = await service.findByTitleAndUserId(mockName, mockUserId);
             expect(result).toEqual(mockCategory);
@@ -161,8 +161,78 @@ describe('CategoriesService', () => {
             mockRepository.findOne.mockRejectedValue(new Error('Server error'));
 
             await expect(service.findByTitleAndUserId(mockName, mockUserId)).rejects.toThrow(InternalServerErrorException);
-        })
-    })
+        });
+    });
 
+    describe('findAllByUserId', () => {
+        const mockUserId = '507f1f77bcf86cd799439011';
+
+        it('should return an array of categories by userId', async () => {
+            const mockCategories = [
+                {
+                    id: new ObjectId('60731f77bcf86cd799439022'),
+                    userId: new ObjectId(mockUserId),
+                    name: 'testCategory1',
+                },
+                {
+                    id: new ObjectId('60731f77bcf86cd799439023'),
+                    userId: new ObjectId(mockUserId),
+                    name: 'testCategory2',
+                },
+                {
+                    id: new ObjectId('60731f77bcf86cd799439024'),
+                    userId: new ObjectId(mockUserId),
+                    name: 'testCategory3',
+                },
+            ];
+
+            mockRepository.find.mockResolvedValue(mockCategories);
+
+            const result = await service.findAllByUserId(mockUserId);
+            expect(result).toEqual(mockCategories);
+            expect(mockRepository.find).toHaveBeenCalledWith({
+                where: {
+                    userId: expect.any(ObjectId)
+                }
+            });
+        });
+        it('should throw InternalServerExceptionError if find fails', async () => {
+            mockRepository.find.mockRejectedValue(new Error('Database Error'));
+
+            await expect(service.findAllByUserId(mockUserId)).rejects.toThrow(InternalServerErrorException);
+        });
+    });
+
+    describe('upadte', () => {
+        it('should update a category', async () => {
+            const mockCategory = {
+                userId: new ObjectId('507f1f77bcf86cd799439011'),
+                id: new ObjectId('60731f77bcf86cd799439022'),
+                name: 'testCategory',
+                createdAt: new Date,
+                updatedAt: new Date,
+            };
+
+            const updateCategoryDto = {
+                name: 'updatedName'
+            };
+
+            const updatedCategory = { ...mockCategory, ...updateCategoryDto };
+
+            jest.spyOn(service, 'findOne').mockResolvedValue(mockCategory);
+            mockRepository.save.mockResolvedValue(updatedCategory);
+
+            const result = await service.update(mockCategory.id.toHexString(), updateCategoryDto);
+
+            expect(result).toEqual(updatedCategory);
+        });
+
+        it('should trow NotFoundException if category was not found', async () => {
+            jest.spyOn(mockRepository, 'update').mockReturnValue({
+            } as any);
+
+            await expect(service.update('60731f77bcf86cd799439022', {})).rejects.toThrow(NotFoundException);
+        });
+    })
 
 })
