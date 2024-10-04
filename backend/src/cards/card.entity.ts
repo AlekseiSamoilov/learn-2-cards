@@ -11,7 +11,7 @@ export class Card {
     frontSide: string;
 
     @Column()
-    backside: string;
+    backSide: string;
 
     @Column()
     categoryId: ObjectId;

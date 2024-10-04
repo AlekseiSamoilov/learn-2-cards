@@ -211,7 +211,7 @@ describe('UsersService', () => {
     describe('remove', () => {
         it('should remove a user', async () => {
             const mockId = new ObjectId().toHexString();
-            mockRepository.delete.mockResolvedValue({ affected: 1 });
+            mockRepository.delete.mockResolvedValue({ deletedCount: 1 });
 
             await expect(service.remove(mockId)).resolves.not.toThrow();
             expect(mockRepository.delete).toHaveBeenCalledWith(new ObjectId(mockId));
@@ -219,7 +219,7 @@ describe('UsersService', () => {
 
         it('should throw NotFoundException if user not found', async () => {
             const mockId = new ObjectId().toHexString();
-            mockRepository.delete.mockResolvedValue({ affected: 0 });
+            mockRepository.delete.mockResolvedValue({ deletedCount: 0 });
 
             await expect(service.remove(mockId)).rejects.toThrow(NotFoundException);
         });

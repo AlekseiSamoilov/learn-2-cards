@@ -39,7 +39,7 @@ export class CategoriesService {
             return category;
         } catch (error) {
             if (error instanceof NotFoundException) {
-                throw error
+                throw error;
             }
             throw new InternalServerErrorException(`Failed to find category ${error.message}`)
         }
@@ -87,7 +87,7 @@ export class CategoriesService {
     async remove(id: string): Promise<void> {
         try {
             const result = await this.categoryRepository.delete(new ObjectId(id));
-            if (result.affected === 0) {
+            if ((result as any).deletedCount === 0) {
                 throw new NotFoundException(`Category with id ${id} not found`)
             }
         } catch (error) {

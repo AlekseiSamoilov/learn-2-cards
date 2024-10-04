@@ -18,7 +18,7 @@ describe('CategoriesService', () => {
         find: jest.fn(),
         findOne: jest.fn(),
         update: jest.fn(),
-        remove: jest.fn(),
+        delete: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -233,18 +233,42 @@ describe('CategoriesService', () => {
             await expect(service.update('60731f77bcf86cd799439022', {})).rejects.toThrow(NotFoundException);
         });
 
-        describe('update', () => {
-            it('should throw InternalServerErrorException for any error other than NotFoundException', async () => {
-                const mockError = new Error('Database connection failed');
-                jest.spyOn(service, 'findOne').mockRejectedValue(new Error('Database Error'));
+        it('should throw InternalServerErrorException for any error other than NotFoundException', async () => {
+            const mockError = new Error('Database connection failed');
+            jest.spyOn(service, 'findOne').mockRejectedValue(new Error('Database Error'));
 
-                await expect(service.update('60731f77bcf86cd799439022', { name: 'Updated Category' }))
-                    .rejects.toThrow(InternalServerErrorException);
+            await expect(service.update('60731f77bcf86cd799439022', { name: 'Updated Category' }))
+                .rejects.toThrow(InternalServerErrorException);
 
-                await expect(service.update('60731f77bcf86cd799439022', { name: 'Updated Category' }))
-                    .rejects.toThrow('Failed to update category: Database Error');
-            });
+            await expect(service.update('60731f77bcf86cd799439022', { name: 'Updated Category' }))
+                .rejects.toThrow('Failed to update category: Database Error');
         });
-    })
+    });
+
+    describe('remove', () => {
+
+        it('should remove a category', async () => {
+            const mockId = new ObjectId().toHexString();
+            mockRepository.delete.mockResolvedValue({ deletedCount: 1 });
+
+            await expect(service.remove(mockId)).resolves.not.toThrow();
+            expect(mockRepository.delete).toHaveBeenCalledWith(new ObjectId(mockId));
+        });
+
+        it('should throw NotFoundException if category was not found', async () => {
+            const mockId = new ObjectId().toHexString();
+            mockRepository.delete.mockResolvedValue({ deletedCount: 0 });
+
+            await expect(service.remove(mockId)).rejects.toThrow(NotFoundException);
+        });
+
+        it('should throw InternalServerErrorException if remove fail', async () => {
+            const mockId = new ObjectId().toHexString();
+            mockRepository.delete.mockRejectedValue(new Error('Database Error'));
+
+            await expect(service.remove(mockId)).rejects.toThrow(InternalServerErrorException);
+        });
+    });
+
 
 })
