@@ -203,7 +203,7 @@ describe('CategoriesService', () => {
         });
     });
 
-    describe('upadte', () => {
+    describe('update', () => {
         it('should update a category', async () => {
             const mockCategory = {
                 userId: new ObjectId('507f1f77bcf86cd799439011'),
@@ -228,10 +228,22 @@ describe('CategoriesService', () => {
         });
 
         it('should trow NotFoundException if category was not found', async () => {
-            jest.spyOn(mockRepository, 'update').mockReturnValue({
-            } as any);
+            jest.spyOn(service, 'findOne').mockResolvedValue(null)
 
             await expect(service.update('60731f77bcf86cd799439022', {})).rejects.toThrow(NotFoundException);
+        });
+
+        describe('update', () => {
+            it('should throw InternalServerErrorException for any error other than NotFoundException', async () => {
+                const mockError = new Error('Database connection failed');
+                jest.spyOn(service, 'findOne').mockRejectedValue(new Error('Database Error'));
+
+                await expect(service.update('60731f77bcf86cd799439022', { name: 'Updated Category' }))
+                    .rejects.toThrow(InternalServerErrorException);
+
+                await expect(service.update('60731f77bcf86cd799439022', { name: 'Updated Category' }))
+                    .rejects.toThrow('Failed to update category: Database Error');
+            });
         });
     })
 

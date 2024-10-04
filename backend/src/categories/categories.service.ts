@@ -71,16 +71,16 @@ export class CategoriesService {
     async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
         try {
             const category = await this.findOne(id);
-            Object.assign(category, updateCategoryDto)
             if (!category) {
                 throw new NotFoundException(`Category with ${id} was not found`)
             }
+            Object.assign(category, updateCategoryDto)
             return await this.categoryRepository.save(category);
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error
             }
-            throw new InternalServerErrorException(`Failed to update category ${error.message}`);
+            throw new InternalServerErrorException(`Failed to update category: ${error.message}`);
         }
     }
 
@@ -94,7 +94,7 @@ export class CategoriesService {
             if (error instanceof NotFoundException) {
                 throw error
             }
-            throw new InternalServerErrorException(`Failed to delete category ${error.message}`)
+            throw new InternalServerErrorException(`Failed to delete category: ${error.message}`)
         }
     }
 
