@@ -8,7 +8,7 @@ export class CreateCardDto {
 
     @IsString()
     @IsNotEmpty()
-    backside: string;
+    backSide: string;
 
     @IsNotEmpty()
     categoryId: ObjectId;

@@ -64,7 +64,7 @@ describe('CategoriesService', () => {
             expect(mockRepository.save).toHaveBeenCalledWith(createCategoryDto);
         });
 
-        it('should throw an InternalServerErrorException if save fails', async () => {
+        it('should throw InternalServerErrorException if save fails', async () => {
             const createCategoryDto: CreateCategoryDto = {
                 name: 'testCategory'
             };
