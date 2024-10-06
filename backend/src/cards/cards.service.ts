@@ -70,7 +70,7 @@ export class CardsService {
 
     async update(id: string, updateCardDto: UpdateCardDto): Promise<Card> {
         try {
-            const card = await this.cardRepository.findOne({ where: { id: new ObjectId(id) } });
+            const card = await this.findOne(id);
             if (!card) {
                 throw new NotFoundException(`Card with id ${id} not found`);
             }

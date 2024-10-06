@@ -1,4 +1,4 @@
-import { Brackets, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { CardsService } from "./cards.service"
 import { Card } from "./card.entity";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -134,7 +134,7 @@ describe('CardsService', () => {
     describe('findAllByUserId', () => {
         const mockUserId = new ObjectId().toHexString();
 
-        it('should return all cards by userId', async () => {
+        it('should return all cards by user id', async () => {
             const mockCards = [
                 { id: new ObjectId().toHexString(), frontSide: 'frontside1', userId: new ObjectId().toHexString() },
                 { id: new ObjectId().toHexString(), frontSide: 'frontside2', userId: new ObjectId().toHexString() }
@@ -155,6 +155,72 @@ describe('CardsService', () => {
 
             await expect(service.findAllByUserId(mockUserId)).rejects.toThrow(InternalServerErrorException);
         });
+    })
+
+    describe('findOneByUserId', () => {
+        const mockUserId = new ObjectId();
+
+        const mockCard = {
+            id: new ObjectId(),
+            frontSide: 'frontside',
+            backSide: 'backside',
+            userId: mockUserId,
+            categoryId: new ObjectId(),
+        };
+        it('should return one card by user id', async () => {
+            mockRepository.findOne.mockResolvedValue(mockCard);
+
+            const result = await service.findOneByUserId(mockUserId.toHexString(), mockCard.id.toHexString());
+
+            expect(result).toEqual(mockCard);
+            expect(mockRepository.findOne).toHaveBeenCalledWith({
+                where: {
+                    userId: mockUserId,
+                    id: mockCard.id,
+                }
+            });
+        });
+
+        it('should throw NotFoundException if user not found', async () => {
+            mockRepository.findOne.mockResolvedValue(null);
+
+            await expect(service.findOneByUserId(mockUserId.toHexString(), mockCard.id.toHexString())).rejects.toThrow(NotFoundException);
+        });
+
+        it('should throw InternalServerExceptionError if find fails', async () => {
+            mockRepository.findOne.mockRejectedValue(new Error('Database error'));
+
+            await expect(service.findOneByUserId(mockUserId.toHexString(), mockCard.id.toHexString())).rejects.toThrow(InternalServerErrorException)
+        });
+    });
+
+    describe('update', () => {
+        const mockCard = {
+            id: new ObjectId(),
+            frontSide: 'frontside',
+            backSide: 'backside',
+            userId: new ObjectId(),
+            categoryId: new ObjectId(),
+            createdAt: new Date,
+            updatedAt: new Date,
+            totalShows: 5,
+            correctAnswers: 2,
+        }
+
+        const updatedCardDto = {
+            frontSide: 'anotherFrontside',
+        }
+
+        it('should update a card', async () => {
+            const upgratedCard = { ...mockCard, ...updatedCardDto };
+
+            jest.spyOn(service, 'findOne').mockResolvedValue(mockCard);
+            mockRepository.save.mockResolvedValue(upgratedCard);
+
+            const result = await service.update(mockCard.id.toHexString(), updatedCardDto);
+
+            expect(result).toEqual(upgratedCard);
+        })
     })
 
 })
