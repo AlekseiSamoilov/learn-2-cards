@@ -1,50 +1,49 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./user.entity";
-import { Repository } from "typeorm";
+import { User, UserDocument } from "./user.schema";
 import { CreateUserDto, UpdateUserDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
-import { ObjectId } from "mongodb";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
 
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>
-    ) { }
+        @InjectModel(User.name)
+        private userModel: Model<UserDocument>) { }
 
-    async create(CreateUserDto: CreateUserDto): Promise<User> {
+    async create(createUserDto: CreateUserDto): Promise<User> {
         try {
-            const { password, ...rest } = CreateUserDto;
+            const { password, ...rest } = createUserDto;
             const hashedPassword = await bcrypt.hash(password, 10);
             const recoveryCode = await this.generateRecoveryCode();
 
-            const user = new User();
-            Object.assign(user, {
+            const createdUser = new this.userModel({
                 ...rest,
                 password: hashedPassword,
                 recoveryCode,
-            });
+            })
 
-            const savedUser = await this.userRepository.save(user)
-            return savedUser;
+            return await createdUser.save();
         } catch (error) {
-            throw new InternalServerErrorException('Failed to create user')
+            if (error.code === 11000) {
+                throw new BadRequestException('User with this login already exists');
+            }
+            throw new InternalServerErrorException(`Failed to create user: ${error.message}`)
         }
     }
 
     async findAll(): Promise<User[]> {
         try {
-            return this.userRepository.find();
+            return await this.userModel.find();
         } catch (error) {
             throw new InternalServerErrorException(`Failed to find users ${error.message}`)
         }
     }
 
-    async findOne(id: string): Promise<User> {
+    async findOne(id: string): Promise<UserDocument> {
         try {
-            const user = await this.userRepository.findOne({ where: { id: new ObjectId(id) } });
+            const user = await this.userModel.findById(id);
             if (!user) {
                 throw new NotFoundException(`User with id ${id} not found`)
             }
@@ -57,9 +56,9 @@ export class UsersService {
         }
     }
 
-    async findByLogin(login: string): Promise<User | undefined> {
+    async findByLogin(login: string): Promise<UserDocument | null> {
         try {
-            const user = await this.userRepository.findOne({ where: { login } });
+            const user = await this.userModel.findOne({ login });
             if (!user) {
                 throw new NotFoundException(`User with lofin ${login} not found`)
             }
@@ -72,9 +71,9 @@ export class UsersService {
         }
     }
 
-    async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
         try {
-            const user = await this.findOne(id);
+            const user = await this.userModel.findById(id);
             if (!user) {
                 throw new NotFoundException(`User with ${id} not found`);
             }
@@ -82,10 +81,16 @@ export class UsersService {
                 updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
             }
             Object.assign(user, updateUserDto);
-            return this.userRepository.save(user)
+            user.updatedAt = new Date();
+
+            const updatedUser = await user.save();
+            return updatedUser;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
+            }
+            if (error.name === 'ValidationError') {
+                throw new BadRequestException(`Validation failed: ${error.message}`);
             }
             throw new InternalServerErrorException(`Failed to update user ${error.message}`)
         }
@@ -93,7 +98,7 @@ export class UsersService {
 
     async remove(id: string): Promise<void> {
         try {
-            const result = await this.userRepository.delete(new ObjectId(id));
+            const result = await this.userModel.deleteOne({ _id: id });
             if ((result as any).deletedCount === 0) {
                 throw new NotFoundException(`User with id ${id} not found`);
             }
@@ -112,12 +117,12 @@ export class UsersService {
                 throw new NotFoundException(`User with login ${login} not found`);
             }
             if (user.recoveryCode !== recoveryCode) {
-                throw new BadRequestException(`Invalud recovery code`);
+                throw new BadRequestException(`Invalid recovery code`);
             }
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             user.password = hashedPassword;
             user.recoveryCode = await this.generateRecoveryCode();
-            await this.userRepository.save(user);
+            await user.save();
         } catch (error) {
             if (error instanceof NotFoundException || error instanceof BadRequestException) {
                 throw error;

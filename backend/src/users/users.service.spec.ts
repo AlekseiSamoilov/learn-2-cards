@@ -1,27 +1,27 @@
-import { Repository } from "typeorm";
-import { User } from "./user.entity";
+import { User, UserDocument } from "./user.schema";
 import { UsersService } from "./users.service"
 import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateUserDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ObjectId } from "mongodb";
+import { Model, Document } from "mongoose";
+import { getModelToken } from "@nestjs/mongoose";
 
 
 jest.mock('bcrypt');
 
 describe('UsersService', () => {
     let service: UsersService;
-    let repo: Repository<User>
+    let model: Model<UserDocument>
 
-    const mockRepository = {
+    const mockUserModel = {
         create: jest.fn(),
-        save: jest.fn(),
         find: jest.fn(),
         findOne: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
+        findById: jest.fn(),
+        findByIdAndUpdate: jest.fn(),
+        deleteOne: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -29,14 +29,14 @@ describe('UsersService', () => {
             providers: [
                 UsersService,
                 {
-                    provide: getRepositoryToken(User),
-                    useValue: mockRepository,
+                    provide: getModelToken(User.name),
+                    useValue: mockUserModel,
                 },
             ],
         }).compile();
 
         service = module.get<UsersService>(UsersService);
-        repo = module.get<Repository<User>>(getRepositoryToken(User));
+        model = module.get<Model<UserDocument>>(getModelToken(User.name));
 
         jest.clearAllMocks();
     });
@@ -58,36 +58,35 @@ describe('UsersService', () => {
             (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
             jest.spyOn(service as any, 'generateRecoveryCode').mockResolvedValue(recoveryCode);
 
-            const mockSavedUser = new User();
-
-            Object.assign(mockSavedUser, {
+            const mockCreateUser = {
+                _id: 'testID',
                 login: createUserDto.login,
                 password: hashedPassword,
                 recoveryCode,
-            });
+                save: jest.fn().mockResolvedValue({
+                    _id: 'testID',
+                    login: createUserDto.login,
+                    password: hashedPassword,
+                    recoveryCode,
+                }),
+            };
 
-            mockRepository.create.mockReturnValue(mockSavedUser);
-            mockRepository.save.mockResolvedValue({ ...mockSavedUser, id: 'someId' });
+            mockUserModel.create.mockReturnValue(mockCreateUser);
 
             const result = await service.create(createUserDto);
 
             expect(result).toEqual(expect.objectContaining({
-                id: expect.any(String),
+                _id: 'testId',
                 login: createUserDto.login,
                 recoveryCode: expect.any(String),
             }));
-            if (result.password) {
-                expect(result.password).toBe(hashedPassword);
-            } else {
-                expect(result.password).toBeUndefined();
-            }
-            expect(bcrypt.hash).toHaveBeenCalledWith(createUserDto.password, expect.any(Number));
-            expect(mockRepository.save).toHaveBeenCalledWith(expect.objectContaining({
+
+            expect(bcrypt.hash).toHaveBeenCalledWith(createUserDto.password, 10);
+            expect(mockUserModel.create).toHaveBeenCalledWith(expect.objectContaining({
                 login: createUserDto.login,
                 password: hashedPassword,
                 recoveryCode,
             }));
-            expect(mockRepository.save).toHaveBeenCalledWith(mockSavedUser);
         });
 
         it('should throw InternalServcerErrorException if user already exist', async () => {
@@ -96,7 +95,7 @@ describe('UsersService', () => {
                 password: 'testPassword',
             };
 
-            mockRepository.save.mockRejectedValue({ code: 11000 });
+            mockUserModel.create.mockRejectedValue({ code: 11000 });
 
             await expect(service.create(createUserDto)).rejects.toThrow(InternalServerErrorException);
         });
@@ -108,35 +107,40 @@ describe('UsersService', () => {
                 { id: '1', login: 'user1', password: 'hash1', recoveryCode: 'code1' },
                 { id: '2', login: 'user2', password: 'hash2', recoveryCode: 'code2' }
             ];
-            mockRepository.find.mockResolvedValue(mockUsers);
+            mockUserModel.find.mockReturnValue({
+                exec: jest.fn().mockResolvedValue(mockUsers)
+            });
 
             const result = await service.findAll();
 
             expect(result).toEqual(mockUsers);
-            expect(mockRepository.find).toHaveBeenCalled();
+            expect(mockUserModel.find).toHaveBeenCalled();
         });
     });
 
     describe('findOne', () => {
         it('should return one user by id', async () => {
             const mockUser = {
-                id: new ObjectId('507f1f77bcf86cd799439011'),
+                _id: '507f1f77bcf86cd799439011',
                 login: 'user1',
                 password: 'hash1',
                 recoveryCode: 'code1'
             };
-            mockRepository.findOne.mockResolvedValue(mockUser);
 
-            const result = await service.findOne(mockUser.id.toHexString());
+            mockUserModel.findById.mockReturnValue({
+                exec: jest.fn().mockResolvedValue(mockUser)
+            });
+
+            const result = await service.findOne(mockUser._id);
 
             expect(result).toEqual(mockUser);
-            expect(mockRepository.findOne).toHaveBeenCalledWith({
-                where: { id: expect.any(ObjectId) }
-            });
+            expect(mockUserModel.findOne).toHaveBeenCalledWith(mockUser._id);
         });
 
         it('should throw NotFoundException if user not found by id', async () => {
-            mockRepository.findOne.mockResolvedValue(null);
+            mockUserModel.findOne.mockReturnValue({
+                exec: jest.fn().mockResolvedValue(null)
+            })
 
             await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(NotFoundException);
         });
@@ -151,18 +155,22 @@ describe('UsersService', () => {
                 recoveryCode: 'code1'
             };
 
-            mockRepository.findOne.mockResolvedValue(mockUser);
+            mockUserModel.findOne.mockReturnValue({
+                exec: jest.fn().mockResolvedValue(mockUser),
+            });
 
             const result = await service.findByLogin(mockUser.login);
 
             expect(result).toEqual(mockUser);
-            expect(mockRepository.findOne).toHaveBeenCalledWith({
-                where: { login: expect.any(String) }
+            expect(mockUserModel.findOne).toHaveBeenCalledWith({
+                login: mockUser.login,
             });
         });
 
         it('should throw NotFoundException if user not found by login', async () => {
-            mockRepository.findOne.mockResolvedValue(null);
+            mockUserModel.findOne.mockReturnValue({
+                exec: jest.fn().mockResolvedValue(null)
+            });
 
             await expect(service.findByLogin('user1')).rejects.toThrow(NotFoundException);
         });
@@ -171,38 +179,30 @@ describe('UsersService', () => {
     describe('update', () => {
         it('should update user', async () => {
             const mockUser = {
-                id: new ObjectId('507f1f77bcf86cd799439011'),
-                login: 'user1',
-                password: 'hash1',
-                recoveryCode: 'code1',
-                name: 'Test User1',
-                createdAt: new Date,
-                updatedAt: new Date
+                _id: '507f1f77bcf86cd799439011',
+                login: 'testUser',
+                recoveryCode: '123456',
+                password: 'oldpassword',
             };
 
             const updateUserDto = {
                 login: 'newuser2'
             };
 
-            const updatedUser = { ...mockUser, ...updateUserDto };
+            jest.spyOn(service, 'findOne').mockResolvedValue(mockUser as UserDocument);
 
-            jest.spyOn(service, 'findOne').mockResolvedValue(mockUser);
+            const result = await service.update(mockUser._id, updateUserDto);
 
-            mockRepository.save.mockResolvedValue(updatedUser);
-
-            const result = await service.update(mockUser.id.toHexString(), updateUserDto);
-
-            expect(result).toEqual(updatedUser);
-            expect(service.findOne).toHaveBeenCalledWith(mockUser.id.toHexString());
-            expect(mockRepository.save).toHaveBeenCalledWith(expect.objectContaining({
-                ...mockUser,
-                ...updateUserDto
+            expect(result).toEqual(expect.objectContaining({
+                _id: mockUser._id,
+                login: updateUserDto.login
             }));
+            expect(service.findOne).toHaveBeenCalledWith(mockUser._id);
+            expect(mockUserModel.findById).toHaveBeenCalled();
         });
 
         it('should throw NotFoundException if user was not found', async () => {
-            jest.spyOn(mockRepository, 'update').mockReturnValue({
-            } as any);
+            jest.spyOn(mockUserModel, 'findOne').mockRejectedValue(new NotFoundException());
 
             await expect(service.update('507f1f77bcf86cd799439011', {})).rejects.toThrow(NotFoundException);
         });
@@ -211,22 +211,22 @@ describe('UsersService', () => {
     describe('remove', () => {
         it('should remove a user', async () => {
             const mockId = new ObjectId().toHexString();
-            mockRepository.delete.mockResolvedValue({ deletedCount: 1 });
+            mockUserModel.deleteOne.mockResolvedValue({ deletedCount: 1 });
 
             await expect(service.remove(mockId)).resolves.not.toThrow();
-            expect(mockRepository.delete).toHaveBeenCalledWith(new ObjectId(mockId));
+            expect(mockUserModel.deleteOne).toHaveBeenCalledWith({ _id: mockId });
         });
 
         it('should throw NotFoundException if user not found', async () => {
             const mockId = new ObjectId().toHexString();
-            mockRepository.delete.mockResolvedValue({ deletedCount: 0 });
+            mockUserModel.deleteOne.mockResolvedValue({ deletedCount: 0 });
 
             await expect(service.remove(mockId)).rejects.toThrow(NotFoundException);
         });
 
         it('should throw InternalErrorException on unexpected error', async () => {
             const mockId = new ObjectId().toHexString();
-            mockRepository.delete.mockRejectedValue(new Error('Unexpected error'));
+            mockUserModel.deleteOne.mockRejectedValue(new Error('Unexpected error'));
 
             await expect(service.remove(mockId)).rejects.toThrow(InternalServerErrorException)
         });
@@ -234,24 +234,28 @@ describe('UsersService', () => {
 
     describe('resetPassword', () => {
         it('should reset password', async () => {
-            const mockUser = {
+            const mockUser: Partial<UserDocument> = {
                 login: 'testUser',
                 recoveryCode: '123456',
                 password: 'oldpassword',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                save: jest.fn().mockResolvedValue({
+                    login: 'testUser',
+                    recoveryCode: 'NEW1234',
+                    password: 'hashedPassword',
+                })
             };
             const newPassword = 'newpassword';
 
-            jest.spyOn(service, 'findByLogin').mockResolvedValue(mockUser as User);
+            jest.spyOn(service, 'findByLogin').mockResolvedValue(mockUser as UserDocument);
             jest.spyOn(service, 'generateRecoveryCode').mockResolvedValue('NEW1234');
             jest.spyOn(bcrypt, 'hash').mockImplementation(() => Promise.resolve('hashedPassword' as never));
 
             await expect(service.resetPassword(mockUser.login, mockUser.recoveryCode, newPassword)).resolves.not.toThrow();
-            expect(mockRepository.save).toHaveBeenCalledWith(({
-                ...mockUser,
-                password: 'hashedPassword',
-                recoveryCode: 'NEW1234',
-            })
-            );
+            expect(mockUser.save).toHaveBeenCalled();
+            expect(mockUser.password).toBe('hashedPassword');
+            expect(mockUser.recoveryCode).toBe('NEW1234');
         });
 
         it('should throw NotFoundException if user not found', async () => {
@@ -266,7 +270,7 @@ describe('UsersService', () => {
                 recoveryCode: 'ABC123',
             };
 
-            jest.spyOn(service, 'findByLogin').mockResolvedValue(mockUser as User);
+            jest.spyOn(service, 'findByLogin').mockResolvedValue(mockUser as UserDocument);
 
             await expect(service.resetPassword(mockUser.login, 'WRONG123', 'newPassword')).rejects.toThrow(BadRequestException);
         });
