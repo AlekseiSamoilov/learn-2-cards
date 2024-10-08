@@ -7,6 +7,7 @@ import { BadRequestException, InternalServerErrorException, NotFoundException } 
 import { ObjectId } from "mongodb";
 import { Model, Document } from "mongoose";
 import { getModelToken } from "@nestjs/mongoose";
+import { create } from "domain";
 
 
 jest.mock('bcrypt');
@@ -22,6 +23,7 @@ describe('UsersService', () => {
         findById: jest.fn(),
         findByIdAndUpdate: jest.fn(),
         deleteOne: jest.fn(),
+        save: jest.fn()
     };
 
     beforeEach(async () => {
@@ -46,12 +48,11 @@ describe('UsersService', () => {
     });
 
     describe('create', () => {
+        const createUserDto: CreateUserDto = {
+            login: 'testUser',
+            password: 'testPassword',
+        };
         it('should create a new user', async () => {
-            const createUserDto: CreateUserDto = {
-                login: 'testUser',
-                password: 'testPassword',
-            };
-
             const hashedPassword = 'hashedPassword';
             const recoveryCode = '123456';
 
@@ -59,19 +60,20 @@ describe('UsersService', () => {
             jest.spyOn(service as any, 'generateRecoveryCode').mockResolvedValue(recoveryCode);
 
             const mockCreateUser = {
-                _id: 'testID',
+                _id: 'testId',
                 login: createUserDto.login,
                 password: hashedPassword,
                 recoveryCode,
                 save: jest.fn().mockResolvedValue({
-                    _id: 'testID',
+                    _id: 'testId',
                     login: createUserDto.login,
                     password: hashedPassword,
                     recoveryCode,
                 }),
             };
 
-            mockUserModel.create.mockReturnValue(mockCreateUser);
+            const mockUserModelConstructor = jest.fn(() => mockCreateUser);
+            (service as any).userModel = mockUserModelConstructor;
 
             const result = await service.create(createUserDto);
 
@@ -82,12 +84,19 @@ describe('UsersService', () => {
             }));
 
             expect(bcrypt.hash).toHaveBeenCalledWith(createUserDto.password, 10);
-            expect(mockUserModel.create).toHaveBeenCalledWith(expect.objectContaining({
-                login: createUserDto.login,
-                password: hashedPassword,
-                recoveryCode,
-            }));
+            expect(mockCreateUser.save).toHaveBeenCalled();
         });
+
+        it('should throw BadRequestException if user already exists', async () => {
+            const error = { code: 11000 };
+            const mockUserModeConstructor = jest.fn(() => {
+                throw error;
+            });
+
+            (service as any).userModel = mockUserModeConstructor;
+
+            await expect(service.create(createUserDto)).rejects.toThrow(BadRequestException);
+        })
 
         it('should throw InternalServcerErrorException if user already exist', async () => {
             const createUserDto: CreateUserDto = {
