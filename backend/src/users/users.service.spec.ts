@@ -7,8 +7,6 @@ import { BadRequestException, InternalServerErrorException, NotFoundException } 
 import { ObjectId } from "mongodb";
 import { Model, Document } from "mongoose";
 import { getModelToken } from "@nestjs/mongoose";
-import { create } from "domain";
-
 
 jest.mock('bcrypt');
 
@@ -98,7 +96,7 @@ describe('UsersService', () => {
             await expect(service.create(createUserDto)).rejects.toThrow(BadRequestException);
         })
 
-        it('should throw InternalServcerErrorException if user already exist', async () => {
+        it('should throw InternalServcerErrorException if create fails', async () => {
             const createUserDto: CreateUserDto = {
                 login: 'existingUser',
                 password: 'testPassword',
@@ -116,9 +114,8 @@ describe('UsersService', () => {
                 { id: '1', login: 'user1', password: 'hash1', recoveryCode: 'code1' },
                 { id: '2', login: 'user2', password: 'hash2', recoveryCode: 'code2' }
             ];
-            mockUserModel.find.mockReturnValue({
-                exec: jest.fn().mockResolvedValue(mockUsers)
-            });
+
+            mockUserModel.find.mockReturnValue(mockUsers)
 
             const result = await service.findAll();
 
@@ -136,20 +133,16 @@ describe('UsersService', () => {
                 recoveryCode: 'code1'
             };
 
-            mockUserModel.findById.mockReturnValue({
-                exec: jest.fn().mockResolvedValue(mockUser)
-            });
+            mockUserModel.findById.mockReturnValue(mockUser);
 
             const result = await service.findOne(mockUser._id);
 
             expect(result).toEqual(mockUser);
-            expect(mockUserModel.findOne).toHaveBeenCalledWith(mockUser._id);
+            expect(mockUserModel.findById).toHaveBeenCalledWith(mockUser._id);
         });
 
         it('should throw NotFoundException if user not found by id', async () => {
-            mockUserModel.findOne.mockReturnValue({
-                exec: jest.fn().mockResolvedValue(null)
-            })
+            mockUserModel.findById.mockReturnValue(null)
 
             await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(NotFoundException);
         });
@@ -164,22 +157,16 @@ describe('UsersService', () => {
                 recoveryCode: 'code1'
             };
 
-            mockUserModel.findOne.mockReturnValue({
-                exec: jest.fn().mockResolvedValue(mockUser),
-            });
+            mockUserModel.findOne.mockReturnValue(mockUser);
 
             const result = await service.findByLogin(mockUser.login);
 
             expect(result).toEqual(mockUser);
-            expect(mockUserModel.findOne).toHaveBeenCalledWith({
-                login: mockUser.login,
-            });
+            expect(mockUserModel.findOne).toHaveBeenCalledWith({ login: mockUser.login });
         });
 
         it('should throw NotFoundException if user not found by login', async () => {
-            mockUserModel.findOne.mockReturnValue({
-                exec: jest.fn().mockResolvedValue(null)
-            });
+            mockUserModel.findOne.mockReturnValue(null);
 
             await expect(service.findByLogin('user1')).rejects.toThrow(NotFoundException);
         });
@@ -198,16 +185,13 @@ describe('UsersService', () => {
                 login: 'newuser2'
             };
 
-            jest.spyOn(service, 'findOne').mockResolvedValue(mockUser as UserDocument);
+            mockUserModel.findById.mockResolvedValue(mockUser);
 
             const result = await service.update(mockUser._id, updateUserDto);
 
-            expect(result).toEqual(expect.objectContaining({
-                _id: mockUser._id,
-                login: updateUserDto.login
-            }));
-            expect(service.findOne).toHaveBeenCalledWith(mockUser._id);
-            expect(mockUserModel.findById).toHaveBeenCalled();
+            expect(result).toEqual(mockUser.login)
+            expect(service.update).toHaveBeenCalledWith(mockUser._id);
+            expect(mockUserModel.save).toHaveBeenCalled();
         });
 
         it('should throw NotFoundException if user was not found', async () => {
