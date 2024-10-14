@@ -73,17 +73,20 @@ export class UsersService {
 
     async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
         try {
-            const user = await this.userModel.findById(id);
-            if (!user) {
-                throw new NotFoundException(`User with ${id} not found`);
-            }
             if (updateUserDto.password) {
                 updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
             }
-            Object.assign(user, updateUserDto);
-            user.updatedAt = new Date();
 
-            const updatedUser = await user.save();
+            const updatedUser = await this.userModel.findByIdAndUpdate(
+                id,
+                { ...updateUserDto, updatedAt: new Date() },
+                { new: true, runValidators: true }
+            );
+
+            if (!updatedUser) {
+                throw new NotFoundException(`User with id ${id} not found`);
+            }
+
             return updatedUser;
         } catch (error) {
             if (error instanceof NotFoundException) {

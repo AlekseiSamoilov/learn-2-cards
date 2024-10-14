@@ -5,7 +5,7 @@ import { CreateUserDto } from "./dto";
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ObjectId } from "mongodb";
-import { Model, Document } from "mongoose";
+import { Model } from "mongoose";
 import { getModelToken } from "@nestjs/mongoose";
 
 jest.mock('bcrypt');
@@ -185,17 +185,22 @@ describe('UsersService', () => {
                 login: 'newuser2'
             };
 
-            mockUserModel.findById.mockResolvedValue(mockUser);
+            const updatedMockUser = { ...mockUser, ...updateUserDto, updatedAt: expect.any(Date) };
+
+            mockUserModel.findByIdAndUpdate.mockResolvedValue(updatedMockUser);
 
             const result = await service.update(mockUser._id, updateUserDto);
 
-            expect(result).toEqual(mockUser.login)
-            expect(service.update).toHaveBeenCalledWith(mockUser._id);
-            expect(mockUserModel.save).toHaveBeenCalled();
+            expect(result).toEqual(updatedMockUser)
+            expect(mockUserModel.findByIdAndUpdate).toHaveBeenCalledWith(
+                mockUser._id,
+                { ...updateUserDto, updatedAt: expect.any(Date) },
+                { new: true, runValidators: true }
+            );
         });
 
         it('should throw NotFoundException if user was not found', async () => {
-            jest.spyOn(mockUserModel, 'findOne').mockRejectedValue(new NotFoundException());
+            jest.spyOn(mockUserModel, 'findByIdAndUpdate').mockRejectedValue(new NotFoundException());
 
             await expect(service.update('507f1f77bcf86cd799439011', {})).rejects.toThrow(NotFoundException);
         });

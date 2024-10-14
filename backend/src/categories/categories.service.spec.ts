@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import { CategoriesService } from "./categories.service"
-import { Category } from "./category.entity";
+import { Category } from "./category.schema";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateCategoryDto } from "./dto/create-categoty.dto";

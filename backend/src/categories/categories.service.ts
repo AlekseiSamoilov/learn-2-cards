@@ -1,22 +1,24 @@
-import { InjectRepository } from "@nestjs/typeorm";
-import { Category } from "./category.entity";
-import { Repository } from "typeorm";
+import { Category } from "./category.schema";
 import { CreateCategoryDto } from "./dto/create-categoty.dto";
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { ObjectId } from "mongodb";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, Types } from "mongoose";
 
 @Injectable()
 export class CategoriesService {
     constructor(
-        @InjectRepository(Category)
-        private readonly categoryRepository: Repository<Category>
-    ) { }
+        @InjectModel(Category.name)
+        private categoryModel: Model<Category>) { }
 
-    async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    async create(createCategoryDto: CreateCategoryDto, userId: string): Promise<Category> {
         try {
-            const newCategory = await this.categoryRepository.save(createCategoryDto);
-            return newCategory;
+            const newCategory = new this.categoryModel({
+                ...createCategoryDto,
+                userId: new Types.ObjectId(userId)
+            });
+            return newCategory.save();
         } catch (error) {
             throw new InternalServerErrorException(`Failed to create new category: ${error.message}`)
         }
@@ -24,7 +26,7 @@ export class CategoriesService {
 
     async findAll(): Promise<Category[]> {
         try {
-            return await this.categoryRepository.find();
+            return await this.categoryModel.find();
         } catch (error) {
             throw new InternalServerErrorException(`Failed to find categories ${error.message}`);
         }
@@ -32,7 +34,7 @@ export class CategoriesService {
 
     async findOne(id: string): Promise<Category> {
         try {
-            const category = await this.categoryRepository.findOne({ where: { id: new ObjectId(id) } });
+            const category = await this.categoryModel.findById(id);
             if (!category) {
                 throw new NotFoundException(`Category with id ${id} not found`);
             }
@@ -47,7 +49,7 @@ export class CategoriesService {
 
     async findByTitleAndUserId(name: string, userId: string): Promise<Category> {
         try {
-            const category = await this.categoryRepository.findOne({ where: { name, userId: new ObjectId(userId) } });
+            const category = await this.categoryModel.findById(userId);
             if (!category) {
                 throw new NotFoundException(`Category with ${name} was not found`)
             }
