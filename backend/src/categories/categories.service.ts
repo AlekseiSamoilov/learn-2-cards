@@ -2,7 +2,6 @@ import { Category } from "./category.schema";
 import { CreateCategoryDto } from "./dto/create-categoty.dto";
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
-import { ObjectId } from "mongodb";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 
@@ -64,7 +63,7 @@ export class CategoriesService {
 
     async findAllByUserId(userId: string): Promise<Category[]> {
         try {
-            return await this.categoryRepository.find({ where: { userId: new ObjectId(userId) } })
+            return await this.categoryModel.findById(userId)
         } catch (error) {
             throw new InternalServerErrorException(`Failed to found categories for user ${error.message}`)
         }
@@ -72,12 +71,11 @@ export class CategoriesService {
 
     async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
         try {
-            const category = await this.findOne(id);
-            if (!category) {
-                throw new NotFoundException(`Category with ${id} was not found`)
+            const updatedCategory = await this.categoryModel.findByIdAndUpdate(id, { updateCategoryDto, updatedAt: new Date() }, { new: true })
+            if (!updatedCategory) {
+                throw new NotFoundException(`Category with id ${id} not found`);
             }
-            Object.assign(category, updateCategoryDto)
-            return await this.categoryRepository.save(category);
+            return updatedCategory
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error
@@ -88,7 +86,7 @@ export class CategoriesService {
 
     async remove(id: string): Promise<void> {
         try {
-            const result = await this.categoryRepository.delete(new ObjectId(id));
+            const result = await this.categoryModel.deleteOne({ _id: id });
             if ((result as any).deletedCount === 0) {
                 throw new NotFoundException(`Category with id ${id} not found`)
             }
