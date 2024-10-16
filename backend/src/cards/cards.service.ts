@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Card } from "./card.entity";
+import { Card } from "./card.schema";
 import { Repository } from "typeorm";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { ObjectId } from "mongodb";

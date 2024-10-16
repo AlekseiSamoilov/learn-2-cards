@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import { CardsService } from "./cards.service"
-import { Card } from "./card.entity";
+import { Card } from "./card.schema";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateCardDto } from "./dto/create-card.dto";

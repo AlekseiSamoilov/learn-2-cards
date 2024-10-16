@@ -6,7 +6,6 @@ import { InternalServerErrorException, NotFoundException } from "@nestjs/common"
 import { ObjectId } from "mongodb";
 import { Model, Types } from "mongoose";
 import { getModelToken } from "@nestjs/mongoose";
-import { Type } from "class-transformer";
 
 
 describe('CategoriesService', () => {
@@ -170,39 +169,35 @@ describe('CategoriesService', () => {
     });
 
     describe('findAllByUserId', () => {
-        const mockUserId = '507f1f77bcf86cd799439011';
+        const mockUserId = new Types.ObjectId().toHexString();
 
         it('should return an array of categories by userId', async () => {
             const mockCategories = [
                 {
-                    id: new ObjectId('60731f77bcf86cd799439022'),
-                    userId: new ObjectId(mockUserId),
+                    id: new Types.ObjectId(),
+                    userId: new Types.ObjectId(mockUserId),
                     name: 'testCategory1',
                 },
                 {
-                    id: new ObjectId('60731f77bcf86cd799439023'),
-                    userId: new ObjectId(mockUserId),
+                    id: new Types.ObjectId(),
+                    userId: new Types.ObjectId(mockUserId),
                     name: 'testCategory2',
                 },
                 {
-                    id: new ObjectId('60731f77bcf86cd799439024'),
-                    userId: new ObjectId(mockUserId),
+                    id: new Types.ObjectId(),
+                    userId: new Types.ObjectId(mockUserId),
                     name: 'testCategory3',
                 },
             ];
 
-            mockCategoryModel.find.mockResolvedValue(mockCategories);
+            mockCategoryModel.findById.mockResolvedValue(mockCategories);
 
             const result = await service.findAllByUserId(mockUserId);
             expect(result).toEqual(mockCategories);
-            expect(mockCategoryModel.find).toHaveBeenCalledWith({
-                where: {
-                    userId: expect.any(ObjectId)
-                }
-            });
+            expect(mockCategoryModel.findById).toHaveBeenCalled();
         });
         it('should throw InternalServerExceptionError if find fails', async () => {
-            mockCategoryModel.find.mockRejectedValue(new Error('Database Error'));
+            mockCategoryModel.findById.mockRejectedValue(new Error('Database Error'));
 
             await expect(service.findAllByUserId(mockUserId)).rejects.toThrow(InternalServerErrorException);
         });
@@ -211,8 +206,8 @@ describe('CategoriesService', () => {
     describe('update', () => {
         it('should update a category', async () => {
             const mockCategory = {
-                userId: new ObjectId('507f1f77bcf86cd799439011'),
-                id: new ObjectId('60731f77bcf86cd799439022'),
+                userId: new Types.ObjectId(),
+                id: new Types.ObjectId(),
                 name: 'testCategory',
                 createdAt: new Date,
                 updatedAt: new Date,
@@ -224,8 +219,7 @@ describe('CategoriesService', () => {
 
             const updatedCategory = { ...mockCategory, ...updateCategoryDto };
 
-            // jest.spyOn(service, 'findOne').mockResolvedValue(mockCategory);
-            mockCategoryModel.save.mockResolvedValue(updatedCategory);
+            mockCategoryModel.findByIdAndUpdate.mockResolvedValue(updatedCategory);
 
             const result = await service.update(mockCategory.id.toHexString(), updateCategoryDto);
 
@@ -233,14 +227,14 @@ describe('CategoriesService', () => {
         });
 
         it('should trow NotFoundException if category was not found', async () => {
-            jest.spyOn(service, 'findOne').mockResolvedValue(null)
+            jest.spyOn(mockCategoryModel, 'findByIdAndUpdate').mockResolvedValue(null)
 
             await expect(service.update('60731f77bcf86cd799439022', {})).rejects.toThrow(NotFoundException);
         });
 
         it('should throw InternalServerErrorException for any error other than NotFoundException', async () => {
             const mockError = new Error('Database connection failed');
-            jest.spyOn(service, 'findOne').mockRejectedValue(new Error('Database Error'));
+            jest.spyOn(mockCategoryModel, 'findByIdAndUpdate').mockRejectedValue(new Error('Database Error'));
 
             await expect(service.update('60731f77bcf86cd799439022', { name: 'Updated Category' }))
                 .rejects.toThrow(InternalServerErrorException);
@@ -257,7 +251,7 @@ describe('CategoriesService', () => {
             mockCategoryModel.deleteOne.mockResolvedValue({ deletedCount: 1 });
 
             await expect(service.remove(mockId)).resolves.not.toThrow();
-            expect(mockCategoryModel.deleteOne).toHaveBeenCalledWith(new ObjectId(mockId));
+            expect(mockCategoryModel.deleteOne).toHaveBeenCalledWith({ _id: mockId });
         });
 
         it('should throw NotFoundException if category was not found', async () => {
