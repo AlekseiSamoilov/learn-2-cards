@@ -6,18 +6,21 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { ObjectId } from "mongodb";
 import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Model } from "mongoose";
+import { getModelToken } from "@nestjs/mongoose";
 
 describe('CardsService', () => {
     let service: CardsService;
-    let repo: Repository<Card>
+    let model: Model<Card>
 
-    const mockRepository = {
+    const mockCardModel = {
         create: jest.fn(),
         save: jest.fn(),
         find: jest.fn(),
         findOne: jest.fn(),
-        update: jest.fn(),
-        remove: jest.fn(),
+        findById: jest.fn(),
+        findByIdAndUpdate: jest.fn(),
+        deleteOne: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -25,14 +28,14 @@ describe('CardsService', () => {
             providers: [
                 CardsService,
                 {
-                    provide: getRepositoryToken(Card),
-                    useValue: mockRepository,
+                    provide: getModelToken(Card.name),
+                    useValue: mockCardModel,
                 }
             ],
         }).compile();
 
         service = module.get<CardsService>(CardsService);
-        repo = module.get<Repository<Card>>(getRepositoryToken(Card));
+        model = module.get<Model<Card>>(getModelToken(Card.name));
 
         jest.clearAllMocks();
     });
