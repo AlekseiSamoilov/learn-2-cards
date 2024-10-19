@@ -1,13 +1,9 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Card } from "./card.schema";
 import { CreateCardDto } from "./dto/create-card.dto";
-import { ObjectId } from "mongodb";
 import { UpdateCardDto } from "./dto/update-card.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
-import { find } from "rxjs";
-import { Type } from "class-transformer";
-import { Not } from "typeorm";
 
 @Injectable()
 export class CardsService {

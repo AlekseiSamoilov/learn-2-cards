@@ -1,12 +1,10 @@
-import { Repository } from "typeorm";
 import { CardsService } from "./cards.service"
 import { Card } from "./card.schema";
 import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { ObjectId } from "mongodb";
 import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { getModelToken } from "@nestjs/mongoose";
 
 describe('CardsService', () => {
@@ -45,56 +43,68 @@ describe('CardsService', () => {
     });
 
     describe('create', () => {
+        const mockCategoryId = new Types.ObjectId().toHexString();
+        const mockUserId = new Types.ObjectId().toHexString();
         const createCardDto: CreateCardDto = {
-            frontSide: 'Its frontside',
-            backSide: 'Its backside',
-            categoryId: new ObjectId(),
-            userId: new ObjectId(),
+            frontside: 'Its frontside',
+            backside: 'Its backside',
+            categoryId: mockCategoryId,
         }
         it('should create a new card', async () => {
 
-            const mockSavedCard = {
-                id: 'testId',
-                frontSide: createCardDto.frontSide,
+            const mockCreatedCard = {
+                _id: new Types.ObjectId(),
+                frontSide: createCardDto.frontside,
+                backside: createCardDto.backside,
+                categoryId: createCardDto.categoryId,
+                save: jest.fn().mockResolvedValue({
+                    _id: new Types.ObjectId(),
+                    frontside: createCardDto.frontside,
+                    backside: createCardDto.backside,
+                    categoryId: createCardDto.categoryId,
+                })
+
             };
 
-            mockRepository.save.mockResolvedValue(mockSavedCard);
+            const mockCardModelConstructor = jest.fn(() => mockCreatedCard);
+            (service as any).cardModel = mockCardModelConstructor;
 
-            const result = await service.create(createCardDto);
+            const result = await service.create(createCardDto, mockUserId, mockCategoryId);
 
             expect(result).toEqual(expect.objectContaining({
-                id: 'testId',
-                frontSide: createCardDto.frontSide,
+                _id: expect.any(Types.ObjectId),
+                frontside: createCardDto.frontside,
+                backside: createCardDto.backside
             }));
 
-            expect(mockRepository.save).toHaveBeenCalledWith(createCardDto)
+            expect(mockCreatedCard.save).toHaveBeenCalled();
         });
 
         it('should throw InternalServerExceptionError if save fails', async () => {
 
-            mockRepository.save.mockRejectedValue(new Error('Database error'));
+            mockCardModel.save.mockRejectedValue(new Error('Database error'));
 
-            await expect(service.create(createCardDto)).rejects.toThrow(InternalServerErrorException);
+            await expect(service.create(createCardDto, mockUserId, mockCategoryId)).rejects.toThrow(InternalServerErrorException);
         });
     });
 
     describe('findAll', () => {
         it('should return an array if cards', async () => {
             const mockCards = [
-                { id: new ObjectId(), frontSide: 'frontside1' },
-                { id: new ObjectId(), frontSide: 'frontside2' },
-                { id: new ObjectId(), frontSide: 'frontside3' }
+                { id: new Types.ObjectId(), frontSide: 'frontside1' },
+                { id: new Types.ObjectId(), frontSide: 'frontside2' },
+                { id: new Types.ObjectId(), frontSide: 'frontside3' }
             ];
 
-            mockRepository.find.mockResolvedValue(mockCards);
+            mockCardModel.find.mockResolvedValue(mockCards);
 
             const result = await service.findAll();
             expect(result).toEqual(mockCards);
-            expect(mockRepository.find).toHaveBeenCalled();
+            expect(mockCardModel.find).toHaveBeenCalled();
         });
 
         it('should throw InternalServerException if find fails', async () => {
-            mockRepository.find.mockRejectedValue(new Error('Database Error'));
+            mockCardModel.find.mockRejectedValue(new Error('Database Error'));
 
             await expect(service.findAll()).rejects.toThrow(InternalServerErrorException);
         });
@@ -102,25 +112,25 @@ describe('CardsService', () => {
 
     describe('findOne', () => {
         it('should return one card by id', async () => {
+            const mockId = new Types.ObjectId();
             const mockCard = {
-                id: new ObjectId(),
-                frontSide: 'frontside',
-                backSide: 'backside',
-                userId: new ObjectId(),
-                categoryId: new ObjectId(),
+                _id: mockId,
+                frontside: 'frontside',
+                backside: 'backside',
+                userId: new Types.ObjectId(),
+                categoryId: new Types.ObjectId(),
             };
 
-            mockRepository.findOne.mockResolvedValue(mockCard);
+            mockCardModel.findById.mockResolvedValue(mockCard);
 
-            const result = await service.findOne(mockCard.id.toHexString());
+            const result = await service.findOne(mockId.toHexString());
 
             expect(result).toEqual(mockCard);
-            expect(mockRepository.findOne).toHaveBeenCalledWith({
-                where: { id: expect.any(ObjectId) }
-            });
+            expect(mockCardModel.findById).toHaveBeenCalledWith(mockCard._id.toHexString())
         });
+
         it('should throw NotFoundException if card not found by id', async () => {
-            mockRepository.findOne.mockResolvedValue(null);
+            mockCardModel.findById.mockResolvedValue(null);
 
             await expect(service.findOne(new ObjectId().toHexString())).rejects.toThrow(NotFoundException)
         });
@@ -128,101 +138,38 @@ describe('CardsService', () => {
         it('should throw InternalServerErrorException if find fails', async () => {
             const mockCardId = new ObjectId().toHexString();
 
-            mockRepository.findOne.mockRejectedValue(new Error('Database error'));
+            mockCardModel.findById.mockRejectedValue(new Error('Database error'));
 
             await expect(service.findOne(mockCardId)).rejects.toThrow(InternalServerErrorException);
         });
     });
 
-    describe('findAllByUserId', () => {
-        const mockUserId = new ObjectId().toHexString();
-
-        it('should return all cards by user id', async () => {
-            const mockCards = [
-                { id: new ObjectId().toHexString(), frontSide: 'frontside1', userId: new ObjectId().toHexString() },
-                { id: new ObjectId().toHexString(), frontSide: 'frontside2', userId: new ObjectId().toHexString() }
-            ];
-
-            mockRepository.find.mockResolvedValue(mockCards);
-
-            const result = await service.findAllByUserId(mockUserId);
-
-            expect(result).toEqual(mockCards);
-            expect(mockRepository.find).toHaveBeenCalledWith({
-                where: { userId: expect.any(ObjectId) }
-            });
-        });
-
-        it('should throw InternalServerErrorException if find fails', async () => {
-            mockRepository.find.mockRejectedValue(new Error('Database Error'));
-
-            await expect(service.findAllByUserId(mockUserId)).rejects.toThrow(InternalServerErrorException);
-        });
-    })
-
-    describe('findOneByUserId', () => {
-        const mockUserId = new ObjectId();
-
-        const mockCard = {
-            id: new ObjectId(),
-            frontSide: 'frontside',
-            backSide: 'backside',
-            userId: mockUserId,
-            categoryId: new ObjectId(),
-        };
-        it('should return one card by user id', async () => {
-            mockRepository.findOne.mockResolvedValue(mockCard);
-
-            const result = await service.findOneByUserId(mockUserId.toHexString(), mockCard.id.toHexString());
-
-            expect(result).toEqual(mockCard);
-            expect(mockRepository.findOne).toHaveBeenCalledWith({
-                where: {
-                    userId: mockUserId,
-                    id: mockCard.id,
-                }
-            });
-        });
-
-        it('should throw NotFoundException if user not found', async () => {
-            mockRepository.findOne.mockResolvedValue(null);
-
-            await expect(service.findOneByUserId(mockUserId.toHexString(), mockCard.id.toHexString())).rejects.toThrow(NotFoundException);
-        });
-
-        it('should throw InternalServerExceptionError if find fails', async () => {
-            mockRepository.findOne.mockRejectedValue(new Error('Database error'));
-
-            await expect(service.findOneByUserId(mockUserId.toHexString(), mockCard.id.toHexString())).rejects.toThrow(InternalServerErrorException)
-        });
-    });
-
     describe('update', () => {
         const mockCard = {
-            id: new ObjectId(),
-            frontSide: 'frontside',
-            backSide: 'backside',
-            userId: new ObjectId(),
-            categoryId: new ObjectId(),
+            _id: new Types.ObjectId(),
+            frontside: 'frontside',
+            backside: 'backside',
+            userId: new Types.ObjectId(),
+            categoryId: new Types.ObjectId(),
             createdAt: new Date,
             updatedAt: new Date,
             totalShows: 5,
             correctAnswers: 2,
+            imageUrl: 'randomUrl'
         }
 
         const updatedCardDto = {
-            frontSide: 'anotherFrontside',
+            frontside: 'anotherFrontside',
         }
 
         it('should update a card', async () => {
-            const upgratedCard = { ...mockCard, ...updatedCardDto };
+            const updatedCard = { ...mockCard, ...updatedCardDto };
 
-            jest.spyOn(service, 'findOne').mockResolvedValue(mockCard);
-            mockRepository.save.mockResolvedValue(upgratedCard);
+            mockCardModel.findByIdAndUpdate.mockResolvedValue(updatedCard)
 
-            const result = await service.update(mockCard.id.toHexString(), updatedCardDto);
+            const result = await service.update(mockCard._id.toHexString(), updatedCardDto);
 
-            expect(result).toEqual(upgratedCard);
+            expect(result).toEqual(updatedCard);
         })
     })
 
