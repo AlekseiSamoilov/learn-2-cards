@@ -1,19 +1,28 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PassportStrategy } from '@nestjs/passport';
-import { UsersService } from "src/users/users.service";
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
-export class JwtStategy extends PassportStrategy(Strategy) {
-    constructor(private userService: UsersService) {
+export class JwtStrategy extends PassportStrategy(Strategy) {
+    private readonly logger = new Logger(JwtStrategy.name);
+
+    constructor(private configService: ConfigService) {
+        const jwtSecret = configService.get<string>('JWT_SECRET');
+
         super({
-            jstFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET,
+            secretOrKey: jwtSecret
         });
+
+        this.logger.debug(`Configuring JwtStrategy. JWT_SECRET is ${jwtSecret ? 'set' : 'not set'}`);
+        if (!jwtSecret) {
+            this.logger.error('JWT_SECRET is not set. This will cause an error.');
+        }
     }
 
     async validate(payload: any) {
-        return this.userService.findOne(payload.sub);
+        return { userId: payload.sub, login: payload.login };
     }
 }
