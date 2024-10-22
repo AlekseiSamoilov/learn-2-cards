@@ -14,7 +14,6 @@ import * as path from 'path';
             envFilePath: path.resolve(__dirname, '..', '.env'),
             load: [() => {
                 const env = process.env;
-                console.log('Loaded environment variables:', Object.keys(env));
                 return env;
             }],
         }),

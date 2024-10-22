@@ -1,12 +1,10 @@
-import { useState } from 'react'
 import './App.css'
+import Input from './components/input/Input'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>Hello World${count}</div>
+      <Input title="Введите логин и запишите его" placeholder='Логин от 6 до 10 символов' />
     </>
   )
 }
