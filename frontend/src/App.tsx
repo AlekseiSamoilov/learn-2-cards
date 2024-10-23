@@ -1,10 +1,11 @@
 import './App.css'
 import Input from './components/input/Input'
+import RegistrationPage from './components/registration-page/RegistrationPage'
 
 function App() {
   return (
     <>
-      <Input title="Введите логин и запишите его" placeholder='Логин от 6 до 10 символов' />
+      <RegistrationPage />
     </>
   )
 }

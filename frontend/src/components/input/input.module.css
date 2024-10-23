@@ -1,15 +1,19 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 15px;
     color: #ffffff;
     width: 100%;
+    align-items: center;
 }
 
 .label {
     text-align: start;
     font-size: 16px;
+    background-color: rgba(83, 134, 172, 1);
+    width: 100%;
+    text-align: center;
 }
 
 .input {
@@ -20,11 +24,8 @@
     height: 50px;
     width: 100%;
     font-size: 20px;
-    background-color: rgba(255, 248, 248, 0.7);
+    background-color: #fff8f8b3;
     padding: 5px;
-
-    position: relative;
-    border: 1px solid #ccc;
 }
 
 .input::placeholder {
@@ -34,4 +35,10 @@
 .input:focus {
     outline-color: #5386ac;
     outline-width: 2px;
+}
+
+.errorMessage {
+    font-size: 10px;
+    color: #ffffff;
+    background-color: red;
 }
