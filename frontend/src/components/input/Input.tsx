@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { TValidationRule } from '../../types/validation';
 import styles from './input.module.css'
+import { AnimatePresence, motion } from "framer-motion";
 
-interface IInputProps {
+export interface IInputProps {
     title: string;
     type?: string;
     placeholder?: string;
@@ -21,7 +22,8 @@ const Input: React.FC<IInputProps> = ({
     validationRules = [],
     error,
     placeholder,
-    required = false
+    required = false,
+    type = 'text'
 }) => {
 
     const [localError, setLocalError] = useState<string>('');
@@ -73,15 +75,25 @@ const Input: React.FC<IInputProps> = ({
         <div className={styles.container}>
             <label className={styles.label}>{title}</label>
             <input
+                type={type}
                 value={value}
                 placeholder={placeholder}
                 className={styles.input}
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
-            {(localError || error) && (
-                <span className={styles.errorMessage}>{localError || error}</span>
-            )}
+            <AnimatePresence mode="popLayout" initial={false}>
+                {(localError || error) && (
+                    <motion.span
+                        className={styles.errorMessage}
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -20, opacity: 0 }}
+                        transition={{ duration: 0.5, type: 'spring', bounce: 0.5 }}
+                    >{localError || error}
+                    </motion.span>
+                )}
+            </AnimatePresence>
         </div>
     )
 }

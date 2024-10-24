@@ -23,6 +23,7 @@
     "@nestjs/mongoose": "^10.0.10",
     "@nestjs/passport": "^10.0.3",
     "bcrypt": "^5.1.1",
+    "framer-motion": "^11.11.9",
     "mongoose": "^8.7.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
