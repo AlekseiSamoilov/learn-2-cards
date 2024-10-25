@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import Input from '../input/Input'
 import PasswordInput from '../password-input/PasswordInput';
+import styles from './registration-page.module.css'
+import Button from '../button/Button';
 
 export default function RegistrationPage() {
 
@@ -26,13 +28,13 @@ export default function RegistrationPage() {
 
 
     return (
-        <div>
-            <h1>Registration</h1>
+        <div className={styles.container}>
+            <h1 className={styles.title}>Регистрация</h1>
             <Input
                 onChange={(e) => setLogin(e.target.value)}
                 value={login}
                 title='Введите логин'
-                placeholder='login placeholer'
+                placeholder='Введите логин, от 4 до 10 символов'
                 validationRules={loginRules}
                 required
             />
@@ -40,16 +42,17 @@ export default function RegistrationPage() {
                 title='Пароль'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder='Enter password'
+                placeholder='Введите пароль, от 6 до 10 символов'
             />
             <PasswordInput
-                title='Confirm password'
+                title='Введите пароль еще раз'
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder='Repeat password'
+                placeholder='Повторите введенный пароль'
                 confirm
                 compareWith={password}
             />
+            <Button onClick={handleSubmit} text='Далее' />
         </div>
     )
 }

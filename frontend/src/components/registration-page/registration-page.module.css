@@ -1,0 +1,12 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+.title {
+    background-color: rgba(83, 134, 172, 1);
+    padding: 5px;
+}

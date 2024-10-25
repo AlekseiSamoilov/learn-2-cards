@@ -89,7 +89,7 @@ const Input: React.FC<IInputProps> = ({
                         initial={{ y: -20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: -20, opacity: 0 }}
-                        transition={{ duration: 0.5, type: 'spring', bounce: 0.5 }}
+                        transition={{ duration: 0.4, type: 'spring', bounce: 0.5 }}
                     >{localError || error}
                     </motion.span>
                 )}

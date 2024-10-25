@@ -46,7 +46,7 @@ const PasswordInput: React.FC<IPasswordInputProps> = ({
                 className={styles.toggle_button}
                 onClick={() => setShowPassword(!showPassword)}
             >
-                {showPassword ? 'hide' : 'show'}</button>
+                {showPassword ? 'Спрятать' : 'Показать'}</button>
         </div>
     )
 }

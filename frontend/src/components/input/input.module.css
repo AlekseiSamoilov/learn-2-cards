@@ -1,8 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-bottom: 10px;
+    gap: 8px;
     color: #ffffff;
     width: 100%;
     align-items: center;
@@ -12,8 +11,8 @@
     text-align: start;
     font-size: 16px;
     background-color: rgba(83, 134, 172, 1);
-    width: 100%;
     text-align: center;
+    /* padding: 0 10px; */
     width: 100%;
 }
 
@@ -21,12 +20,12 @@
     border: none;
     margin: 0;
     padding: 0;
-    /* border-radius: 10px; */
     height: 50px;
-    width: 100%;
+    /* width: 100%; */
     font-size: 20px;
     background-color: #fff8f8b3;
     padding: 5px;
+    color: rgba(83, 134, 172, 1);
 }
 
 .input::placeholder {
@@ -39,9 +38,12 @@
 }
 
 .errorMessage {
-    padding: 5px ;
+    padding: 0 5px ;
     font-size: 10px;
     color: #ffffff;
     background-color: red;
-    /* border-radius: 10px; */
+}
+
+.input::placeholder {
+    font-size: 12px;
 }
