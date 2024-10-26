@@ -6,11 +6,13 @@ const RecoveryCodePage = () => {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Код для восстановления пароля</h1>
-            <h2 className={styles.sub_title}>Ваш код для восстановления
+            <h2 className={styles.subtitle}>Ваш код для восстановления
                 пароля, сохраните его</h2>
-            <div className={styles.code_display}>KENGURU</div>
+            <div className={styles.code_display}>
+                <span className={styles.code_word}>KENGURU</span>
+            </div>
             <Button text='Сохранил' />
-        </div>
+        </div >
     )
 }
 

@@ -3,7 +3,8 @@ import styles from './button.module.css'
 
 export interface IButtonProps {
     text?: string;
-    onClick?: (e: React.FormEvent) => void
+    onClick?: (e: React.FormEvent) => void;
+
 }
 const Button: React.FC<IButtonProps> = ({ text }) => {
     return (

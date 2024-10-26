@@ -86,9 +86,9 @@ const Input: React.FC<IInputProps> = ({
                 {(localError || error) && (
                     <motion.span
                         className={styles.errorMessage}
-                        initial={{ y: -20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -20, opacity: 0 }}
+                        initial={{ x: -40, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -40, opacity: 0 }}
                         transition={{ duration: 0.4, type: 'spring', bounce: 0.5 }}
                     >{localError || error}
                     </motion.span>
