@@ -3,23 +3,13 @@ import Input from '../input/Input'
 import PasswordInput from '../password-input/PasswordInput';
 import styles from './registration-page.module.css'
 import Button from '../button/Button';
+import { createConfirmPasswordRules, loginValidationRules, passwordValidationRules } from '../utils/validation-rules';
 
 export default function RegistrationPage() {
 
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('')
-
-    const loginRules = [
-        {
-            validate: (value: string) => value.length >= 3,
-            errorMessage: 'Логин не может быть короче 3 символов'
-        },
-        {
-            validate: (value: string) => value.length <= 10,
-            errorMessage: 'Логин не может быть длинее 10 символов'
-        },
-    ];
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,7 +25,7 @@ export default function RegistrationPage() {
                 value={login}
                 title='Введите логин'
                 placeholder='Введите логин, от 4 до 10 символов'
-                validationRules={loginRules}
+                validationRules={loginValidationRules}
                 required
             />
             <PasswordInput
@@ -43,14 +33,16 @@ export default function RegistrationPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder='Введите пароль, от 6 до 10 символов'
+                validationRules={passwordValidationRules}
+                required
             />
             <PasswordInput
                 title='Введите пароль еще раз'
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder='Повторите введенный пароль'
-                confirm
-                compareWith={password}
+                validationRules={createConfirmPasswordRules(password)}
+                required
             />
             <Button onClick={handleSubmit} text='Далее' />
         </div>
