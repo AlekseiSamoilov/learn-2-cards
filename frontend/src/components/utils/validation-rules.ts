@@ -1,4 +1,4 @@
-import { TValidationRule } from "../../types/validation";
+import { TValidationRule } from "../../types/validationRule";
 
 export const loginValidationRules: TValidationRule[] = [
     {
@@ -26,5 +26,12 @@ export const createConfirmPasswordRules = (compareWith: string): TValidationRule
     {
         validate: (value: string) => value === compareWith,
         errorMessage: 'Пароли не совпадают'
+    }
+];
+
+export const recoveryCodeValidationRules: TValidationRule[] = [
+    {
+        validate: (value: string) => value.length >= 5,
+        errorMessage: 'Код для должен быть длинее 5 символов'
     }
 ]

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Input, { IInputProps } from "../input/Input";
 import styles from './passwordInput.module.css'
+import { passwordValidationRules } from "../utils/validation-rules";
 
 interface IPasswordInputProps extends IInputProps {
     confirm?: boolean;
@@ -24,6 +25,7 @@ const PasswordInput: React.FC<IPasswordInputProps> = ({
                 placeholder={placeholder}
                 type={showPassword ? 'text' : 'password'}
                 required
+                validationRules={passwordValidationRules}
             />
             <button
                 className={styles.toggle_button}

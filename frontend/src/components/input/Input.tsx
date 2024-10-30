@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TValidationRule } from '../../types/validation';
+import { TValidationRule } from '../../types/validationRule';
 import styles from './input.module.css'
 import { AnimatePresence, motion } from "framer-motion";
 

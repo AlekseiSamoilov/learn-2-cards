@@ -3,6 +3,7 @@ import Input from '../input/Input'
 import Button from '../button/Button'
 import styles from './login-page.module.css'
 import { loginValidationRules, passwordValidationRules } from '../utils/validation-rules'
+import PasswordInput from '../password-input/PasswordInput'
 
 const LoginPage = () => {
 
@@ -18,7 +19,7 @@ const LoginPage = () => {
                 validationRules={loginValidationRules}
                 required
             />
-            <Input
+            <PasswordInput
                 title='Введите пароль'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
