@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import Input from '../input/Input'
-import PasswordInput from '../password-input/PasswordInput';
+import Input from '../../input/Input'
+import PasswordInput from '../../password-input/PasswordInput';
 import styles from './registration-page.module.css'
-import Button from '../button/Button';
-import { createConfirmPasswordRules, loginValidationRules, passwordValidationRules } from '../utils/validation-rules';
+import Button from '../../button/Button';
+import { createConfirmPasswordRules, loginValidationRules, passwordValidationRules } from '../../utils/validation-rules';
 
 export default function RegistrationPage() {
 

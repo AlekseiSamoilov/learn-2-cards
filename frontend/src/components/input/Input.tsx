@@ -82,14 +82,14 @@ const Input: React.FC<IInputProps> = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
-            <AnimatePresence mode="popLayout" initial={false}>
+            <AnimatePresence mode="popLayout" initial={true}>
                 {(localError || error) && (
                     <motion.span
                         className={styles.errorMessage}
-                        initial={{ x: -40, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: -40, opacity: 0 }}
-                        transition={{ duration: 0.4, type: 'spring', bounce: 0.5 }}
+                        initial={{ y: -10, opacity: 0, filter: 'blur(4px)' }}
+                        animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                        exit={{ y: -10, opacity: 0, filter: 'blur(4px)' }}
+                        transition={{ duration: 0.3, type: 'spring', bounce: 0 }}
                     >{localError || error}
                     </motion.span>
                 )}

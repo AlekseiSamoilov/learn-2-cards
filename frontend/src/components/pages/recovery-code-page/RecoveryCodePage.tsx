@@ -1,6 +1,6 @@
 import React from 'react'
-import styles from './recovery-code-mage.module.css'
-import Button from '../button/Button'
+import styles from './recovery-code-page.module.css'
+import Button from '../../button/Button'
 
 const RecoveryCodePage = () => {
     return (
