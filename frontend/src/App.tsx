@@ -6,6 +6,7 @@ import RecoveryPasswordPage from './components/recovery-password-page/RecoveryPa
 import RegistrationPage from './components/pages/registration-page/RegistrationPage'
 import Category from './components/category/Category'
 import MainPage from './components/pages/main-page/MainPage'
+import CategoryPage from './components/pages/category-page/CategoryPage'
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
       {/* <LoginPage /> */}
       {/* <RecoveryPasswordPage /> */}
       {/* <NewPasswordPage /> */}
-      <MainPage />
+      {/* <MainPage /> */}
+      <CategoryPage />
     </>
   )
 }
