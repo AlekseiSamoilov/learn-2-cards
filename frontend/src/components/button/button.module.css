@@ -5,9 +5,31 @@
     height: 50px;
     color: white;
     border-radius: 5px;
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+}
+
+.button:hover {
+    background-color: rgba(83, 134, 172, 0.8);
 }
 
 .button:active {
     background-color: rgba(83, 134, 172, 0.2);
     border: 2px solid rgba(83, 134, 172, 1);
+}
+
+.width_small {
+    width: 100px;
+}
+
+.width_medium {
+    width: 150px;
+}
+
+.width_large {
+    width: 300px;
+}
+
+.width_full {
+    width: 100%;
 }

@@ -15,11 +15,11 @@ const CategoryPage = () => {
             <div className={styles.repeat_container}>
                 <p className={styles.repeat_title}>Сколько карточек повторим?</p>
                 <input className={styles.repeat_input}></input>
-                <Button text='Начать' />
+                <Button text='Начать' width='300px' />
             </div>
             <div className={styles.buttons}>
-                <Button text='Назад к категориям' />
-                <Button text='Создать карточку' />
+                <Button text='Назад к категориям' width='150px' />
+                <Button text='Создать карточку' width='150px' />
             </div>
         </div>
     )

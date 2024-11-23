@@ -29,6 +29,7 @@
     justify-content: flex-start;
     background-color: rgba(255, 248, 248, 0.7);
     padding: 20px 5px;
+    height: 100%;
 }
 
 .word {
@@ -36,10 +37,12 @@
     border-radius: 5px;
     text-align: center;
     background-color: rgba(83, 134, 172, 1);
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .word:hover {
-    background-color: rgb(41, 133, 67);
+    background-color: rgba(41, 133, 67, 0.7);
 }
 
 .repeat_container {
@@ -53,6 +56,10 @@
     margin: 0;
     background-color: rgba(83, 134, 172, 1);
     margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+
 }
 
 .repeat_input {
@@ -66,4 +73,5 @@
 .buttons {
     display: flex;
     margin-top: 18px;
+    gap: 5px;
 }

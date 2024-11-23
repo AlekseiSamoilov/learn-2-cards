@@ -7,6 +7,8 @@ import RegistrationPage from './components/pages/registration-page/RegistrationP
 import Category from './components/category/Category'
 import MainPage from './components/pages/main-page/MainPage'
 import CategoryPage from './components/pages/category-page/CategoryPage'
+import WordPage from './components/pages/word-page/WordPage'
+import ReviewPage from './components/pages/review-page/ReviewPage'
 
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
       {/* <RecoveryPasswordPage /> */}
       {/* <NewPasswordPage /> */}
       {/* <MainPage /> */}
-      <CategoryPage />
+      {/* <CategoryPage /> */}
+      {/* <WordPage /> */}
+      <ReviewPage />
     </>
   )
 }
