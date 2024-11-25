@@ -12,8 +12,8 @@ const WordPage = () => {
                 <div className={styles.hint}></div>
             </div>
             <div className={styles.buttons}>
-                <Button text='Назад к списку' width='150px' />
-                <Button text='Редактировать' width='150px' />
+                <Button text='Назад к списку' width='medium' />
+                <Button text='Редактировать' width='medium' />
             </div>
         </div>
     )

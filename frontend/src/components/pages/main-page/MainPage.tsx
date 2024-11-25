@@ -13,7 +13,7 @@ const MainPage = () => {
                 <Category title='Category3' />
                 <Category title='Category4' />
             </div>
-            <Button text='Редактировать' />
+            <Button width='large' text='Редактировать' />
         </div>
     )
 }

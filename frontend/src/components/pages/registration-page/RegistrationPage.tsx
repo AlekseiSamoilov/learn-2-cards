@@ -4,9 +4,10 @@ import PasswordInput from '../../password-input/PasswordInput';
 import styles from './registration-page.module.css'
 import Button from '../../button/Button';
 import { createConfirmPasswordRules, loginValidationRules, passwordValidationRules } from '../../utils/validation-rules';
+import { useNavigate } from 'react-router-dom';
 
 export default function RegistrationPage() {
-
+    const navigate = useNavigate();
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('')
@@ -14,6 +15,8 @@ export default function RegistrationPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (password !== confirmPassword) return;
+
+        navigate('/recovery-code');
     };
 
 
@@ -44,7 +47,7 @@ export default function RegistrationPage() {
                 validationRules={createConfirmPasswordRules(password)}
                 required
             />
-            <Button onClick={handleSubmit} text='Далее' />
+            <Button width='large' onClick={handleSubmit} text='Далее' />
         </div>
     )
 }

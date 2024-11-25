@@ -3,9 +3,12 @@
     flex-direction: column;
     gap: 5px;
     align-items: center;
+    min-height: 100vh;
 }
 
 .title {
+    margin: 0;
+    font-weight: 300;
     background-color: rgba(83, 134, 172, 1);
     padding: 5px;
 }

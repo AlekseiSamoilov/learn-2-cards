@@ -2,13 +2,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%
+    width: 100%;
+    min-height: 100vh;
 }
 
 .title {
+    font-weight: 300;
     margin: 0;
     text-align: center;
     margin-bottom: 50px;
+    background-color: rgba(83, 134, 172, 1);
 }
 
 .subtitle {
@@ -17,6 +20,7 @@
     color: rgba(255, 255, 255, 1);
     margin-bottom: 8px;
     text-align: center;
+    font-weight: 300;
 }
 
 .code_display {
