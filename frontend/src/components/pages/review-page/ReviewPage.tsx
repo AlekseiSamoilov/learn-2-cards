@@ -113,8 +113,8 @@ const ReviewPage = () => {
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3, ease: 'easeInOut', type: 'spring', bounce: 0.4 }}
                                 >
-                                    <Button onClick={handleNextCard} text='Правильно' width='150px' />
-                                    <Button onClick={handleNextCard} text='Неправильно' width='150px' />
+                                    <Button onClick={handleNextCard} text='Правильно' width='medium' />
+                                    <Button onClick={handleNextCard} text='Неправильно' width='medium' />
                                 </motion.div>
                             </motion.div>
                         ) : (
@@ -126,14 +126,14 @@ const ReviewPage = () => {
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ type: 'spring', bounce: 0.4, duration: 0.3 }}
                             >
-                                <Button onClick={handleFlip} text='Показать ответ' width='150px' />
-                                <Button onClick={toggleHint} text='Подсказка' width='150px' />
+                                <Button onClick={handleFlip} text='Показать ответ' width='medium' />
+                                <Button onClick={toggleHint} text='Подсказка' width='medium' />
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </div>
             </motion.div >
-            <Button text='Назад к списку' width='300px' />
+            <Button text='Назад к списку' width='large' />
         </div >
     )
 }

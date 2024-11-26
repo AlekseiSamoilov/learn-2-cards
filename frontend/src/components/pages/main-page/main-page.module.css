@@ -21,5 +21,10 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    
+}
+
+.add_category {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
