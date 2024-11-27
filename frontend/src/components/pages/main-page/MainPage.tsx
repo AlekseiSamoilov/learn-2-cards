@@ -35,6 +35,7 @@ const MainPage = () => {
             <div className={styles.category_list}>
                 {categories.map(category => (
                     <Category
+                        key={category.id}
                         id={category.id}
                         title={category.title}
                         onDelete={isEditing ? () => removeCategory(category.id) : undefined} />

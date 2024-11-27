@@ -4,9 +4,10 @@ import Button from '../../button/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCategories } from '../../context/categoryContext';
 import AddWordForm from '../../add-word-form/AddWordForm';
+import WordCard from '../../wordCard/WordCard';
 
 const CategoryPage = () => {
-    const { categoryId } = useParams();
+    const { categoryId } = useParams<{ categoryId: string }>();
     const navigate = useNavigate();
     const { categories, words, addWord, removeWord } = useCategories();
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -15,6 +16,10 @@ const CategoryPage = () => {
 
     const category = categories.find(c => c.id === categoryId);
     const categoryWords = words.filter(w => w.categoryId === categoryId);
+
+    if (!categoryId) {
+        return <div>Категория не найдена</div>
+    }
 
     if (!category) {
         return <div>Категория не найдена</div>
@@ -28,7 +33,7 @@ const CategoryPage = () => {
     const handleStartRepeat = () => {
         const count = parseInt(cardsToRepeat);
         if (count > 0 && count <= categoryWords.length) {
-            navigate(`/review${categoryId}?count=${count}`);
+            navigate(`/review/${categoryId}?count=${count}`);
         }
     };
 
@@ -41,16 +46,52 @@ const CategoryPage = () => {
                     onCancel={() => setShowAddForm(false)}
                 />
             ) : (
-                <ul className={styles.words_list}></ul>
+                <ul className={styles.words_list}>
+                    {categoryWords.map(word => (
+                        <WordCard
+                            key={word.id}
+                            frontside={word.frontside}
+                            backside={word.backside}
+                            isEditing={isEditing}
+                            onDelete={() => removeWord(word.id)}
+                        />
+                    ))}
+                </ul>
             )}
             <div className={styles.repeat_container}>
                 <p className={styles.repeat_title}>Сколько карточек повторим?</p>
-                <input className={styles.repeat_input}></input>
-                <Button text='Начать' width='large' />
+                <input className={styles.repeat_input}
+                    type='number'
+                    min='1'
+                    max={categoryWords.length}
+                    value={cardsToRepeat}
+                    onChange={(e) => setCardsToRepeat(e.target.value)}
+                ></input>
+                <Button
+                    text='Начать'
+                    width='large'
+                    onClick={handleStartRepeat}
+                    disabled={!cardsToRepeat || categoryWords.length === 0}
+                />
             </div>
             <div className={styles.buttons}>
-                <Button text='Назад к категориям' width='medium' />
-                <Button text='Создать карточку' width='medium' />
+                <Button
+                    text='Назад к категориям'
+                    width='small'
+                    onClick={() => navigate('/main')}
+                />
+                {!showAddForm && (
+                    <Button
+                        text='Создать карточку'
+                        width='small'
+                        onClick={() => setShowAddForm(true)}
+                    />
+                )}
+                <Button
+                    text={isEditing ? 'Готово' : 'Редактировать'}
+                    width='small'
+                    onClick={() => setIsEditing(!isEditing)}
+                />
             </div>
         </div>
     )

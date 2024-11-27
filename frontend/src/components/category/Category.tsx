@@ -13,7 +13,7 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, id }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/category${id}`);
+        navigate(`/category/${id}`);
     };
 
     return (

@@ -5,6 +5,7 @@ export interface IButtonProps {
     text?: string;
     onClick?: (e: React.FormEvent) => void;
     width?: 'small' | 'medium' | 'large' | 'full';
+    disabled?: boolean;
 
 }
 const Button: React.FC<IButtonProps> = ({ text, width = '300px', onClick }) => {

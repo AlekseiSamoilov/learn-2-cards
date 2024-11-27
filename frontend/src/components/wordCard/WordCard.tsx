@@ -1,13 +1,13 @@
 import React from 'react'
-import styles from './word-card-props.module.css'
+import styles from './word-card.module.css'
 
 interface IWordCardProps {
     frontside: string;
     backside: string;
     onDelete: () => void;
-    onEdit: () => void;
-    isEditing: () => void;
-    hintImageUrl: string;
+    onEdit?: () => void;
+    isEditing: boolean;
+    hintImageUrl?: string;
 }
 
 const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onEdit, isEditing, hintImageUrl }) => {

@@ -20,6 +20,7 @@
 .words_list {
     box-sizing: border-box;
     margin: 0;
+    margin-top: 10px;
     padding: 0;
     width: 100%;
     align-items: center;
@@ -31,6 +32,7 @@
     background-color: rgba(255, 248, 248, 0.7);
     padding: 20px 5px;
     height: 100%;
+    border-radius: 10px;
 }
 
 .word {
@@ -75,4 +77,5 @@
     display: flex;
     margin-top: 18px;
     gap: 5px;
+    /* flex-direction: column; */
 }
