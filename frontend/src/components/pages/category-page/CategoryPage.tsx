@@ -37,6 +37,13 @@ const CategoryPage = () => {
         }
     };
 
+    const handleEditWord = (wordId: string, frontside: string, backside: string) => {
+        const updateWords = words.map(word =>
+            word.id === wordId ? { ...word, frontside, backside } : word
+        );
+        setWords(updateWords)
+    }
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>{category.title}</h1>
@@ -46,34 +53,38 @@ const CategoryPage = () => {
                     onCancel={() => setShowAddForm(false)}
                 />
             ) : (
-                <ul className={styles.words_list}>
-                    {categoryWords.map(word => (
-                        <WordCard
-                            key={word.id}
-                            frontside={word.frontside}
-                            backside={word.backside}
-                            isEditing={isEditing}
-                            onDelete={() => removeWord(word.id)}
+                <>
+                    <ul className={styles.words_list}>
+                        {categoryWords.map(word => (
+                            <WordCard
+                                key={word.id}
+                                frontside={word.frontside}
+                                backside={word.backside}
+                                isEditing={isEditing}
+                                onDelete={() => removeWord(word.id)}
+                                onEdit={(frontside, backside) => handleEditWord(word.id, frontside, backside)}
+                            />
+                        ))}
+                    </ul>
+                    <div className={styles.repeat_container}>
+                        <p className={styles.repeat_title}>Сколько карточек повторим?</p>
+                        <input
+                            className={styles.repeat_input}
+                            type='number'
+                            min='1'
+                            max={categoryWords.length}
+                            value={cardsToRepeat}
+                            onChange={(e) => setCardsToRepeat(e.target.value)}
                         />
-                    ))}
-                </ul>
+                        <Button
+                            text='Начать'
+                            width='large'
+                            onClick={handleStartRepeat}
+                            disabled={!cardsToRepeat || categoryWords.length === 0}
+                        />
+                    </div>
+                </>
             )}
-            <div className={styles.repeat_container}>
-                <p className={styles.repeat_title}>Сколько карточек повторим?</p>
-                <input className={styles.repeat_input}
-                    type='number'
-                    min='1'
-                    max={categoryWords.length}
-                    value={cardsToRepeat}
-                    onChange={(e) => setCardsToRepeat(e.target.value)}
-                ></input>
-                <Button
-                    text='Начать'
-                    width='large'
-                    onClick={handleStartRepeat}
-                    disabled={!cardsToRepeat || categoryWords.length === 0}
-                />
-            </div>
             <div className={styles.buttons}>
                 <Button
                     text='Назад к категориям'
