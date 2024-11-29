@@ -8,6 +8,7 @@ interface ICategoryContext {
     removeCategory: (id: string) => void;
     addWord: (categoryId: string, frontside: string, backside: string) => void;
     removeWord: (id: string) => void;
+    updateWord: (wordId: string, frontside: string, backside: string) => void;
 }
 
 const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
@@ -42,6 +43,10 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setWords(words.filter(word => word.id !== id));
     };
 
+    const updateWord = (wordId: string, frontside: string, backside: string) => {
+        setWords(words.map(word => word.id === wordId ? { ...word, frontside, backside } : word));
+    };
+
     return (
         <CategoryContext.Provider value={{
             categories,
@@ -49,7 +54,8 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             addCategory,
             removeCategory,
             addWord,
-            removeWord
+            removeWord,
+            updateWord
         }}>
             {children}
         </CategoryContext.Provider>

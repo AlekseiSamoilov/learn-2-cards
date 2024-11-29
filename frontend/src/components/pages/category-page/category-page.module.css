@@ -77,5 +77,10 @@
     display: flex;
     margin-top: 18px;
     gap: 5px;
-    /* flex-direction: column; */
+}
+
+.not_found {
+    background-color: rgba(83, 134, 172, 1);
+    border-radius: 10px;
+    padding: 30px;
 }

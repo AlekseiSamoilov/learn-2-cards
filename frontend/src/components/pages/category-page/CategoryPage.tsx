@@ -9,7 +9,7 @@ import WordCard from '../../wordCard/WordCard';
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
     const navigate = useNavigate();
-    const { categories, words, addWord, removeWord } = useCategories();
+    const { categories, words, addWord, removeWord, updateWord } = useCategories();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [cardsToRepeat, setCardsToRepeat] = useState<string>('');
@@ -18,11 +18,11 @@ const CategoryPage = () => {
     const categoryWords = words.filter(w => w.categoryId === categoryId);
 
     if (!categoryId) {
-        return <div>Категория не найдена</div>
+        return <div className={styles.not_found}>Категория не найдена</div>
     }
 
     if (!category) {
-        return <div>Категория не найдена</div>
+        return <div className={styles.not_found}>Категория не найдена</div>
     }
 
     const handleAddWord = (frontside: string, backside: string) => {
@@ -36,13 +36,6 @@ const CategoryPage = () => {
             navigate(`/review/${categoryId}?count=${count}`);
         }
     };
-
-    const handleEditWord = (wordId: string, frontside: string, backside: string) => {
-        const updateWords = words.map(word =>
-            word.id === wordId ? { ...word, frontside, backside } : word
-        );
-        setWords(updateWords)
-    }
 
     return (
         <div className={styles.container}>
@@ -62,7 +55,7 @@ const CategoryPage = () => {
                                 backside={word.backside}
                                 isEditing={isEditing}
                                 onDelete={() => removeWord(word.id)}
-                                onEdit={(frontside, backside) => handleEditWord(word.id, frontside, backside)}
+                                onEdit={(frontside, backside) => updateWord(word.id, frontside, backside)}
                             />
                         ))}
                     </ul>

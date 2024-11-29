@@ -4,20 +4,23 @@ import Input from '../input/Input';
 import Button from '../button/Button';
 
 interface IAddWordFormProps {
-    onSubmit: (frontside: string, backside: string) => void;
+    onSubmit: (frontside: string, backside: string, hintImageUrl: string) => void;
     onCancel: () => void;
 }
 
 const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel }) => {
     const [frontside, setFrontside] = useState<string>('');
     const [backside, setBackside] = useState<string>('');
+    const [hintImageUrl, setHintImageUrl] = useState<string>('');
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (frontside.trim() && backside.trim()) {
-            onSubmit(frontside, backside);
+            onSubmit(frontside, backside, hintImageUrl);
             setFrontside('');
             setBackside('');
+            setHintImageUrl('')
         }
     };
 
@@ -36,6 +39,12 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel }) => {
                 onChange={(e) => setBackside(e.target.value)}
                 placeholder='Введите обратную сторону'
                 required
+            />
+            <Input
+                title='Ссылка на картинку'
+                value={hintImageUrl}
+                onChange={(e) => setHintImageUrl(e.target.value)}
+                placeholder='Введите ссылку на картинку-подсказку'
             />
             <div className={styles.form_buttons}>
                 <Button text='Добавить' width='medium' />
