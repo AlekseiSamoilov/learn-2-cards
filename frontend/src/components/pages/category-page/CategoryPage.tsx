@@ -25,15 +25,23 @@ const CategoryPage = () => {
         return <div className={styles.not_found}>Категория не найдена</div>
     }
 
-    const handleAddWord = (frontside: string, backside: string) => {
-        addWord(categoryId, frontside, backside);
+    const handleAddWord = (frontside: string, backside: string, hintImageUrl?: string) => {
+        addWord(categoryId, frontside, backside, hintImageUrl);
         setShowAddForm(false)
     };
 
     const handleStartRepeat = () => {
         const count = parseInt(cardsToRepeat);
         if (count > 0 && count <= categoryWords.length) {
-            navigate(`/review/${categoryId}?count=${count}`);
+            const selectedCards = categoryWords.slice(0, count).map(word => ({
+                id: word.id,
+                frontside: word.frontside,
+                backside: word.backside,
+                totalShows: word.totalShows || 0,
+                correctAnswers: word.correctAnswers || 0,
+                hintImageUrl: word.hintImageUrl
+            }));
+            navigate(`review${categoryId}?count=${count}`, { state: { cards: selectedCards } });
         }
     };
 
@@ -54,8 +62,9 @@ const CategoryPage = () => {
                                 frontside={word.frontside}
                                 backside={word.backside}
                                 isEditing={isEditing}
+                                hintImageUrl={word.hintImageUrl}
                                 onDelete={() => removeWord(word.id)}
-                                onEdit={(frontside, backside) => updateWord(word.id, frontside, backside)}
+                                onEdit={(frontside, backside, hintImageUrl) => updateWord(word.id, frontside, backside, hintImageUrl)}
                             />
                         ))}
                     </ul>

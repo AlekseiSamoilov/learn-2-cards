@@ -6,9 +6,9 @@ interface ICategoryContext {
     words: IWord[];
     addCategory: (title: string) => void;
     removeCategory: (id: string) => void;
-    addWord: (categoryId: string, frontside: string, backside: string) => void;
+    addWord: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
     removeWord: (id: string) => void;
-    updateWord: (wordId: string, frontside: string, backside: string) => void;
+    updateWord: (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
 }
 
 const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
@@ -29,12 +29,13 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setWords(words.filter(word => word.categoryId !== id));
     };
 
-    const addWord = (categoryId: string, frontside: string, backside: string) => {
+    const addWord = (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => {
         const newWord: IWord = {
             id: Date.now().toString(),
             frontside,
             backside,
-            categoryId
+            categoryId,
+            hintImageUrl
         };
         setWords([...words, newWord]);
     };
@@ -43,8 +44,8 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setWords(words.filter(word => word.id !== id));
     };
 
-    const updateWord = (wordId: string, frontside: string, backside: string) => {
-        setWords(words.map(word => word.id === wordId ? { ...word, frontside, backside } : word));
+    const updateWord = (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => {
+        setWords(words.map(word => word.id === wordId ? { ...word, frontside, backside, hintImageUrl } : word));
     };
 
     return (

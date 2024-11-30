@@ -8,4 +8,5 @@ export interface IWord {
     frontside: string;
     backside: string;
     categoryId: string;
+    hintImageUrl?: string;
 }

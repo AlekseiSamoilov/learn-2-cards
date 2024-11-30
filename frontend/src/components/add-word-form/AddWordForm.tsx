@@ -4,14 +4,20 @@ import Input from '../input/Input';
 import Button from '../button/Button';
 
 interface IAddWordFormProps {
-    onSubmit: (frontside: string, backside: string, hintImageUrl: string) => void;
+    onSubmit: (frontside: string, backside: string, hintImageUrl?: string) => void;
     onCancel: () => void;
+    initialValues?: {
+        frontside: string;
+        backside: string;
+        hintImageUrl: string;
+    };
+    isEditing?: boolean;
 }
 
-const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel }) => {
-    const [frontside, setFrontside] = useState<string>('');
-    const [backside, setBackside] = useState<string>('');
-    const [hintImageUrl, setHintImageUrl] = useState<string>('');
+const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialValues, isEditing = false }) => {
+    const [frontside, setFrontside] = useState<string>(initialValues?.frontside || '');
+    const [backside, setBackside] = useState<string>(initialValues?.backside || '');
+    const [hintImageUrl, setHintImageUrl] = useState<string>(initialValues?.hintImageUrl || '');
 
 
     const handleSubmit = (e: React.FormEvent) => {

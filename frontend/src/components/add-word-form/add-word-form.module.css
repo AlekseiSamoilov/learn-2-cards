@@ -3,11 +3,16 @@
     flex-direction: column;
     margin-top: 10px;
     gap: 5px;
+    background-color: rgba(211, 178, 227, 1);
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid red;
 }
 
 .form_buttons {
     display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 5px;
+    margin-top: 5px;
     justify-content: flex-end;
 }
