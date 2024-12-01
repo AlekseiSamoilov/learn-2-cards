@@ -92,7 +92,10 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
             </AnimatePresence>
             {
                 isEditing && (
-                    <motion.div className={styles.word_action} layout>
+                    <motion.div className={styles.word_action} layout
+                        initial={{ opacity: 0.5, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: isEditing ? 1.2 : 1 }}
+                        transition={{ duration: 0.5 }}>
                         <button className={styles.edit_button} onClick={(e) => { e.stopPropagation(); setIsEditMode(true) }}>✎</button>
                         <button className={styles.delete_button} onClick={(e) => { e.stopPropagation(); onDelete() }}>✖</button>
                     </motion.div>

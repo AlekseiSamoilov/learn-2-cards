@@ -35,7 +35,9 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             frontside,
             backside,
             categoryId,
-            hintImageUrl
+            hintImageUrl,
+            totalShows: 0,
+            correctAnswers: 0,
         };
         setWords([...words, newWord]);
     };

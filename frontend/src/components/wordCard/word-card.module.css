@@ -1,5 +1,5 @@
 .container {
-    background-color: rgba(83, 134, 172, 1);
+    background-color: rgba(83, 134, 172, 0.9);
     padding: 10px;
     width: 100%;
     text-align: center;
@@ -12,6 +12,11 @@
     min-height: min-content;
     cursor: pointer;
     overflow: hidden;
+    /* transition: 0.2s ease all; */
+}
+
+.container:hover {
+    background-color: rgba(83, 134, 172, 1);
 }
 
 .word_container {

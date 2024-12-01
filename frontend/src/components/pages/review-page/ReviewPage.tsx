@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './review-page.module.css'
 import Button from '../../button/Button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 interface ICard {
     id: string;
@@ -13,41 +14,58 @@ interface ICard {
 }
 
 const ReviewPage = () => {
+    const { categoryId } = useParams<{ categoryId: string }>();
+    const location = useLocation();
+    const navigate = useNavigate();
     // const [numberOfCards, setNumberOfCards] = useState<number>(0);
     const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
     const [isStarted, setIsStarted] = useState<boolean>(false);
     const [isFlipped, setIsFlipped] = useState<boolean>(false);
     const [showHint, setShowHint] = useState<boolean>(false);
-    const [cards, setCards] = useState<ICard[]>([
-        {
-            id: '123',
-            frontside: 'Hello',
-            backside: 'World',
-            totalShows: 2,
-            correctAnswers: 2,
-            hintImageUrl: 'https://images.pexels.com/photos/2466778/pexels-photo-2466778.jpeg'
-        },
-        {
-            id: '124',
-            frontside: 'Every',
-            backside: 'Day',
-            totalShows: 2,
-            correctAnswers: 2,
-            hintImageUrl: 'https://www.pexels.com/ru-ru/photo/2466778/'
-        }]);
+    const { cards: initialCards } = location.state || { cards: [] };
+    const [cards, setCards] = useState<ICard[]>(initialCards);
+
+    useEffect(() => {
+        if (!location.state || !cards.length) {
+            navigate('/main')
+        }
+    }, [])
+
+    const handleAnswer = (isCorrect: boolean) => {
+        setCards(prevCards =>
+            prevCards.map((card, idx) =>
+                idx === currentCardIndex ? {
+                    ...card,
+                    totalShows: card.totalShows + 1,
+                    correctAnswers: isCorrect ? card.correctAnswers + 1 : card.correctAnswers
+                }
+                    : card)
+        );
+        handleNextCard();
+    }
 
     const handleFlip = () => {
         setIsFlipped(true);
         setShowHint(false)
     };
 
+    const handleSessionComplete = () => {
+        navigate('/result')
+    }
+
+    const handleBackToList = () => {
+        navigate(`/category/${categoryId}`)
+    }
+
     const handleNextCard = () => {
         if (currentCardIndex < cards.length - 1) {
             setCurrentCardIndex(prev => prev + 1);
             setIsFlipped(false);
             setShowHint(false);
+        } else {
+            handleSessionComplete();
         }
-    }
+    };
 
     const toggleHint = () => {
         setShowHint(prev => !prev);
@@ -133,7 +151,7 @@ const ReviewPage = () => {
                     </AnimatePresence>
                 </div>
             </motion.div >
-            <Button text='Назад к списку' width='large' />
+            <Button onClick={handleBackToList} text='Назад к списку' width='large' />
         </div >
     )
 }

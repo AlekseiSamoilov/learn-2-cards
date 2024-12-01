@@ -3,10 +3,15 @@ export interface ICategory {
     title: string;
 }
 
-export interface IWord {
+export interface IWordCreate {
     id: string;
     frontside: string;
     backside: string;
     categoryId: string;
     hintImageUrl?: string;
+}
+
+export interface IWord extends IWordCreate {
+    totalShows: number;
+    correctAnswers: number;
 }

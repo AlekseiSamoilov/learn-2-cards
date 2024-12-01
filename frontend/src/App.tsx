@@ -25,7 +25,7 @@ function App() {
           <Route path='/main' element={<MainPage />} />
           <Route path='/category/:categoryId' element={<CategoryPage />} />
           <Route path='/word' element={<WordPage />} />
-          <Route path='/review' element={<ReviewPage />} />
+          <Route path='/review/:categoryId' element={<ReviewPage />} />
           <Route path='/result' element={<ResultPage />} />
         </Routes>
       </CategoryProvider>

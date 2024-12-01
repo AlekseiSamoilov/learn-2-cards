@@ -37,11 +37,11 @@ const CategoryPage = () => {
                 id: word.id,
                 frontside: word.frontside,
                 backside: word.backside,
-                totalShows: word.totalShows || 0,
-                correctAnswers: word.correctAnswers || 0,
+                totalShows: word.totalShows,
+                correctAnswers: word.correctAnswers,
                 hintImageUrl: word.hintImageUrl
             }));
-            navigate(`review${categoryId}?count=${count}`, { state: { cards: selectedCards } });
+            navigate(`/review/${categoryId}`, { state: { cards: selectedCards } });
         }
     };
 
