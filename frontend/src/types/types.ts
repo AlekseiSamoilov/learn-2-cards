@@ -15,3 +15,9 @@ export interface IWord extends IWordCreate {
     totalShows: number;
     correctAnswers: number;
 }
+
+export interface IUser {
+    login: string;
+    password: string;
+    recoveryCode: string;
+}
