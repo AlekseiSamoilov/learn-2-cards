@@ -1,7 +1,7 @@
-import { title } from 'framer-motion/client';
 import React from 'react'
 import Modal from '../modal/modal';
 import styles from './confirm-modal.module.css'
+import Button from '../button/Button';
 
 interface IConfirmModalProps {
     isOpen: boolean;
@@ -28,9 +28,19 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({
         onClose();
     }
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={title, size = "small"}>
+        <Modal isOpen={isOpen} onClose={onClose} title={title} size="small">
             <div className={styles.container}>
-
+                <p className={styles.message}>{message}</p>
+                <div className={styles.button}>
+                    <Button text={confirmText}
+                        onClick={handleConfirm}
+                        width='medium'
+                    />
+                    <Button text={cancelText}
+                        onClick={onClose}
+                        width='medium'
+                    />
+                </div>
             </div>
         </Modal>
     )
