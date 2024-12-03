@@ -19,7 +19,7 @@ const MainPage = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.welcome}>Доброе утро, <span className={styles.user_name}>Алексей!</span></h1>
+            <h1 className={styles.welcome}>Доброе утро, <span className={styles.user_name}>lol</span></h1>
             {isEditing && (
                 <div className={styles.add_category}>
                     <Input

@@ -5,15 +5,23 @@ import styles from './login-page.module.css'
 import { loginValidationRules, passwordValidationRules } from '../../utils/validation-rules'
 import PasswordInput from '../../password-input/PasswordInput'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../hooks/useAuth'
 
 const LoginPage = () => {
-    const navigate = useNavigate()
-    const [login, setLogin] = useState<string>('');
+    const navigate = useNavigate();
+    const { login, error, isLoading } = useAuth();
+    const [loginValue, setLoginValue] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const handleSubmit = () => {
-        navigate('/main')
-    }
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await login({ login: loginValue, password });
+            navigate('/main');
+        } catch (err) {
+            console.error('Ошибка логина:', err);
+        }
+    };
 
     const handleRecoverPassword = () => {
         navigate('/recovery-password')
@@ -21,10 +29,11 @@ const LoginPage = () => {
 
     return (
         <div className={styles.container} >
+            {error && <div>{error}</div>}
             <Input
-                value={login}
+                value={loginValue}
                 title='Введите логин'
-                onChange={(e) => setLogin(e.target.value)}
+                onChange={(e) => setLoginValue(e.target.value)}
                 validationRules={loginValidationRules}
                 required
             />
@@ -35,8 +44,8 @@ const LoginPage = () => {
                 validationRules={passwordValidationRules}
                 required
             />
-            <Button onClick={handleSubmit} width='large' text='Далее' />
-            <Button onClick={handleRecoverPassword} width='large' text='Восстановить пароль' />
+            <Button onClick={handleSubmit} width='large' text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading} />
+            <Button onClick={handleRecoverPassword} width='large' text='Восстановить пароль' disabled={isLoading} />
         </div>
     )
 }

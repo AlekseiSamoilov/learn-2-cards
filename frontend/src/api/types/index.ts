@@ -15,15 +15,20 @@ export interface IResetPasswordRequest {
 }
 
 export interface IAuthResponse {
-    access_token: string;
     user: {
         id: string;
         login: string;
-        recoveryPassword: string;
+        recoveryCode: string;
     }
 }
 
 export interface IAuthError {
     message: string;
     statusCode: number;
+}
+
+export interface IBackendError {
+    statusCode: number;
+    message: string;
+    error?: string;
 }

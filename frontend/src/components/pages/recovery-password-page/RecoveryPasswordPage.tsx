@@ -4,7 +4,6 @@ import Button from '../../button/Button'
 import styles from './recovery-password-page.module.css'
 import { loginValidationRules, recoveryCodeValidationRules } from '../../utils/validation-rules'
 import { useNavigate } from 'react-router-dom'
-import { sub } from 'framer-motion/client'
 
 const RecoveryPasswordPage = () => {
     const navigate = useNavigate();

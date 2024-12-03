@@ -13,6 +13,9 @@ export class User {
     @Prop({ required: true })
     recoveryCode: string;
 
+    @Prop({ default: '' })
+    displayName: string;
+
     @Prop({ type: [{ type: Types.ObjectId, ref: 'Category' }] })
 
     @Prop({ default: Date.now })

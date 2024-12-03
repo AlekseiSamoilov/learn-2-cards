@@ -5,18 +5,33 @@ import styles from './registration-page.module.css'
 import Button from '../../button/Button';
 import { createConfirmPasswordRules, loginValidationRules, passwordValidationRules } from '../../utils/validation-rules';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 
 export default function RegistrationPage() {
     const navigate = useNavigate();
+    const { register, error, isLoading } = useAuth();
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('')
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (password !== confirmPassword) return;
 
-        navigate('/recovery-code');
+        try {
+            console.log('Attempting registration with:', { login, password });
+            const response = await register({ login, password });
+            console.log('Registration response:', response);
+            if (response?.user?.recoveryCode) {
+                navigate('/recovery-code', {
+                    state: { recoveryCode: response.user.recoveryCode }
+                });
+            } else {
+                console.log('Missing recovery code in response:', response);
+            }
+        } catch (err) {
+            console.error('Ошибка регистрации', err)
+        }
     };
 
 
@@ -47,7 +62,7 @@ export default function RegistrationPage() {
                 validationRules={createConfirmPasswordRules(password)}
                 required
             />
-            <Button width='large' onClick={handleSubmit} text='Далее' />
+            <Button width='large' onClick={handleSubmit} text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading || password !== confirmPassword} />
         </div>
     )
 }

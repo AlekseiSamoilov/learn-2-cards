@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
       <CategoryProvider>
         <Routes>
-          <Route path="/" element={<RegistrationPage />} />
+          <Route path="/register" element={<RegistrationPage />} />
           <Route path='/recovery-code' element={<RecoveryCodePage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/recovery-password' element={<RecoveryPasswordPage />} />

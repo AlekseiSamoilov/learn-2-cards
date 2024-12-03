@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { ILoginRequest, IRegisterRequest } from "../api/types";
+import { IBackendError, ILoginRequest, IRegisterRequest } from "../api/types";
 import { authService } from "../api/services/auth.service";
+import axios from "axios";
 
 export const useAuth = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -11,10 +12,14 @@ export const useAuth = () => {
             setIsLoading(true);
             setError(null);
             const response = await authService.login(credentials);
-            localStorage.setItem('token', response.access_token);
             return response;
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Произошла ошибка при входе');
+            if (axios.isAxiosError(err) && err.response?.data) {
+                const backendError = err.response.data as IBackendError;
+                setError(backendError.message);
+            } else {
+                setError('Произошла ошибка при входе');
+            }
             throw err;
         } finally {
             setIsLoading(false);
@@ -25,11 +30,19 @@ export const useAuth = () => {
         try {
             setIsLoading(true);
             setError(null);
+            console.log('Starting registration with:', userData);
             const response = await authService.register(userData);
-            localStorage.setItem('token', response.access_token);
+            console.log('Registration successful:', response);
             return response;
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Произошла ошибка при регистрации ');
+            console.log('Registration error in useAuth', err);
+            if (axios.isAxiosError(err) && err.response) {
+                const message = err.response.data.message || 'Registration error';
+                setError(message);
+                console.log('Ошибка при регистрации', message);
+            } else {
+                setError('Неизвестная ошибка при регистрации');
+            }
             throw err;
         } finally {
             setIsLoading(false);
