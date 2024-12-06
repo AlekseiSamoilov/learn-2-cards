@@ -24,5 +24,15 @@ export const userService = {
 
     async remove(id: string): Promise<void> {
         await api.delete(`/users/${id}`);
-    }
+    },
+
+    async getCurrentUser(): Promise<IUser> {
+        const response = await api.get('/users/me');
+        return response.data
+    },
+
+    async updateDisplayName(displayName: string): Promise<IUser> {
+        const response = await api.patch('/users/display-name', { displayName });
+        return response.data;
+    },
 };

@@ -1,9 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 import { CreateUserDto, UpdateUserDto } from "./dto";
 import { UsersService } from "./users.service";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { UserResourceGruard } from "src/common/user-resource.guard";
+
+interface IRequestWithUser extends Request {
+    user: {
+        id: string;
+        login: string;
+        displayName: string;
+    }
+}
 
 @Controller('users')
 export class UsersController {
@@ -48,5 +56,17 @@ export class UsersController {
     resetPassword(@Body() ResetPasswordDto: ResetPasswordDto) {
         const { login, recoveryCode, newPassword } = ResetPasswordDto;
         return this.userService.resetPassword(login, recoveryCode, newPassword);
+    }
+
+    @Get('me')
+    @UseGuards(JwtAuthGuard)
+    getMe(@Req() req: IRequestWithUser) {
+        return this, this.userService.findOne(req.user.id);
+    }
+
+    @Patch('display-name')
+    @UseGuards(JwtAuthGuard)
+    updateDisplayName(@Req() req: IRequestWithUser, @Body('displayName') displayName: string) {
+        return this.userService.update(req.user.id, { displayName });
     }
 }

@@ -18,7 +18,7 @@ const Modal: React.FC<IModalProps> = ({
 }) => {
     if (!isOpen) return null;
 
-    const handleOverlayClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
             onClose();
         }
