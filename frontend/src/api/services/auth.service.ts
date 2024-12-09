@@ -4,7 +4,10 @@ import { IAuthResponse, ILoginRequest, IRegisterRequest, IResetPasswordRequest }
 export const authService = {
     async login(data: ILoginRequest): Promise<IAuthResponse> {
         const response = await api.post<IAuthResponse>('/auth/login', data);
-        return response.data;
+        return {
+            token: response.data.token,
+            user: response.data.user
+        };
     },
 
     async register(data: IRegisterRequest): Promise<IAuthResponse> {
@@ -14,18 +17,11 @@ export const authService = {
             console.log('Raw registration data:', response.data);
 
             return {
-                user: {
-                    id: response.data._doc._id || response.data._id,
-                    login: response.data._doc.login || response.data.login,
-                    recoveryCode: response.data._doc.recoveryCode || response.data.recoveryCode
-                }
+                token: response.data.access_token,
+                user: response.data.user
             };
         } catch (error: any) {
-            console.log('Registration error details:', {
-                error: error,
-                status: error.response?.status,
-                data: error.response?.data
-            });
+            console.log('Registration error');
             throw error;
         }
     },

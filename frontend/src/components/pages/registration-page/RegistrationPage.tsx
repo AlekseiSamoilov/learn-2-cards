@@ -12,15 +12,21 @@ export default function RegistrationPage() {
     const { register, error, isLoading } = useAuth();
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('')
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [displayName, setDisplayName] = useState<string>('');
+    const [formError, setFormError] = useState<string>('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (password !== confirmPassword) return;
+        setFormError('');
+        if (password !== confirmPassword) {
+            setFormError('Пароли не совпадают');
+            return;
+        };
 
         try {
             console.log('Attempting registration with:', { login, password });
-            const response = await register({ login, password });
+            const response = await register({ login, password, displayName: displayName.trim() || login });
             console.log('Registration response:', response);
             if (response?.user?.recoveryCode) {
                 navigate('/recovery-code', {
@@ -46,6 +52,13 @@ export default function RegistrationPage() {
                 validationRules={loginValidationRules}
                 required
             />
+
+            <Input
+                onChange={(e) => setDisplayName(e.target.value)}
+                value={displayName}
+                title='Как вас называть?'
+                placeholder='Введите имя для отображения'
+            />
             <PasswordInput
                 title='Пароль'
                 value={password}
@@ -62,6 +75,9 @@ export default function RegistrationPage() {
                 validationRules={createConfirmPasswordRules(password)}
                 required
             />
+            {formError && (
+                <div className={styles.error_message}>{formError}</div>
+            )}
             <Button width='large' onClick={handleSubmit} text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading || password !== confirmPassword} />
         </div>
     )

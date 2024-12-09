@@ -12,6 +12,7 @@ export const useAuth = () => {
             setIsLoading(true);
             setError(null);
             const response = await authService.login(credentials);
+            localStorage.setItem('token', response.token);
             return response;
         } catch (err: any) {
             if (axios.isAxiosError(err) && err.response?.data) {
@@ -32,6 +33,7 @@ export const useAuth = () => {
             setError(null);
             console.log('Starting registration with:', userData);
             const response = await authService.register(userData);
+            localStorage.setItem('token', response.token);
             console.log('Registration successful:', response);
             return response;
         } catch (err: any) {

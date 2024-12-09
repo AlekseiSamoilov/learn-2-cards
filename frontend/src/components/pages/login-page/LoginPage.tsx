@@ -12,13 +12,29 @@ const LoginPage = () => {
     const { login, error, isLoading } = useAuth();
     const [loginValue, setLoginValue] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [formError, setFormError] = useState<string>('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFormError('');
+
         try {
-            await login({ login: loginValue, password });
-            navigate('/main');
+            if (!loginValue.trim() || !password.trim()) {
+                setFormError('Пожалуйста, заполните все поля');
+                return;
+            }
+
+            const response = await login({
+                login: loginValue,
+                password: password
+            });
+
+            if (response.token) {
+                localStorage.setItem('token', response.token);
+                navigate('/main');
+            }
         } catch (err) {
+            setFormError(error || 'Ошибка при входе');
             console.error('Ошибка логина:', err);
         }
     };
@@ -36,6 +52,7 @@ const LoginPage = () => {
                 onChange={(e) => setLoginValue(e.target.value)}
                 validationRules={loginValidationRules}
                 required
+                error={formError}
             />
             <PasswordInput
                 title='Введите пароль'
@@ -44,6 +61,9 @@ const LoginPage = () => {
                 validationRules={passwordValidationRules}
                 required
             />
+            {formError && (
+                <div className={styles.error_message}>{formError}</div>
+            )}
             <Button onClick={handleSubmit} width='large' text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading} />
             <Button onClick={handleRecoverPassword} width='large' text='Восстановить пароль' disabled={isLoading} />
         </div>

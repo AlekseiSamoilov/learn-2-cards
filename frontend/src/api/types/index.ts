@@ -15,10 +15,12 @@ export interface IResetPasswordRequest {
 }
 
 export interface IAuthResponse {
+    token: string;
     user: {
         id: string;
         login: string;
         recoveryCode: string;
+        displayName?: string;
     }
 }
 
