@@ -6,6 +6,7 @@ export interface ILoginRequest {
 export interface IRegisterRequest {
     login: string;
     password: string;
+    displayName: string;
 }
 
 export interface IResetPasswordRequest {

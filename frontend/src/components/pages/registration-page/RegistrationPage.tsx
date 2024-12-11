@@ -30,7 +30,10 @@ export default function RegistrationPage() {
             console.log('Registration response:', response);
             if (response?.user?.recoveryCode) {
                 navigate('/recovery-code', {
-                    state: { recoveryCode: response.user.recoveryCode }
+                    state: {
+                        recoveryCode: response.user.recoveryCode,
+                        login: response.user.login
+                    }
                 });
             } else {
                 console.log('Missing recovery code in response:', response);

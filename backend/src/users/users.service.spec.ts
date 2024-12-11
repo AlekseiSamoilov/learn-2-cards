@@ -49,6 +49,7 @@ describe('UsersService', () => {
         const createUserDto: CreateUserDto = {
             login: 'testUser',
             password: 'testPassword',
+            displayName: 'testuser',
         };
         it('should create a new user', async () => {
             const hashedPassword = 'hashedPassword';
@@ -100,6 +101,7 @@ describe('UsersService', () => {
             const createUserDto: CreateUserDto = {
                 login: 'existingUser',
                 password: 'testPassword',
+                displayName: 'testUser',
             };
 
             mockUserModel.create.mockRejectedValue({ code: 11000 });

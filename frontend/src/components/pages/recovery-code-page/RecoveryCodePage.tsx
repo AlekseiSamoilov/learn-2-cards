@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './recovery-code-page.module.css'
 import Button from '../../button/Button'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -7,7 +7,13 @@ const RecoveryCodePage = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const recoveryCode = location.state?.recoveryCode;
+    const { recoveryCode, login } = location.state || {};
+
+    useEffect(() => {
+        if (!recoveryCode) {
+            navigate('/register');
+        }
+    }, [recoveryCode, navigate]);
 
     const handleSaved = () => {
         navigate('/login')

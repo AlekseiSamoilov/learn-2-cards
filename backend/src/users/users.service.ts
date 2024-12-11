@@ -22,9 +22,10 @@ export class UsersService {
                 ...rest,
                 password: hashedPassword,
                 recoveryCode,
-            })
+            });
 
-            return await createdUser.save();
+            const savedUser = await createdUser.save();
+            return savedUser;
         } catch (error) {
             if (error.code === 11000) {
                 throw new BadRequestException('User with this login already exists');

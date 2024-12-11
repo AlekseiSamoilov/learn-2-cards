@@ -4,6 +4,8 @@ import { Document, Types } from "mongoose";
 export type UserDocument = User & Document;
 @Schema()
 export class User {
+    _id: Types.ObjectId;
+
     @Prop({ required: true, unique: true })
     login: string;
 

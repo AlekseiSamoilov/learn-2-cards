@@ -4,10 +4,7 @@ import { IAuthResponse, ILoginRequest, IRegisterRequest, IResetPasswordRequest }
 export const authService = {
     async login(data: ILoginRequest): Promise<IAuthResponse> {
         const response = await api.post<IAuthResponse>('/auth/login', data);
-        return {
-            token: response.data.token,
-            user: response.data.user
-        };
+        return response.data;
     },
 
     async register(data: IRegisterRequest): Promise<IAuthResponse> {
@@ -15,11 +12,7 @@ export const authService = {
         try {
             const response = await api.post<any>('/auth/register', data);
             console.log('Raw registration data:', response.data);
-
-            return {
-                token: response.data.access_token,
-                user: response.data.user
-            };
+            return response.data;
         } catch (error: any) {
             console.log('Registration error');
             throw error;
