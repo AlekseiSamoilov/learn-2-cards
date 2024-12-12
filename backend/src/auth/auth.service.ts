@@ -3,9 +3,8 @@ import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "src/users/users.service";
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from "src/users/dto";
-import { response } from "express";
 
-interface IAuthResponse {
+export interface IAuthResponse {
     token: string;
     user: {
         id: string;
@@ -25,14 +24,22 @@ export class AuthService {
     async validateUser(login: string, password: string): Promise<any> {
         const user = await this.userService.findByLogin(login);
         if (user && await bcrypt.compare(password, user.password)) {
-            const { password, ...result } = user;
+            const { password, ...result } = user.toObject();
             return result;
         }
         return null
     }
 
     async login(user: any) {
-        const payload = { login: user.login, sub: user.id };
+        console.log('Login user data:', user);
+
+        const payload = {
+            userId: user._id,
+            login: user.login,
+        };
+
+        console.log('Login payload:', payload);
+
         return {
             token: this.jwtService.sign(payload),
             user: {
@@ -47,10 +54,14 @@ export class AuthService {
     async register(createUserDto: CreateUserDto): Promise<IAuthResponse> {
         try {
             const userDoc = await this.userService.create(createUserDto);
-            const payload = { login: userDoc.login, sub: userDoc._id };
+            const payload = {
+                sub: userDoc._id,
+                login: userDoc.login,
+            }
+
             const token = this.jwtService.sign(payload);
 
-            const response: IAuthResponse = {
+            return {
                 token,
                 user: {
                     id: userDoc._id.toString(),
@@ -59,8 +70,6 @@ export class AuthService {
                     displayName: userDoc.displayName,
                 }
             };
-            console.log('Auth service response:', response);
-            return response;
         } catch (error) {
             if (error.code === 11000) {
                 throw new ConflictException('User with this login already exists');

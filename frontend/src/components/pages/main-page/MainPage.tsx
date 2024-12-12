@@ -11,7 +11,6 @@ const MainPage = () => {
     const { categories, addCategory, removeCategory } = useCategories();
     const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
-
     const [isNameModalOpen, setIsNameModalOpen] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState<string>('');
 
@@ -29,8 +28,8 @@ const MainPage = () => {
 
     const handleNameSave = async (newName: string) => {
         try {
-            await userService.updateDisplayName(newName);
-            setDisplayName(newName);
+            const updatedUser = await userService.updateDisplayName(newName);
+            setDisplayName(updatedUser.displayName || updatedUser.login);
         } catch (error) {
             console.log('Failed to update display name', error);
         }

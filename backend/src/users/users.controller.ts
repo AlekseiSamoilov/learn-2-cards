@@ -7,9 +7,9 @@ import { UserResourceGruard } from "src/common/user-resource.guard";
 
 interface IRequestWithUser extends Request {
     user: {
-        id: string;
+        userId: string;
         login: string;
-        displayName: string;
+        displayName?: string;
     }
 }
 
@@ -60,13 +60,18 @@ export class UsersController {
 
     @Get('me')
     @UseGuards(JwtAuthGuard)
-    getMe(@Req() req: IRequestWithUser) {
-        return this, this.userService.findOne(req.user.id);
+    async getCurrentUser(@Req() req: IRequestWithUser) {
+        console.log('Request user in getCurrentUser:', req.user);
+        const user = await this.userService.findOne(req.user.userId);
+        return user;
     }
 
     @Patch('display-name')
     @UseGuards(JwtAuthGuard)
-    updateDisplayName(@Req() req: IRequestWithUser, @Body('displayName') displayName: string) {
-        return this.userService.update(req.user.id, { displayName });
+    async updateDisplayName(
+        @Req() req: IRequestWithUser,
+        @Body('displayName') displayName: string
+    ) {
+        return this.userService.update(req.user.userId, { displayName })
     }
 }

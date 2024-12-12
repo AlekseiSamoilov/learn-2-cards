@@ -27,12 +27,24 @@ export const userService = {
     },
 
     async getCurrentUser(): Promise<IUser> {
-        const response = await api.get('/users/me');
-        return response.data
+        try {
+            const response = await api.get('/users/me');
+            console.log('getCurrentUser response:', response.data);
+            return response.data
+        } catch (error) {
+            console.error('getCurrentUser', error);
+            throw error;
+        }
     },
 
     async updateDisplayName(displayName: string): Promise<IUser> {
-        const response = await api.patch('/users/display-name', { displayName });
-        return response.data;
+        try {
+            const response = await api.patch('/users/display-name', { displayName });
+            console.log('Update display name response:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Update display name error:', error);
+            throw error;
+        }
     },
 };

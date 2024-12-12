@@ -25,10 +25,23 @@ export default function RegistrationPage() {
         };
 
         try {
-            console.log('Attempting registration with:', { login, password });
-            const response = await register({ login, password, displayName: displayName.trim() || login });
+            const registerData = {
+                login,
+                password,
+                displayName: displayName.trim() || login
+            };
+
+            console.log('Sending registration data:', registerData);
+
+            const response = await register(registerData);
             console.log('Registration response:', response);
-            if (response?.user?.recoveryCode) {
+
+            if (response && response.user && response.user.recoveryCode) {
+                console.log('Navigation to recovery code page with:', {
+                    recoveryCode: response.user.recoveryCode,
+                    login: response.user.login
+                });
+
                 navigate('/recovery-code', {
                     state: {
                         recoveryCode: response.user.recoveryCode,
@@ -36,7 +49,8 @@ export default function RegistrationPage() {
                     }
                 });
             } else {
-                console.log('Missing recovery code in response:', response);
+                console.log('Invalid response format:', response);
+                setFormError('Ошибка при регистрации, неверный формат ответа');
             }
         } catch (err) {
             console.error('Ошибка регистрации', err)
