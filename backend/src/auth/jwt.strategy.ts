@@ -1,12 +1,10 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigService } from "@nestjs/config";
 import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-
     constructor(private userService: UsersService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -16,25 +14,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-
+        console.log('1. JWT Strategy validate - payload:', payload);
+        console.log('2. JWT Strategy validate - payload.sub:', payload.sub);
         try {
-            console.log('JWT Payload:', payload);
-            if (!payload.userId) {
-                console.error('No sub in payload', payload);
-                throw new Error('No user id in token payload');
-            }
-            const user = await this.userService.findOne(payload.userId);
-            console.log('Found user:', user);
+            const user = await this.userService.findOne(payload.sub);
+            console.log('3. JWT Strategy validate - found user:', user);
 
             return {
-                id: user._id.toString(),
+                id: payload.sub,
                 login: user.login,
                 displayName: user.displayName
             };
-
         } catch (error) {
-            console.log('JWT validate error:', error);
-            throw error;
+            console.error('JWT validate error:', error);
+            throw new UnauthorizedException('Invalid token');
         }
     }
 }

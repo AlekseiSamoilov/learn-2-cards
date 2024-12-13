@@ -34,7 +34,7 @@ export class AuthService {
         console.log('Login user data:', user);
 
         const payload = {
-            userId: user._id,
+            sub: user._id.toString(),
             login: user.login,
         };
 
@@ -43,7 +43,7 @@ export class AuthService {
         return {
             token: this.jwtService.sign(payload),
             user: {
-                id: user._id,
+                id: user._id.toString(),
                 login: user.login,
                 recoveryCode: user.recoveryCode,
                 displayName: user.displayName,

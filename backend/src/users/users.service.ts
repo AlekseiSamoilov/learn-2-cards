@@ -43,18 +43,25 @@ export class UsersService {
     }
 
     async findOne(id: string): Promise<UserDocument> {
+        console.log('8. UsersService findOne - searching for id:', id);
         try {
-            console.log('findOne called with ID:', id);
-            const user = await this.userModel.findById(id);
-            if (!user) {
-                throw new NotFoundException(`User with id ${id} not found`)
+            if (!id) {
+                console.log('9. UsersService findOne - id is empty');
+                throw new BadRequestException('User ID is required');
             }
+
+            const user = await this.userModel.findById(id);
+            console.log('10. UsersService findOne - found user:', user);
+
+            if (!user) {
+                console.log('11. UsersService findOne - user not found');
+                throw new NotFoundException(`User with id ${id} not found`);
+            }
+
             return user;
         } catch (error) {
-            if (error instanceof NotFoundException) {
-                throw error
-            }
-            throw new InternalServerErrorException(`Failed to find user ${error.message}`)
+            console.error('12. UsersService findOne - error:', error);
+            throw error;
         }
     }
 

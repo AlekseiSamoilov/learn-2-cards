@@ -29,7 +29,8 @@ const MainPage = () => {
     const handleNameSave = async (newName: string) => {
         try {
             const updatedUser = await userService.updateDisplayName(newName);
-            setDisplayName(updatedUser.displayName || updatedUser.login);
+            setDisplayName(updatedUser.displayName);
+            setIsNameModalOpen(false);
         } catch (error) {
             console.log('Failed to update display name', error);
         }

@@ -46,5 +46,6 @@ export const userService = {
             console.error('Update display name error:', error);
             throw error;
         }
+
     },
 };

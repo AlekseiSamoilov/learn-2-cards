@@ -52,6 +52,10 @@ const NameModal: React.FC<INameModalProps> = ({
                         onClick={onClose}
                     />
                 </div>
+                <Button
+                    text='Выйти из аккаунта'
+                    width='large'
+                />
             </form>
         </Modal>
     )
