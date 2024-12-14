@@ -1,8 +1,3 @@
-export interface ICategory {
-    id: string;
-    title: string;
-}
-
 export interface IWordCreate {
     id: string;
     frontside: string;
