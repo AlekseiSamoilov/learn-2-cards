@@ -11,11 +11,24 @@ import NewPasswordPage from './components/pages/new-password-page/NewPasswordPag
 import ResultPage from './components/pages/result-page/ResultPage'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { CategoryProvider } from './components/context/categoryContext'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   return (
     <BrowserRouter>
       <CategoryProvider>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <Routes>
           <Route path="/register" element={<RegistrationPage />} />
           <Route path='/recovery-code' element={<RecoveryCodePage />} />

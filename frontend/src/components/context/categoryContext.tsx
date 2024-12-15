@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { IWord } from "../../types/types";
 import { ICategory } from "../../api/types/category.types";
 import { categoryService } from "../../api/services/category.service";
+import { toast } from "react-toastify";
 
 interface ICategoryContext {
     categories: ICategory[];
@@ -10,8 +11,9 @@ interface ICategoryContext {
     error: string | null;
     addCategory: (title: string) => Promise<void>;
     removeCategory: (id: string) => Promise<void>;
+    updateCategory: (id: string, title: string) => Promise<void>;
     addWord: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
-    removeWord: (id: string) => Promise<void>;
+    removeWord: (id: string) => void;
     updateWord: (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
 }
 
@@ -21,7 +23,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [words, setWords] = useState<IWord[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [erro, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         fetchCategories();
@@ -31,7 +33,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         try {
             setIsLoading(true);
             setError(null);
-            const fetchedCategories = await categoryService.getAllCaegories();
+            const fetchedCategories = await categoryService.getAllCategories();
             setCategories(fetchedCategories);
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to fetch categories';
@@ -42,18 +44,56 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
     };
 
-    const addCategory = (title: string) => {
-        const newCategory: ICategory = {
-            _id: Date.now().toString(),
-            title
-        };
-        setCategories([...categories, newCategory]);
+    const addCategory = async (title: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const newCategory = await categoryService.createCategory({ title });
+            setCategories(prev => [...prev, newCategory]);
+            toast.success('Категория успешно создана');
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Failed to create category';
+            setError(errorMessage);
+            toast.error(errorMessage);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const removeCategory = (id: string) => {
-        setCategories(categories.filter(cat => cat._id !== id));
-        setWords(words.filter(word => word.categoryId !== id));
+    const removeCategory = async (id: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            await categoryService.deleteCategory(id);
+            setCategories(prev => prev.filter(cat => cat._id !== id));
+            setWords(prev => prev.filter(word => word.categoryId !== id));
+            toast.success('Категория успешно удалена');
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Failed to delete category';
+            setError(errorMessage);
+            toast.error(errorMessage)
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
+
+    const updateCategory = async (id: string, title: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const updatedCategory = await categoryService.updateCategory(id, { title });
+            setCategories(prev => prev.map(cat => cat._id === id ? updatedCategory : cat));
+            toast.success('Категория успешно обновлена');
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Failed to update category';
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const addWord = (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => {
         const newWord: IWord = {
@@ -80,8 +120,11 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         <CategoryContext.Provider value={{
             categories,
             words,
+            isLoading,
+            error,
             addCategory,
             removeCategory,
+            updateCategory,
             addWord,
             removeWord,
             updateWord

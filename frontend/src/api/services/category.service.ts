@@ -7,8 +7,8 @@ export const categoryService = {
         return response.data;
     },
 
-    async getAllCaegories(): Promise<ICategory> {
-        const response = await api.get<ICategory>('/categories');
+    async getAllCategories(): Promise<ICategory[]> {
+        const response = await api.get<ICategory[]>('/categories');
         return response.data;
     },
 

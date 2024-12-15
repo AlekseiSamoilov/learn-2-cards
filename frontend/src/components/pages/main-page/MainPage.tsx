@@ -68,10 +68,10 @@ const MainPage = () => {
             <div className={styles.category_list}>
                 {categories.map(category => (
                     <Category
-                        key={category.id}
-                        id={category.id}
+                        key={category._id}
+                        id={category._id}
                         title={category.title}
-                        onDelete={isEditing ? () => removeCategory(category.id) : undefined} />
+                        onDelete={isEditing ? () => removeCategory(category._id) : undefined} />
                 ))}
             </div>
             <Button
