@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 import { CategoriesService } from "./categories.service";
 import { CreateCategoryDto } from "./dto/create-categoty.dto";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
@@ -9,8 +9,9 @@ export class CategoriesController {
     constructor(private readonly categoryService: CategoriesService) { }
 
     @Post()
-    create(@Body() createCategoryDto: CreateCategoryDto, userId: string) {
-        return this.categoryService.create(createCategoryDto, userId);
+    create(@Body() createCategoryDto: CreateCategoryDto, @Req() req) {
+        console.log(`categories controller logs:`, req)
+        return this.categoryService.create(createCategoryDto, req.user.id);
     }
 
     @Get()

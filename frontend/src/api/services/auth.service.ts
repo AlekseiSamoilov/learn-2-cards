@@ -8,10 +8,8 @@ export const authService = {
     },
 
     async register(data: IRegisterRequest): Promise<IAuthResponse> {
-        console.log('Sending registration data:', data);
         try {
             const response = await api.post<any>('/auth/register', data);
-            console.log('Raw registration data:', response.data);
             return response.data;
         } catch (error: any) {
             console.log('Registration error');

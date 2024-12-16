@@ -31,12 +31,8 @@ export class UsersController {
     @Get('me')
     @UseGuards(JwtAuthGuard)
     async getMe(@Req() req: any) {
-        console.log('4. UsersController getMe - full request:', req);
-        console.log('5. UsersController getMe - req.user:', req.user);
-
         try {
             const user = await this.userService.findOne(req.user.id);
-            console.log('6. UsersController getMe - found user:', user);
 
             return {
                 id: user._id.toString(),
@@ -45,7 +41,6 @@ export class UsersController {
                 recoveryCode: user.recoveryCode
             };
         } catch (error) {
-            console.error('7. GetMe error:', error);
             throw new UnauthorizedException('User not found');
         }
     }

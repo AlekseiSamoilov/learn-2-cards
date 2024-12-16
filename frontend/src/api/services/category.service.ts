@@ -3,31 +3,64 @@ import { ICategory, ICreateCategoryDto, IUpdateCategoryDto } from "../types/cate
 
 export const categoryService = {
     async createCategory(data: ICreateCategoryDto): Promise<ICategory> {
-        const response = await api.post<ICategory>('/categories', data);
-        return response.data;
+        try {
+            const response = await api.post<ICategory>('/categories', data);
+            return response.data;
+        } catch (error: any) {
+            console.error('Create category error:', error);
+            throw error;
+        }
     },
 
     async getAllCategories(): Promise<ICategory[]> {
-        const response = await api.get<ICategory[]>('/categories');
-        return response.data;
+        try {
+            const response = await api.get<ICategory[]>('/categories');
+            return response.data;
+        } catch (error: any) {
+            console.error('Get category error', error);
+            throw error;
+        }
+
     },
 
     async getCategoryById(id: string): Promise<ICategory> {
-        const response = await api.get<ICategory>(`/categories/${id}`);
-        return response.data;
+        try {
+            const response = await api.get<ICategory>(`/categories/${id}`);
+            return response.data;
+        } catch (error: any) {
+            console.error('Get category error', error);
+            throw error;
+        }
     },
 
     async updateCategory(id: string, data: IUpdateCategoryDto): Promise<ICategory> {
-        const response = await api.patch<ICategory>(`/categories/${id}`, data);
-        return response.data;
+        try {
+            const response = await api.patch<ICategory>(`/categories/${id}`, data);
+            return response.data;
+        } catch (error: any) {
+            console.error('Update category error', error);
+            throw error;
+        }
     },
 
     async deleteCategory(id: string): Promise<void> {
-        await api.delete(`/categories/${id}`);
+        try {
+            await api.delete(`/categories/${id}`);
+        } catch (error: any) {
+            console.error('Delete category error', error);
+            throw error;
+        }
+
     },
 
     async getAllUserCategories(userId: string): Promise<ICategory[]> {
-        const response = await api.get<ICategory[]>(`/categories/user/${userId}`);
-        return response.data;
+        try {
+            const response = await api.get<ICategory[]>(`/categories/user/${userId}`);
+            return response.data;
+        } catch (error: any) {
+            console.error('Error get categories', error);
+            throw error;
+        }
+
     },
 }

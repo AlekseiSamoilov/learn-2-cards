@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './main-page.module.css'
 import Category from '../../category/Category'
 import Button from '../../button/Button'
@@ -6,25 +6,32 @@ import { useCategories } from '../../context/categoryContext'
 import Input from '../../input/Input'
 import { userService } from '../../../api/services/user.service'
 import NameModal from '../../name-modal/NameModal'
+import { toast } from 'react-toastify'
 
 const MainPage = () => {
-    const { categories, addCategory, removeCategory } = useCategories();
+    const { categories, addCategory, removeCategory, isLoading, error, initializeCategories } = useCategories();
     const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isNameModalOpen, setIsNameModalOpen] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState<string>('');
 
+    const fetchUserData = async () => {
+        try {
+            const userData = await userService.getCurrentUser();
+            setDisplayName(userData.displayName || userData.login);
+        } catch (error) {
+            console.log('Failed to fetch user data', error);
+        }
+    };
+    fetchUserData();
+
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userData = await userService.getCurrentUser();
-                setDisplayName(userData.displayName || userData.login);
-            } catch (error) {
-                console.log('Failed to fetch user data', error);
-            }
-        };
-        fetchUserData();
-    }, []);
+        const token = localStorage.getItem('token');
+        if (token) {
+            initializeCategories();
+            fetchUserData();
+        }
+    }, [initializeCategories]);
 
     const handleNameSave = async (newName: string) => {
         try {
@@ -36,10 +43,19 @@ const MainPage = () => {
         }
     };
 
-    const handleAddCategory = () => {
-        if (newCategoryTitle.trim()) {
-            addCategory(newCategoryTitle);
+    const handleAddCategory = async () => {
+        if (!newCategoryTitle.trim()) {
+            toast.error('Необходимо ввести имя категории');
+            return;
+        }
+        try {
+            await addCategory(newCategoryTitle.trim());
             setNewCategoryTitle('');
+            toast.success('Категория успешно создана');
+        } catch (error: any) {
+            error.response?.data?.message || 'Failed to create category';
+            toast.error(error);
+            console.error('Create category error', error)
         }
     };
 

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { IWord } from "../../types/types";
 import { ICategory } from "../../api/types/category.types";
 import { categoryService } from "../../api/services/category.service";
@@ -9,6 +9,7 @@ interface ICategoryContext {
     words: IWord[];
     isLoading: boolean;
     error: string | null;
+    initializeCategories: () => Promise<void>;
     addCategory: (title: string) => Promise<void>;
     removeCategory: (id: string) => Promise<void>;
     updateCategory: (id: string, title: string) => Promise<void>;
@@ -25,31 +26,36 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        fetchCategories();
-    }, []);
+    const initializeCategories = useCallback(async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
-    const fetchCategories = async () => {
         try {
             setIsLoading(true);
             setError(null);
             const fetchedCategories = await categoryService.getAllCategories();
             setCategories(fetchedCategories);
         } catch (error: any) {
+            if (error.response?.status === 401) {
+                setCategories([]);
+                return;
+            }
             const errorMessage = error.response?.data?.message || 'Failed to fetch categories';
-            setError(errorMessage);
+            setError(errorMessage)
             toast.error(errorMessage);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     const addCategory = async (title: string) => {
         try {
             setIsLoading(true);
+            console.log(`categories controller logs:`, title)
             setError(null);
             const newCategory = await categoryService.createCategory({ title });
             setCategories(prev => [...prev, newCategory]);
+            console.log(categories)
             toast.success('Категория успешно создана');
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to create category';
@@ -122,6 +128,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             words,
             isLoading,
             error,
+            initializeCategories,
             addCategory,
             removeCategory,
             updateCategory,

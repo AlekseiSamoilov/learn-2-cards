@@ -16,4 +16,5 @@ export interface IUpdateCategoryDto {
 
 export interface ICategoriesReponse {
     categories: ICategory[];
+    message?: string;
 }
