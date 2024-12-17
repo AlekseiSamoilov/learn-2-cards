@@ -18,3 +18,11 @@ export interface ICategoriesReponse {
     categories: ICategory[];
     message?: string;
 }
+
+export interface ICategoryResponse {
+    _id: string;
+    title: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+}

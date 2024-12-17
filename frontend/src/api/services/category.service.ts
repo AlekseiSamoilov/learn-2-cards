@@ -1,10 +1,18 @@
 import api from "../instance";
-import { ICategory, ICreateCategoryDto, IUpdateCategoryDto } from "../types/category.types";
+import { ICategory, ICreateCategoryDto, IUpdateCategoryDto, ICategoryResponse } from "../types/category.types";
 
 export const categoryService = {
     async createCategory(data: ICreateCategoryDto): Promise<ICategory> {
         try {
-            const response = await api.post<ICategory>('/categories', data);
+            // Отправляем данные как объект, а не как JSON строку
+            const requestData = {
+                title: data.title
+            };
+
+            // Проверяем формат данных
+            console.log('Request data:', requestData);
+
+            const response = await api.post<ICategoryResponse>('/categories', requestData);
             return response.data;
         } catch (error: any) {
             console.error('Create category error:', error);
@@ -20,7 +28,6 @@ export const categoryService = {
             console.error('Get category error', error);
             throw error;
         }
-
     },
 
     async getCategoryById(id: string): Promise<ICategory> {
