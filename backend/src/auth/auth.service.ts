@@ -74,4 +74,8 @@ export class AuthService {
             throw error;
         }
     }
+
+    async logout(userId: string): Promise<{ message: string }> {
+        return { message: 'Successfully logged out' };
+    }
 }

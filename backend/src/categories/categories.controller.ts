@@ -9,6 +9,7 @@ export class CategoriesController {
     constructor(private readonly categoryService: CategoriesService) { }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     async create(@Body() createCategoryDto: CreateCategoryDto, @Req() req) {
         console.log('Creating category with DTO:', createCategoryDto);
         console.log('User from request:', req.user);

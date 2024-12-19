@@ -3,6 +3,9 @@ import Modal from '../modal/modal';
 import styles from './name-modal.module.css'
 import Input from '../input/Input';
 import Button from '../button/Button';
+import { authService } from '../../api/services/auth.service';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface INameModalProps {
     isOpen: boolean;
@@ -18,6 +21,7 @@ const NameModal: React.FC<INameModalProps> = ({
     initialName = ''
 }) => {
     const [name, setName] = useState<string>(initialName);
+    const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,6 +30,17 @@ const NameModal: React.FC<INameModalProps> = ({
             onClose();
         }
     };
+
+    const handleLogout = async () => {
+        try {
+            await authService.logout();
+            navigate('/login');
+            toast.success('Вы успешно вышли из аккаунта');
+        } catch (error) {
+            console.error('Logout error:', error);
+            toast.error('Произошла ошибка при выходе из аккаунта');
+        }
+    }
 
     return (
         <Modal
@@ -55,6 +70,7 @@ const NameModal: React.FC<INameModalProps> = ({
                 <Button
                     text='Выйти из аккаунта'
                     width='large'
+                    onClick={handleLogout}
                 />
             </form>
         </Modal>

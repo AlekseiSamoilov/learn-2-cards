@@ -19,5 +19,16 @@ export const authService = {
 
     async resetPassword(data: IResetPasswordRequest): Promise<void> {
         await api.post('/users/reset-password', data);
+    },
+
+    async logout(): Promise<void> {
+        try {
+            await api.post('/auth/logout');
+            localStorage.removeItem('token');
+        } catch (error) {
+            console.log('Logout error:', error);
+            localStorage.removeItem('token');
+            throw error;
+        }
     }
 };

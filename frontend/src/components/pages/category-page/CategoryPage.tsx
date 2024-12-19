@@ -14,7 +14,7 @@ const CategoryPage = () => {
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [cardsToRepeat, setCardsToRepeat] = useState<string>('');
 
-    const category = categories.find(c => c.id === categoryId);
+    const category = categories.find(c => c._id === categoryId);
     const categoryWords = words.filter(w => w.categoryId === categoryId);
 
     if (!categoryId) {

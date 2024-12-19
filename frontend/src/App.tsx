@@ -12,6 +12,7 @@ import ResultPage from './components/pages/result-page/ResultPage'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { CategoryProvider } from './components/context/categoryContext'
 import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
           draggable
           pauseOnHover
           theme="light"
+          style={{
+            fontSize: '14px',
+            maxWidth: '200px'
+          }}
         />
         <Routes>
           <Route path="/register" element={<RegistrationPage />} />
