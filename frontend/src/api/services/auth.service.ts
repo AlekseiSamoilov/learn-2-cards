@@ -1,5 +1,5 @@
 import api from "../instance";
-import { IAuthResponse, ILoginRequest, IRegisterRequest, IResetPasswordRequest } from "../types";
+import { IAuthResponse, ILoginRequest, IRegisterRequest, IResetPasswordRequest, IResetPasswordResponse } from "../types";
 
 export const authService = {
     async login(data: ILoginRequest): Promise<IAuthResponse> {
@@ -17,8 +17,14 @@ export const authService = {
         }
     },
 
-    async resetPassword(data: IResetPasswordRequest): Promise<void> {
-        await api.post('/users/reset-password', data);
+    async resetPassword(data: IResetPasswordRequest): Promise<IResetPasswordResponse> {
+        try {
+            const response = await api.post<IResetPasswordResponse>('/users/reset-password', data);
+            return response.data;
+        } catch (error: any) {
+            console.error('Password reset error:', error);
+            throw error;
+        }
     },
 
     async logout(): Promise<void> {

@@ -31,7 +31,11 @@ export const createConfirmPasswordRules = (compareWith: string): TValidationRule
 
 export const recoveryCodeValidationRules: TValidationRule[] = [
     {
-        validate: (value: string) => value.length >= 5,
-        errorMessage: 'Код для должен быть длинее 5 символов'
+        validate: (value: string) => value.length >= 6,
+        errorMessage: 'Код должен содержать 6 символов'
+    },
+    {
+        validate: (value: string) => /^[A-Z0-9]+$/.test(value),
+        errorMessage: 'Код должен содержаь только заглавные буквы и цифры'
     }
-]
+];
