@@ -47,9 +47,15 @@ export class UsersController {
 
 
     @Post('reset-password')
-    resetPassword(@Body() ResetPasswordDto: ResetPasswordDto) {
+    async esetPassword(@Body() ResetPasswordDto: ResetPasswordDto) {
         const { login, recoveryCode, newPassword } = ResetPasswordDto;
-        return this.userService.resetPassword(login, recoveryCode, newPassword);
+        await this.userService.resetPassword(login, recoveryCode, newPassword);
+        const updatedUser = await this.userService.findByLogin(login);
+
+        return {
+            recoveryCode: updatedUser.recoveryCode,
+            message: 'Password has benn reset successfully'
+        }
     }
 
     @Patch('display-name')

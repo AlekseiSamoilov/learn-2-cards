@@ -28,21 +28,28 @@ const RecoveryPasswordPage = () => {
                 recoveryCode,
                 newPassword
             });
-
-            navigate('/recovery-code', {
-                state: {
-                    recoveryCode: response.recoveryCode,
-                    login: login,
-                    formReset: true
-                }
-            });
-            toast.success('Пароль успешно изменен');
+            if (response && response.recoveryCode) {
+                navigate('/recovery-code', {
+                    state: {
+                        recoveryCode: response.recoveryCode,
+                        login: login,
+                    },
+                    replace: true
+                });
+                toast.success('Пароль успешно изменен');
+            } else {
+                throw new Error('No recovery code in response');
+            }
         } catch (error: any) {
             const message = error.response?.data?.message || 'Ошибка при восстановлении пароля';
             toast.error(message);
         } finally {
             setIsLoading(false);
         }
+    }
+
+    const handleReturnToTheLogin = () => {
+        navigate('/login');
     }
 
     return (
@@ -66,6 +73,8 @@ const RecoveryPasswordPage = () => {
                 placeholder='Введите новый пароль'
             />
             <Button onClick={submitNewPassword} width='large' text='Сменить пароль' />
+            <Button onClick={handleReturnToTheLogin} width='large' text='Вернуться на страницу авторизации' />
+
         </div>
     )
 }

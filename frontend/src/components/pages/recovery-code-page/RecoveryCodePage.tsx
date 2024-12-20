@@ -10,18 +10,17 @@ const RecoveryCodePage = () => {
     const { recoveryCode, login } = location.state || {};
 
     useEffect(() => {
-        if (!recoveryCode) {
+        if (!recoveryCode && location.state) {
             navigate('/register');
         }
-    }, [recoveryCode, navigate]);
+    }, [recoveryCode, navigate, location.state]);
 
     const handleSaved = () => {
         navigate('/login')
     }
 
-    if (!recoveryCode) {
-        navigate('/login');
-        return null;
+    if (!location.state || !recoveryCode) {
+        return <div>Loading...</div>
     }
     return (
         <div className={styles.container}>
