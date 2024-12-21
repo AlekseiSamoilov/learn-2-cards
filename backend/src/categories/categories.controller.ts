@@ -11,10 +11,7 @@ export class CategoriesController {
     @Post()
     @UseGuards(JwtAuthGuard)
     async create(@Body() createCategoryDto: CreateCategoryDto, @Req() req) {
-        console.log('Creating category with DTO:', createCategoryDto);
-        console.log('User from request:', req.user);
         const result = await this.categoryService.create(createCategoryDto, req.user.id);
-        console.log('Category created:', result);
 
         if (!req.user || !req.user.id) {
             throw new Error('User not auth');

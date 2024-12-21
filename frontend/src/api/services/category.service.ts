@@ -4,13 +4,9 @@ import { ICategory, ICreateCategoryDto, IUpdateCategoryDto, ICategoryResponse } 
 export const categoryService = {
     async createCategory(data: ICreateCategoryDto): Promise<ICategory> {
         try {
-            // Отправляем данные как объект, а не как JSON строку
             const requestData = {
-                title: data.title
+                title: data.title,
             };
-
-            // Проверяем формат данных
-            console.log('Request data:', requestData);
 
             const response = await api.post<ICategoryResponse>('/categories', requestData);
             return response.data;

@@ -3,6 +3,8 @@ import { IWord } from "../../types/types";
 import { ICategory } from "../../api/types/category.types";
 import { categoryService } from "../../api/services/category.service";
 import { toast } from "react-toastify";
+import { ICard } from "../../api/types/card.types";
+import { cardService } from "../../api/services/card.service";
 
 interface ICategoryContext {
     categories: ICategory[];
@@ -13,7 +15,7 @@ interface ICategoryContext {
     addCategory: (title: string) => Promise<void>;
     removeCategory: (id: string) => Promise<void>;
     updateCategory: (id: string, title: string) => Promise<void>;
-    addWord: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
+    addCard: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => Promise<void>;
     removeWord: (id: string) => void;
     updateWord: (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
 }
@@ -22,6 +24,7 @@ const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
 
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [categories, setCategories] = useState<ICategory[]>([]);
+    const [cards, setCards] = useState<ICard[]>([]);
     const [words, setWords] = useState<IWord[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -101,17 +104,39 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
     }
 
-    const addWord = (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => {
-        const newWord: IWord = {
-            id: Date.now().toString(),
-            frontside,
-            backside,
-            categoryId,
-            hintImageUrl,
-            totalShows: 0,
-            correctAnswers: 0,
-        };
-        setWords([...words, newWord]);
+    // const addCategory = async (title: string) => {
+    //     try {
+    //         setIsLoading(true);
+    //         setError(null);
+    //         const newCategory = await categoryService.createCategory({ title });
+    //         setCategories(prev => [...prev, newCategory]);
+    //         console.log(categories)
+    //         toast.success('Категория успешно создана');
+    //     } catch (error: any) {
+    //         const errorMessage = error.response?.data?.message || 'Failed to create category';
+    //         setError(errorMessage);
+    //         toast.error(errorMessage);
+    //         throw error;
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
+
+    const addCard = async (id: string, frontside: string, backside: string, hintImageUrl?: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const newCard = await cardService.createCard({ id, frontside, backside });
+            setCards(prev => [...prev, newCard]);
+            console.log(cards);
+            toast.success('Карточка успешно создана');
+        } catch (error: any) {
+            const errorMessage = error.reponse?.data?.message || 'Fail to create card';
+            toast.error(errorMessage);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const removeWord = (id: string) => {
@@ -132,7 +157,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             addCategory,
             removeCategory,
             updateCategory,
-            addWord,
+            addCard,
             removeWord,
             updateWord
         }}>

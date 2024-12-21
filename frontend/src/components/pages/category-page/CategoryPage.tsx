@@ -5,11 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useCategories } from '../../context/categoryContext';
 import AddWordForm from '../../add-word-form/AddWordForm';
 import WordCard from '../../wordCard/WordCard';
+import { toast } from 'react-toastify';
 
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
     const navigate = useNavigate();
-    const { categories, words, addWord, removeWord, updateWord } = useCategories();
+    const { categories, words, addCard, removeWord, updateWord } = useCategories();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [cardsToRepeat, setCardsToRepeat] = useState<string>('');
@@ -25,9 +26,19 @@ const CategoryPage = () => {
         return <div className={styles.not_found}>Категория не найдена</div>
     }
 
-    const handleAddWord = (frontside: string, backside: string, hintImageUrl?: string) => {
-        addWord(categoryId, frontside, backside, hintImageUrl);
-        setShowAddForm(false)
+    const handleAddCard = async (id: string, frontside: string, backside: string, hintImageUrl?: string) => {
+        // if (!frontside.trim() || !backside.trim()) {
+        //     toast.error('Необходимо заполнить обе стороны карточки');
+        //     return;
+        // }
+        try {
+            await addCard(frontside, backside, id);
+            toast.success('Карточка успешно создана');
+        } catch (error: any) {
+            error.response?.data?.message || 'Failed to create card';
+            toast.error(error);
+            console.error('Create card error:', error)
+        }
     };
 
     const handleStartRepeat = () => {
@@ -50,7 +61,7 @@ const CategoryPage = () => {
             <h1 className={styles.title}>{category.title}</h1>
             {showAddForm ? (
                 <AddWordForm
-                    onSubmit={handleAddWord}
+                    onSubmit={handleAddCard}
                     onCancel={() => setShowAddForm(false)}
                 />
             ) : (
