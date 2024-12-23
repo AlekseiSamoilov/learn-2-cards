@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './category-page.module.css';
 import Button from '../../button/Button';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -6,34 +6,59 @@ import { useCategories } from '../../context/categoryContext';
 import AddWordForm from '../../add-word-form/AddWordForm';
 import WordCard from '../../wordCard/WordCard';
 import { toast } from 'react-toastify';
+import { ICategory } from '../../../api/types/category.types';
 
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
     const navigate = useNavigate();
-    const { categories, words, addCard, removeWord, updateWord } = useCategories();
+    const { categories, words, addCard, removeWord, updateWord, loadCategoryCards, initializeCategories } = useCategories();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [cardsToRepeat, setCardsToRepeat] = useState<string>('');
+    // const [category, setCategory] = useState<ICategory | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const category = categories.find(c => c._id === categoryId);
     const categoryWords = words.filter(w => w.categoryId === categoryId);
 
-    if (!categoryId) {
+    useEffect(() => {
+        const loadData = async () => {
+            setIsLoading(true);
+            await initializeCategories();
+            setIsLoading(false);
+        };
+        loadData();
+    }, []);
+
+    useEffect(() => {
+        if (!isLoading && categoryId && categories.length > 0) {
+            const currentCategory = categories.find(c => c._id === categoryId);
+            if (currentCategory) {
+                loadCategoryCards(categoryId);
+            }
+        }
+    }, [categoryId, categories, isLoading]);
+
+    if (isLoading) {
         return <div className={styles.not_found}>Категория не найдена</div>
     }
 
+    const category = categories.find(c => c._id === categoryId);
     if (!category) {
         return <div className={styles.not_found}>Категория не найдена</div>
     }
 
-    const handleAddCard = async (id: string, frontside: string, backside: string, hintImageUrl?: string) => {
-        // if (!frontside.trim() || !backside.trim()) {
-        //     toast.error('Необходимо заполнить обе стороны карточки');
-        //     return;
-        // }
+    const handleAddCard = async (frontside: string, backside: string, hintImageUrl?: string) => {
+        if (!categoryId) {
+            toast.error('Category ID is missing');
+            return;
+        }
+
         try {
-            await addCard(frontside, backside, id);
+            console.log('Creating card in category:', categoryId);
+            await addCard(frontside, backside, categoryId, hintImageUrl);
             toast.success('Карточка успешно создана');
+            console.log('Loading cards for category:', categoryId)
+            await loadCategoryCards('Карточка успешно создана');
         } catch (error: any) {
             error.response?.data?.message || 'Failed to create card';
             toast.error(error);

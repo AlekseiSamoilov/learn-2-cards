@@ -15,8 +15,6 @@ api.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
-        // Для отладки
-        console.log('Request headers:', config.headers);
         return config;
     },
     (error) => {

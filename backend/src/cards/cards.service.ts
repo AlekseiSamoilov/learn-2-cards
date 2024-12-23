@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Card } from "./card.schema";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
@@ -78,7 +78,12 @@ export class CardsService {
     }
     async findByCategory(categoryId: string): Promise<Card[]> {
         try {
+            if (!Types.ObjectId.isValid(categoryId)) {
+                throw new BadRequestException(`Invalid category ID format: ${categoryId}`);
+            }
+
             const findedCards = await this.cardModel.find({ categoryId: new Types.ObjectId(categoryId) });
+
             if (!findedCards) {
                 throw new NotFoundException(`Cards in the category with id: ${categoryId}, not found`)
             }

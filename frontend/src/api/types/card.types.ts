@@ -1,5 +1,4 @@
 export interface ICard {
-    _id: string;
     frontside: string;
     backside: string;
     categoryId: string;
@@ -11,11 +10,9 @@ export interface ICard {
 }
 
 export interface ICreateCardDto {
-    id: string;
     frontside: string;
     backside: string;
     imageUrl?: string;
-    // categoryId: string;
 }
 
 export interface IUpdateCardDto extends ICreateCardDto {

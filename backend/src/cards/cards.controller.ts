@@ -9,7 +9,7 @@ import { UpdateCardDto } from "./dto/update-card.dto";
 export class CardController {
     constructor(private readonly cardSerivce: CardsService) { }
 
-    @Post('":categoryId')
+    @Post(':categoryId')
     create(@Body() createCardDto: CreateCardDto, @Request() req, @Param('categoryId') categoryId: string) {
         return this.cardSerivce.create(createCardDto, req.user.userId, categoryId);
     }

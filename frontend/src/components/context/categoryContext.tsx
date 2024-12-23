@@ -15,7 +15,8 @@ interface ICategoryContext {
     addCategory: (title: string) => Promise<void>;
     removeCategory: (id: string) => Promise<void>;
     updateCategory: (id: string, title: string) => Promise<void>;
-    addCard: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => Promise<void>;
+    addCard: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => Promise<ICard>;
+    loadCategoryCards: (categoryId: string) => Promise<void>;
     removeWord: (id: string) => void;
     updateWord: (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
 }
@@ -49,6 +50,10 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         } finally {
             setIsLoading(false);
         }
+    }, []);
+
+    useEffect(() => {
+        initializeCategories();
     }, []);
 
     const addCategory = async (title: string) => {
@@ -104,36 +109,41 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
     }
 
-    // const addCategory = async (title: string) => {
-    //     try {
-    //         setIsLoading(true);
-    //         setError(null);
-    //         const newCategory = await categoryService.createCategory({ title });
-    //         setCategories(prev => [...prev, newCategory]);
-    //         console.log(categories)
-    //         toast.success('Категория успешно создана');
-    //     } catch (error: any) {
-    //         const errorMessage = error.response?.data?.message || 'Failed to create category';
-    //         setError(errorMessage);
-    //         toast.error(errorMessage);
-    //         throw error;
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
-
-    const addCard = async (id: string, frontside: string, backside: string, hintImageUrl?: string) => {
+    const addCard = async (frontside: string, backside: string, categoryId: string, hintImageUrl?: string) => {
         try {
             setIsLoading(true);
             setError(null);
-            const newCard = await cardService.createCard({ id, frontside, backside });
-            setCards(prev => [...prev, newCard]);
-            console.log(cards);
+            const newCard = await cardService.createCard({ frontside, backside, imageUrl: hintImageUrl }, categoryId);
+            await loadCategoryCards(categoryId);
+            // setCards(prev => [...prev, newCard]);
             toast.success('Карточка успешно создана');
+            return newCard;
         } catch (error: any) {
             const errorMessage = error.reponse?.data?.message || 'Fail to create card';
             toast.error(errorMessage);
             throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const loadCategoryCards = async (categoryId: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            if (!categoryId) {
+                console.error('No category ID provided');
+                return;
+            }
+
+            console.log('Loading cards for category: ', categoryId)
+            const categoryCards = await cardService.getCardsByCategory(categoryId);
+            setCards(categoryCards);
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Failed to load cards';
+            setError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -159,7 +169,8 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             updateCategory,
             addCard,
             removeWord,
-            updateWord
+            updateWord,
+            loadCategoryCards
         }}>
             {children}
         </CategoryContext.Provider>
