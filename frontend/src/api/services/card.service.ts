@@ -17,8 +17,10 @@ export const cardService = {
     async createCard(data: ICreateCardDto, categoryId: string): Promise<ICard> {
         try {
             const requestData = {
-                ...data,
-                categoryId
+                frontside: data.frontside,
+                backside: data.backside,
+                categoryId,
+                ...(data.imageUrl && { imageUrl: data.imageUrl })
             };
 
             const response = await api.post<ICardResponse>(`/cards/${categoryId}`, requestData);
