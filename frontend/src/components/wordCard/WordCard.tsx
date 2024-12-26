@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './word-card.module.css'
-import Input from '../input/Input';
-import Button from '../button/Button';
+// import Input from '../input/Input';
+// import Button from '../button/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import AddWordForm from '../add-word-form/AddWordForm';
 

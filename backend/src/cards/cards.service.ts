@@ -79,7 +79,7 @@ export class CardsService {
     async findByCategory(categoryId: string): Promise<Card[]> {
         try {
             if (!Types.ObjectId.isValid(categoryId)) {
-                throw new BadRequestException(`Invalid category ID format: ${categoryId}`);
+                throw new BadRequestException(`Invalid category ID format from if block cards.service.ts: ${categoryId}`);
             }
 
             const findedCards = await this.cardModel.find({ categoryId: new Types.ObjectId(categoryId) });
@@ -92,7 +92,7 @@ export class CardsService {
             if (error instanceof NotFoundException) {
                 throw error
             }
-            throw new InternalServerErrorException(`Failed to find cards: ${error.message}`);
+            throw new InternalServerErrorException(`Failed to find cards from cards.service.ts: ${error.message}`);
         }
     }
 

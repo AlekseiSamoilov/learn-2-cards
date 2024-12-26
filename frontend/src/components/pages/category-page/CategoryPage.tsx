@@ -6,19 +6,17 @@ import { useCategories } from '../../context/categoryContext';
 import AddWordForm from '../../add-word-form/AddWordForm';
 import WordCard from '../../wordCard/WordCard';
 import { toast } from 'react-toastify';
-import { ICategory } from '../../../api/types/category.types';
 
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
     const navigate = useNavigate();
-    const { categories, words, addCard, removeWord, updateWord, loadCategoryCards, initializeCategories } = useCategories();
+    const { categories, cards, addCard, removeWord, updateCard, loadCategoryCards, initializeCategories } = useCategories();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [cardsToRepeat, setCardsToRepeat] = useState<string>('');
-    // const [category, setCategory] = useState<ICategory | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const categoryWords = words.filter(w => w.categoryId === categoryId);
+    const categoryCards = cards.filter(w => w.categoryId === categoryId);
 
     useEffect(() => {
         const loadData = async () => {
@@ -49,7 +47,7 @@ const CategoryPage = () => {
 
     const handleAddCard = async (frontside: string, backside: string, hintImageUrl?: string) => {
         if (!categoryId) {
-            toast.error('Category ID is missing');
+            toast.error('Category Id is missing');
             return;
         }
 
@@ -58,7 +56,7 @@ const CategoryPage = () => {
             await addCard(frontside, backside, categoryId, hintImageUrl);
             toast.success('Карточка успешно создана');
             console.log('Loading cards for category:', categoryId)
-            await loadCategoryCards('Карточка успешно создана');
+            await loadCategoryCards(categoryId);
         } catch (error: any) {
             error.response?.data?.message || 'Failed to create card';
             toast.error(error);
@@ -68,14 +66,14 @@ const CategoryPage = () => {
 
     const handleStartRepeat = () => {
         const count = parseInt(cardsToRepeat);
-        if (count > 0 && count <= categoryWords.length) {
-            const selectedCards = categoryWords.slice(0, count).map(word => ({
-                id: word.id,
-                frontside: word.frontside,
-                backside: word.backside,
-                totalShows: word.totalShows,
-                correctAnswers: word.correctAnswers,
-                hintImageUrl: word.hintImageUrl
+        if (count > 0 && count <= categoryCards.length) {
+            const selectedCards = categoryCards.slice(0, count).map(card => ({
+                id: card.id,
+                frontside: card.frontside,
+                backside: card.backside,
+                totalShows: card.totalShows,
+                correctAnswers: card.correctAnswers,
+                hintImageUrl: card.imageUrl
             }));
             navigate(`/review/${categoryId}`, { state: { cards: selectedCards } });
         }
@@ -84,6 +82,7 @@ const CategoryPage = () => {
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>{category.title}</h1>
+
             {showAddForm ? (
                 <AddWordForm
                     onSubmit={handleAddCard}
@@ -92,25 +91,26 @@ const CategoryPage = () => {
             ) : (
                 <>
                     <ul className={styles.words_list}>
-                        {categoryWords.map(word => (
+                        {categoryCards.map(card => (
                             <WordCard
-                                key={word.id}
-                                frontside={word.frontside}
-                                backside={word.backside}
+                                key={card.id}
+                                frontside={card.frontside}
+                                backside={card.backside}
                                 isEditing={isEditing}
-                                hintImageUrl={word.hintImageUrl}
-                                onDelete={() => removeWord(word.id)}
-                                onEdit={(frontside, backside, hintImageUrl) => updateWord(word.id, frontside, backside, hintImageUrl)}
+                                hintImageUrl={card.imageUrl}
+                                onDelete={() => removeWord(card.id)}
+                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card.id, frontside, backside, hintImageUrl)}
                             />
                         ))}
                     </ul>
                     <div className={styles.repeat_container}>
+                        <p className={styles.subtitle}>Карточек в категории: {categoryCards.length}</p>
                         <p className={styles.repeat_title}>Сколько карточек повторим?</p>
                         <input
                             className={styles.repeat_input}
                             type='number'
                             min='1'
-                            max={categoryWords.length}
+                            max={categoryCards.length}
                             value={cardsToRepeat}
                             onChange={(e) => setCardsToRepeat(e.target.value)}
                         />
@@ -118,7 +118,7 @@ const CategoryPage = () => {
                             text='Начать'
                             width='large'
                             onClick={handleStartRepeat}
-                            disabled={!cardsToRepeat || categoryWords.length === 0}
+                            disabled={!cardsToRepeat || categoryCards.length === 0}
                         />
                     </div>
                 </>

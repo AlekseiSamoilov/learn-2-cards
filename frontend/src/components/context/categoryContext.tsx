@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { IWord } from "../../types/types";
 import { ICategory } from "../../api/types/category.types";
 import { categoryService } from "../../api/services/category.service";
 import { toast } from "react-toastify";
@@ -8,7 +7,7 @@ import { cardService } from "../../api/services/card.service";
 
 interface ICategoryContext {
     categories: ICategory[];
-    words: IWord[];
+    cards: ICard[];
     isLoading: boolean;
     error: string | null;
     initializeCategories: () => Promise<void>;
@@ -18,7 +17,7 @@ interface ICategoryContext {
     addCard: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => Promise<ICard>;
     loadCategoryCards: (categoryId: string) => Promise<void>;
     removeWord: (id: string) => void;
-    updateWord: (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
+    updateCard: (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => void;
 }
 
 const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
@@ -26,7 +25,6 @@ const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [cards, setCards] = useState<ICard[]>([]);
-    const [words, setWords] = useState<IWord[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +62,6 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             const newCategory = await categoryService.createCategory({ title });
             setCategories(prev => [...prev, newCategory]);
             console.log(categories)
-            toast.success('Категория успешно создана');
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to create category';
             setError(errorMessage);
@@ -81,7 +78,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             setError(null);
             await categoryService.deleteCategory(id);
             setCategories(prev => prev.filter(cat => cat._id !== id));
-            setWords(prev => prev.filter(word => word.categoryId !== id));
+            setCards(prev => prev.filter(card => card.categoryId !== id));
             toast.success('Категория успешно удалена');
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to delete category';
@@ -114,9 +111,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             setIsLoading(true);
             setError(null);
             const newCard = await cardService.createCard({ frontside, backside, imageUrl: hintImageUrl }, categoryId);
-            await loadCategoryCards(categoryId);
-            // setCards(prev => [...prev, newCard]);
-            toast.success('Карточка успешно создана');
+            setCards(prev => [...prev, newCard]);
             return newCard;
         } catch (error: any) {
             const errorMessage = error.reponse?.data?.message || 'Fail to create card';
@@ -150,17 +145,17 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     const removeWord = (id: string) => {
-        setWords(words.filter(word => word.id !== id));
+        setCards(cards.filter(card => card.id !== id));
     };
 
-    const updateWord = (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => {
-        setWords(words.map(word => word.id === wordId ? { ...word, frontside, backside, hintImageUrl } : word));
+    const updateCard = (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => {
+        setCards(cards.map(card => card.id === wordId ? { ...card, frontside, backside, hintImageUrl } : card));
     };
 
     return (
         <CategoryContext.Provider value={{
             categories,
-            words,
+            cards,
             isLoading,
             error,
             initializeCategories,
@@ -169,7 +164,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             updateCategory,
             addCard,
             removeWord,
-            updateWord,
+            updateCard,
             loadCategoryCards
         }}>
             {children}
