@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styles from './review-page.module.css'
 import Button from '../../button/Button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import CardSelectionService from '../../../api/services/cardsSelection.service';
 
 interface ICard {
     id: string;
@@ -11,61 +12,110 @@ interface ICard {
     totalShows: number;
     correctAnswers: number;
     hintImageUrl?: string;
+    categoryId: string;
 }
 
 const ReviewPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
+    const { name } = useParams<{ name: string }>();
     const location = useLocation();
     const navigate = useNavigate();
-    // const [numberOfCards, setNumberOfCards] = useState<number>(0);
-    const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
-    const [isStarted, setIsStarted] = useState<boolean>(false);
+    const [currentCard, setCurrentCard] = useState<ICard | null>(null);
     const [isFlipped, setIsFlipped] = useState<boolean>(false);
     const [showHint, setShowHint] = useState<boolean>(false);
+    const [reviewedCards, setReviewedCards] = useState<Set<string>>(new Set());
     const { cards: initialCards } = location.state || { cards: [] };
     const [cards, setCards] = useState<ICard[]>(initialCards);
 
+    const cardSelectionService = useMemo(() => new CardSelectionService(), []);
+
+    const selectNextCards = () => {
+        const availableCards = cards.filter(card => !reviewedCards.has(card.id));
+        if (availableCards.length === 0) {
+            navigate('/result', {
+                state: {
+                    stats: cards.map(card => cardSelectionService.getCardsStats(card))
+                }
+            });
+            return;
+        }
+
+        const nextCards = cardSelectionService.getNextCard(availableCards);
+        setCurrentCard(nextCards);
+        setIsFlipped(false);
+        setShowHint(false);
+    };
+
     useEffect(() => {
         if (!location.state || !cards.length) {
-            navigate('/main')
+            navigate('/main');
+            return;
         }
-    }, [])
+        selectNextCards();
+    }, []);
 
-    const handleAnswer = (isCorrect: boolean) => {
-        setCards(prevCards =>
-            prevCards.map((card, idx) =>
-                idx === currentCardIndex ? {
+    const handleAnswer = async (isCorrect: boolean) => {
+        if (!currentCard) return;
+
+        const updatedCards = cards.map(card =>
+            card.id === currentCard.id
+                ? {
                     ...card,
                     totalShows: card.totalShows + 1,
                     correctAnswers: isCorrect ? card.correctAnswers + 1 : card.correctAnswers
                 }
-                    : card)
+                : card
         );
-        handleNextCard();
-    }
+        setCards(updatedCards);
+
+        setReviewedCards(prev => new Set(prev).add(currentCard.id));
+
+        selectNextCards();
+    };
+
+    if (!currentCard) return null;
+
+    // useEffect(() => {
+    //     if (!location.state || !cards.length) {
+    //         navigate('/main')
+    //     }
+    // }, [])
+
+    // const handleAnswer = (isCorrect: boolean) => {
+    //     setCards(prevCards =>
+    //         prevCards.map((card, idx) =>
+    //             idx === currentCardIndex ? {
+    //                 ...card,
+    //                 totalShows: card.totalShows + 1,
+    //                 correctAnswers: isCorrect ? card.correctAnswers + 1 : card.correctAnswers
+    //             }
+    //                 : card)
+    //     );
+    //     handleNextCard();
+    // }
 
     const handleFlip = () => {
         setIsFlipped(true);
         setShowHint(false)
     };
 
-    const handleSessionComplete = () => {
-        navigate('/result')
-    }
+    // const handleSessionComplete = () => {
+    //     navigate('/result')
+    // }
 
     const handleBackToList = () => {
         navigate(`/category/${categoryId}`)
     }
 
-    const handleNextCard = () => {
-        if (currentCardIndex < cards.length - 1) {
-            setCurrentCardIndex(prev => prev + 1);
-            setIsFlipped(false);
-            setShowHint(false);
-        } else {
-            handleSessionComplete();
-        }
-    };
+    // const handleNextCard = () => {
+    //     if (currentCardIndex < cards.length - 1) {
+    //         setCurrentCardIndex(prev => prev + 1);
+    //         setIsFlipped(false);
+    //         setShowHint(false);
+    //     } else {
+    //         handleSessionComplete();
+    //     }
+    // };
 
     const toggleHint = () => {
         setShowHint(prev => !prev);
@@ -74,19 +124,19 @@ const ReviewPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.title}>Слова</h1>
-                <div className={styles.progress}>{currentCardIndex + 1} из {cards.length}</div>
+                <h1 className={styles.title}>{name}</h1>
+                <div className={styles.progress}>{reviewedCards.size} из {cards.length}</div>
             </div>
             <motion.div
                 className={styles.card_container}
-                key={currentCardIndex}
+                key={currentCard.id}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2, type: 'spring', bounce: 0.3 }}
             >
                 <div className={styles.front_side}>
-                    {cards[currentCardIndex].frontside}
+                    {currentCard.frontside}
                     <AnimatePresence>
                         {showHint && (
                             <motion.div
@@ -97,7 +147,7 @@ const ReviewPage = () => {
                                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                             >
                                 <img
-                                    src={cards[currentCardIndex].hintImageUrl}
+                                    src={currentCard.hintImageUrl}
                                     alt='Подсказка'
                                     className={styles.hint_image}
                                 />
@@ -122,7 +172,7 @@ const ReviewPage = () => {
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                                 >
-                                    {cards[currentCardIndex].backside}
+                                    {currentCard.backside}
                                 </motion.div>
                                 <motion.div
                                     className={styles.buttons}
@@ -131,8 +181,8 @@ const ReviewPage = () => {
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3, ease: 'easeInOut', type: 'spring', bounce: 0.4 }}
                                 >
-                                    <Button onClick={handleNextCard} text='Правильно' width='medium' />
-                                    <Button onClick={handleNextCard} text='Неправильно' width='medium' />
+                                    <Button onClick={() => handleAnswer(true)} text='Правильно' width='medium' />
+                                    <Button onClick={() => handleAnswer(false)} text='Неправильно' width='medium' />
                                 </motion.div>
                             </motion.div>
                         ) : (

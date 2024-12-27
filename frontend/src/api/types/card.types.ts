@@ -6,8 +6,8 @@ export interface ICard {
     totalShows: number;
     correctAnswers: number;
     imageUrl?: string;
-    createdAt: string;
-    updatedAt: string;
+    // createdAt: string;
+    // updatedAt: string;
 }
 
 export interface ICreateCardDto {

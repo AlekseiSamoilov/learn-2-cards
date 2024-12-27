@@ -63,7 +63,9 @@ export class CategoriesService {
 
     async findAllByUserId(userId: string): Promise<Category[]> {
         try {
-            return await this.categoryModel.findById(userId)
+            return await this.categoryModel.find({
+                userId: new Types.ObjectId(userId)
+            })
         } catch (error) {
             throw new InternalServerErrorException(`Failed to found categories for user ${error.message}`)
         }

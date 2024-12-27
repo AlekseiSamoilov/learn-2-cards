@@ -54,7 +54,7 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
             />
             <div className={styles.form_buttons}>
                 <Button text='Добавить' width='medium' />
-                <Button text='Отмена' onClick={onCancel} width='medium' />
+                <Button text='Закончить' onClick={onCancel} width='medium' />
             </div>
         </form>
     )

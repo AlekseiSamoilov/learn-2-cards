@@ -57,6 +57,10 @@ export default function RegistrationPage() {
         }
     };
 
+    const goToLoginPage = () => {
+        navigate('/login');
+    }
+
 
     return (
         <div className={styles.container}>
@@ -73,7 +77,7 @@ export default function RegistrationPage() {
             <Input
                 onChange={(e) => setDisplayName(e.target.value)}
                 value={displayName}
-                title='Как вас называть?'
+                title='Введите имя'
                 placeholder='Введите имя для отображения'
             />
             <PasswordInput
@@ -96,6 +100,8 @@ export default function RegistrationPage() {
                 <div className={styles.error_message}>{formError}</div>
             )}
             <Button width='large' onClick={handleSubmit} text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading || password !== confirmPassword} />
+            <p>Уже зарегистрированы?</p>
+            <Button width='large' onClick={goToLoginPage} text='Войти' disabled={isLoading} />
         </div>
     )
 }

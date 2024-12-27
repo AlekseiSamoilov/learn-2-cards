@@ -6,6 +6,7 @@ import { useCategories } from '../../context/categoryContext';
 import AddWordForm from '../../add-word-form/AddWordForm';
 import WordCard from '../../wordCard/WordCard';
 import { toast } from 'react-toastify';
+import LoadingSpinner from '../../loading-spinner/LoadingSpinner';
 
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
@@ -37,7 +38,7 @@ const CategoryPage = () => {
     }, [categoryId, categories, isLoading]);
 
     if (isLoading) {
-        return <div className={styles.not_found}>Категория не найдена</div>
+        return <div><LoadingSpinner /></div >
     }
 
     const category = categories.find(c => c._id === categoryId);
@@ -52,10 +53,8 @@ const CategoryPage = () => {
         }
 
         try {
-            console.log('Creating card in category:', categoryId);
             await addCard(frontside, backside, categoryId, hintImageUrl);
             toast.success('Карточка успешно создана');
-            console.log('Loading cards for category:', categoryId)
             await loadCategoryCards(categoryId);
         } catch (error: any) {
             error.response?.data?.message || 'Failed to create card';

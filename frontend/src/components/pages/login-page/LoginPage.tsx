@@ -43,6 +43,10 @@ const LoginPage = () => {
         navigate('/recovery-password')
     }
 
+    const goToRegistrationPage = () => {
+        navigate('/register')
+    }
+
     return (
         <div className={styles.container} >
             {error && <div>{error}</div>}
@@ -61,11 +65,11 @@ const LoginPage = () => {
                 validationRules={passwordValidationRules}
                 required
             />
-            {formError && (
-                <div className={styles.error_message}>{formError}</div>
-            )}
-            <Button onClick={handleSubmit} width='large' text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading} />
-            <Button onClick={handleRecoverPassword} width='large' text='Восстановить пароль' disabled={isLoading} />
+            <div className={styles.buttons_container}>
+                <Button onClick={handleSubmit} width='large' text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading} />
+                <Button onClick={handleRecoverPassword} width='large' text='Восстановить пароль' disabled={isLoading} />
+            </div>
+            <Button onClick={goToRegistrationPage} width='large' text='Регистрация' disabled={isLoading} />
         </div>
     )
 }
