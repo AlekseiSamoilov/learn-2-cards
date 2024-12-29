@@ -30,4 +30,27 @@ export const cardService = {
             throw error;
         }
     },
+
+    async incrementTotalShows(cardId: string): Promise<ICard> {
+        try {
+            const response = await api.patch<ICardResponse>(`/cards/${cardId}/shows`);
+            return response.data;
+        } catch (error) {
+            console.error('Patch card total shows error:', error);
+            throw error;
+        }
+    },
+
+    async incrementCorrectAnswers(cardId: string): Promise<ICard> {
+
+        try {
+            console.log('Card ID before request:', cardId);
+            const response = await api.patch<ICardResponse>(`/cards/${cardId}/correct`);
+            console.log('Response:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Patch card correct answers error:', error);
+            throw error;
+        }
+    }
 }

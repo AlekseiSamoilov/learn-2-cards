@@ -145,11 +145,11 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     const removeWord = (id: string) => {
-        setCards(cards.filter(card => card.id !== id));
+        setCards(cards.filter(card => card._id !== id));
     };
 
     const updateCard = (wordId: string, frontside: string, backside: string, hintImageUrl?: string) => {
-        setCards(cards.map(card => card.id === wordId ? { ...card, frontside, backside, hintImageUrl } : card));
+        setCards(cards.map(card => card._id === wordId ? { ...card, frontside, backside, hintImageUrl } : card));
     };
 
     return (

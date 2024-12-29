@@ -18,6 +18,9 @@ const CategoryPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const categoryCards = cards.filter(w => w.categoryId === categoryId);
+    console.log("categoryCards:", categoryCards)
+
+
 
     useEffect(() => {
         const loadData = async () => {
@@ -67,14 +70,20 @@ const CategoryPage = () => {
         const count = parseInt(cardsToRepeat);
         if (count > 0 && count <= categoryCards.length) {
             const selectedCards = categoryCards.slice(0, count).map(card => ({
-                id: card.id,
+                _id: card._id,
                 frontside: card.frontside,
                 backside: card.backside,
                 totalShows: card.totalShows,
                 correctAnswers: card.correctAnswers,
                 hintImageUrl: card.imageUrl
             }));
-            navigate(`/review/${categoryId}`, { state: { cards: selectedCards } });
+            console.log('selectedCards', selectedCards)
+            navigate(`/review/${categoryId}`, {
+                state: {
+                    cards: selectedCards,
+                    cardsToRepeat: count
+                }
+            });
         }
     };
 
@@ -92,13 +101,13 @@ const CategoryPage = () => {
                     <ul className={styles.words_list}>
                         {categoryCards.map(card => (
                             <WordCard
-                                key={card.id}
+                                key={card._id}
                                 frontside={card.frontside}
                                 backside={card.backside}
                                 isEditing={isEditing}
                                 hintImageUrl={card.imageUrl}
-                                onDelete={() => removeWord(card.id)}
-                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card.id, frontside, backside, hintImageUrl)}
+                                onDelete={() => removeWord(card._id)}
+                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card._id, frontside, backside, hintImageUrl)}
                             />
                         ))}
                     </ul>

@@ -2,11 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import styles from './review-page.module.css'
 import Button from '../../button/Button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { isCookie, useLocation, useNavigate, useParams } from 'react-router-dom';
 import CardSelectionService from '../../../api/services/cardsSelection.service';
+import { cardService } from '../../../api/services/card.service';
 
 interface ICard {
-    id: string;
+    _id: string;
     frontside: string;
     backside: string;
     totalShows: number;
@@ -24,27 +25,39 @@ const ReviewPage = () => {
     const [isFlipped, setIsFlipped] = useState<boolean>(false);
     const [showHint, setShowHint] = useState<boolean>(false);
     const [reviewedCards, setReviewedCards] = useState<Set<string>>(new Set());
-    const { cards: initialCards } = location.state || { cards: [] };
+    const { cards: initialCards, cardsToReview } = location.state || { cards: [], cardsToReview: 0 };
     const [cards, setCards] = useState<ICard[]>(initialCards);
+    const [studyStats, setStudyStats] = useState<{
+        totalAnswers: number;
+        correctAnswers: number;
+    }>({ totalAnswers: 0, correctAnswers: 0 });
 
     const cardSelectionService = useMemo(() => new CardSelectionService(), []);
 
+    console.log('Initial cards:', initialCards); // Добавьте для отладки
+
     const selectNextCards = () => {
-        const availableCards = cards.filter(card => !reviewedCards.has(card.id));
-        if (availableCards.length === 0) {
+        const availableCards = cards.filter(card => !reviewedCards.has(card._id));
+
+        if (reviewedCards.size >= cardsToReview || availableCards.length === 0) {
             navigate('/result', {
                 state: {
-                    stats: cards.map(card => cardSelectionService.getCardsStats(card))
+                    stats: {
+                        totalAnswers: studyStats.totalAnswers,
+                        correctAnswers: studyStats.correctAnswers,
+                        successRate: (studyStats.correctAnswers / studyStats.totalAnswers) * 100
+                    }
                 }
             });
             return;
         }
-
         const nextCards = cardSelectionService.getNextCard(availableCards);
         setCurrentCard(nextCards);
         setIsFlipped(false);
         setShowHint(false);
-    };
+    }
+
+
 
     useEffect(() => {
         if (!location.state || !cards.length) {
@@ -57,65 +70,43 @@ const ReviewPage = () => {
     const handleAnswer = async (isCorrect: boolean) => {
         if (!currentCard) return;
 
-        const updatedCards = cards.map(card =>
-            card.id === currentCard.id
-                ? {
-                    ...card,
-                    totalShows: card.totalShows + 1,
-                    correctAnswers: isCorrect ? card.correctAnswers + 1 : card.correctAnswers
-                }
-                : card
-        );
-        setCards(updatedCards);
+        try {
+            if (isCorrect) {
+                await cardService.incrementCorrectAnswers(currentCard._id);
+            } else {
+                await cardService.incrementTotalShows(currentCard._id);
+            }
 
-        setReviewedCards(prev => new Set(prev).add(currentCard.id));
+            const updatedCards = cards.map(card => card._id === currentCard._id ? {
+                ...card,
+                totalShows: card.totalShows + 1,
+                correctAnswers: isCorrect ? card.correctAnswers + 1 : card.correctAnswers
+            } : card);
+            setCards(updatedCards);
 
-        selectNextCards();
+            setStudyStats(prev => ({
+                totalAnswers: prev.totalAnswers + 1,
+                correctAnswers: isCorrect ? prev.correctAnswers + 1 : prev.correctAnswers
+            }));
+
+            setReviewedCards(prev => new Set(prev).add(currentCard._id));
+            selectNextCards();
+        } catch (error) {
+            console.error('Failed to update card statistics: error');
+            throw error;
+        }
     };
 
     if (!currentCard) return null;
-
-    // useEffect(() => {
-    //     if (!location.state || !cards.length) {
-    //         navigate('/main')
-    //     }
-    // }, [])
-
-    // const handleAnswer = (isCorrect: boolean) => {
-    //     setCards(prevCards =>
-    //         prevCards.map((card, idx) =>
-    //             idx === currentCardIndex ? {
-    //                 ...card,
-    //                 totalShows: card.totalShows + 1,
-    //                 correctAnswers: isCorrect ? card.correctAnswers + 1 : card.correctAnswers
-    //             }
-    //                 : card)
-    //     );
-    //     handleNextCard();
-    // }
 
     const handleFlip = () => {
         setIsFlipped(true);
         setShowHint(false)
     };
 
-    // const handleSessionComplete = () => {
-    //     navigate('/result')
-    // }
-
     const handleBackToList = () => {
         navigate(`/category/${categoryId}`)
     }
-
-    // const handleNextCard = () => {
-    //     if (currentCardIndex < cards.length - 1) {
-    //         setCurrentCardIndex(prev => prev + 1);
-    //         setIsFlipped(false);
-    //         setShowHint(false);
-    //     } else {
-    //         handleSessionComplete();
-    //     }
-    // };
 
     const toggleHint = () => {
         setShowHint(prev => !prev);
@@ -129,7 +120,7 @@ const ReviewPage = () => {
             </div>
             <motion.div
                 className={styles.card_container}
-                key={currentCard.id}
+                key={currentCard._id}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
