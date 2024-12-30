@@ -1,5 +1,6 @@
 export interface ICard {
-    _id: string;
+    id: string;
+    _id?: string;
     frontside: string;
     backside: string;
     categoryId: string;
@@ -27,5 +28,5 @@ export interface ICardsReponse {
 }
 
 export interface ICardResponse extends ICard {
-    _id: string;
+    id: string;
 }

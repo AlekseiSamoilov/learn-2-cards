@@ -12,10 +12,7 @@ interface ICardStats {
 const ResultPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const stats = location.state?.stats as ICardStats[] || [];
-
-    const avetageSuccessRate = stats.reduce((acc, stat) => acc + stat.successRate, 0) / stats.length;
-    const cardsNeedingPractice = stats.filter(stat => stat.needMorePractice).length;
+    const stats = location.state?.stats || { totalAnswers: 0, correctAnswers: 0, successRate: 0 };
 
     const getEncouragement = (rate: number): string => {
         if (rate >= 90) return "Отлично! Вы великолепно справляетесь!";
@@ -32,14 +29,12 @@ const ResultPage = () => {
             <h1 className={styles.title}>Результаты</h1>
             <div className={styles.result_container}>
                 <h2 className={styles.result}>
-                    Средний процент правильных ответов: {avetageSuccessRate.toFixed(1)}%
+                    Средний процент правльных ответов: {stats.successRate.toFixed(1)}%
                 </h2>
                 <h3 className={styles.summary}>
-                    {getEncouragement(avetageSuccessRate)}
+                    {getEncouragement(stats.successRate)}
                 </h3>
-                {cardsNeedingPractice > 0 && (
-                    <p className={styles.practice_note}>{cardsNeedingPractice} карточек требуют дополнительной практики</p>
-                )}
+                <p>Правльных ответов: {stats.correctAnswers} из {stats.totalAnswers}</p>
             </div>
             <Button onClick={goToBegin} width='large' text='К категориям' />
         </div>

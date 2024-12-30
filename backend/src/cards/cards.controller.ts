@@ -46,7 +46,7 @@ export class CardController {
 
     @Patch(':id/correct')
     incrementCorrectAnswers(@Param('id') id: string) {
-        return this.cardSerivce.incrementTotalShows(id)
+        return this.cardSerivce.incrementCorrectAnswers(id)
     }
 
     @Get('random/:categoryId')

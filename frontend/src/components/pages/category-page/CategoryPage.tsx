@@ -70,18 +70,17 @@ const CategoryPage = () => {
         const count = parseInt(cardsToRepeat);
         if (count > 0 && count <= categoryCards.length) {
             const selectedCards = categoryCards.slice(0, count).map(card => ({
-                _id: card._id,
+                id: card._id,
                 frontside: card.frontside,
                 backside: card.backside,
                 totalShows: card.totalShows,
                 correctAnswers: card.correctAnswers,
                 hintImageUrl: card.imageUrl
             }));
-            console.log('selectedCards', selectedCards)
             navigate(`/review/${categoryId}`, {
                 state: {
                     cards: selectedCards,
-                    cardsToRepeat: count
+                    cardsToRepeat: count,
                 }
             });
         }
@@ -101,13 +100,13 @@ const CategoryPage = () => {
                     <ul className={styles.words_list}>
                         {categoryCards.map(card => (
                             <WordCard
-                                key={card._id}
+                                key={card.id}
                                 frontside={card.frontside}
                                 backside={card.backside}
                                 isEditing={isEditing}
                                 hintImageUrl={card.imageUrl}
-                                onDelete={() => removeWord(card._id)}
-                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card._id, frontside, backside, hintImageUrl)}
+                                onDelete={() => removeWord(card.id)}
+                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card.id, frontside, backside, hintImageUrl)}
                             />
                         ))}
                     </ul>
