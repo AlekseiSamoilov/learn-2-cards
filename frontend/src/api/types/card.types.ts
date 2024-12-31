@@ -1,20 +1,17 @@
 export interface ICard {
-    id: string;
-    _id?: string;
+    _id: string;
     frontside: string;
     backside: string;
     categoryId: string;
     totalShows: number;
     correctAnswers: number;
-    imageUrl?: string;
-    // createdAt: string;
-    // updatedAt: string;
+    hintImageUrl?: string;
 }
 
 export interface ICreateCardDto {
     frontside: string;
     backside: string;
-    imageUrl?: string;
+    hintImageUrl?: string;
 }
 
 export interface IUpdateCardDto extends ICreateCardDto {
@@ -28,5 +25,5 @@ export interface ICardsReponse {
 }
 
 export interface ICardResponse extends ICard {
-    id: string;
+    _id: string;
 }

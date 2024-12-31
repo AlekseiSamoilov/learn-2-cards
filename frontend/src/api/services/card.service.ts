@@ -1,5 +1,5 @@
 import api from "../instance";
-import { ICard, ICardResponse, ICreateCardDto } from "../types/card.types";
+import { ICard, ICardResponse, ICreateCardDto, IUpdateCardDto } from "../types/card.types";
 
 export const cardService = {
 
@@ -20,7 +20,7 @@ export const cardService = {
                 frontside: data.frontside,
                 backside: data.backside,
                 categoryId,
-                ...(data.imageUrl && { imageUrl: data.imageUrl })
+                ...(data.hintImageUrl && { imageUrl: data.hintImageUrl })
             };
 
             const response = await api.post<ICardResponse>(`/cards/${categoryId}`, requestData);
@@ -50,6 +50,25 @@ export const cardService = {
             return response.data;
         } catch (error) {
             console.error('Patch card correct answers error:', error);
+            throw error;
+        }
+    },
+
+    async updateCard(cardId: string, data: IUpdateCardDto): Promise<ICard> {
+        try {
+            const response = await api.patch<ICard>(`/cards/${cardId}`, data);
+            return response.data;
+        } catch (error: any) {
+            console.error('Update card error:', error);
+            throw error;
+        }
+    },
+
+    async deleteCard(cardId: string): Promise<void> {
+        try {
+            await api.delete(`/cards/${cardId}`);
+        } catch (error) {
+            console.error('Delete card error:', error);
             throw error;
         }
     }

@@ -7,7 +7,7 @@ import CardSelectionService from '../../../api/services/cardsSelection.service';
 import { cardService } from '../../../api/services/card.service';
 
 interface ICard {
-    id: string;
+    _id: string;
     frontside: string;
     backside: string;
     totalShows: number;
@@ -32,12 +32,6 @@ const ReviewPage = () => {
         correctAnswers: number;
     }>({ totalAnswers: 0, correctAnswers: 0 });
 
-    useEffect(() => {
-        console.log('Cards changed:', cards);
-        console.log('Reviewed cards:', reviewedCards);
-        console.log('Cards to review:', cardsToRepeat);
-    }, [cards, reviewedCards, cardsToRepeat]);
-
     const cardSelectionService = useMemo(() => new CardSelectionService(), []);
 
     useEffect(() => {
@@ -47,7 +41,7 @@ const ReviewPage = () => {
         }
 
         if (!currentCard && cards.length > reviewedCards.size) {
-            const availableCards = cards.filter(card => !reviewedCards.has(card.id));
+            const availableCards = cards.filter(card => !reviewedCards.has(card._id));
             if (availableCards.length > 0) {
                 const nextCards = cardSelectionService.getNextCard(availableCards);
                 setCurrentCard(nextCards)
@@ -55,53 +49,22 @@ const ReviewPage = () => {
         }
     }, [cards, reviewedCards, currentCard]);
 
-    // const selectNextCards = useCallback(() => {
-
-    //     if (studyStats.currentCardIndex >= cardsToRepeat) {
-    //         navigate('/result', {
-    //             state: {
-    //                 stats: {
-    //                     totalAnswers: studyStats.totalAnswers,
-    //                     correctAnswers: studyStats.correctAnswers,
-    //                     successRate: (studyStats.correctAnswers / studyStats.totalAnswers) * 100
-    //                 }
-    //             }
-    //         });
-    //         return;
-    //     }
-
-    //     const availableCards = cards.filter(card => !reviewedCards.has(card.id));
-    //     const nextCards = cardSelectionService.getNextCard(availableCards);
-    //     setCurrentCard(nextCards);
-    //     setIsFlipped(false);
-    //     setShowHint(false);
-    // }, [cardsToRepeat, cards, reviewedCards]);
-
-
     const handleAnswer = async (isCorrect: boolean) => {
         if (!currentCard) return;
 
         try {
             if (isCorrect) {
-                await cardService.incrementCorrectAnswers(currentCard.id);
+                await cardService.incrementCorrectAnswers(currentCard._id);
             } else {
-                await cardService.incrementTotalShows(currentCard.id);
+                await cardService.incrementTotalShows(currentCard._id);
             }
-
-
-            // const updatedCards = cards.map(card => card.id === currentCard.id ? {
-            //     ...card,
-            //     totalShows: card.totalShows + 1,
-            //     correctAnswers: isCorrect ? card.correctAnswers + 1 : card.correctAnswers
-            // } : card);
-            // setCards(updatedCards);
 
             setStudyStats(prev => ({
                 totalAnswers: prev.totalAnswers + 1,
                 correctAnswers: isCorrect ? prev.correctAnswers + 1 : prev.correctAnswers,
             }));
 
-            setReviewedCards(prev => new Set(prev).add(currentCard.id));
+            setReviewedCards(prev => new Set(prev).add(currentCard._id));
 
             if (reviewedCards.size + 1 >= cardsToRepeat) {
                 navigate('/result', {
@@ -117,7 +80,7 @@ const ReviewPage = () => {
             }
 
             const availableCards = cards.filter(card =>
-                !reviewedCards.has(card.id) && card.id !== currentCard.id
+                !reviewedCards.has(card._id) && card._id !== currentCard._id
             );
 
             if (availableCards.length > 0) {
@@ -155,7 +118,7 @@ const ReviewPage = () => {
             </div>
             <motion.div
                 className={styles.card_container}
-                key={currentCard.id}
+                key={currentCard._id}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}

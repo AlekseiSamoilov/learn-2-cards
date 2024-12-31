@@ -11,14 +11,13 @@ import LoadingSpinner from '../../loading-spinner/LoadingSpinner';
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
     const navigate = useNavigate();
-    const { categories, cards, addCard, removeWord, updateCard, loadCategoryCards, initializeCategories } = useCategories();
+    const { categories, cards, addCard, removeCard, updateCard, loadCategoryCards, initializeCategories } = useCategories();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [cardsToRepeat, setCardsToRepeat] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const categoryCards = cards.filter(w => w.categoryId === categoryId);
-    console.log("categoryCards:", categoryCards)
 
 
 
@@ -75,7 +74,7 @@ const CategoryPage = () => {
                 backside: card.backside,
                 totalShows: card.totalShows,
                 correctAnswers: card.correctAnswers,
-                hintImageUrl: card.imageUrl
+                hintImageUrl: card.hintImageUrl
             }));
             navigate(`/review/${categoryId}`, {
                 state: {
@@ -100,13 +99,13 @@ const CategoryPage = () => {
                     <ul className={styles.words_list}>
                         {categoryCards.map(card => (
                             <WordCard
-                                key={card.id}
+                                key={card._id}
                                 frontside={card.frontside}
                                 backside={card.backside}
                                 isEditing={isEditing}
-                                hintImageUrl={card.imageUrl}
-                                onDelete={() => removeWord(card.id)}
-                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card.id, frontside, backside, hintImageUrl)}
+                                hintImageUrl={card.hintImageUrl}
+                                onDelete={() => removeCard(card._id)}
+                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card._id, frontside, backside, hintImageUrl)}
                             />
                         ))}
                     </ul>

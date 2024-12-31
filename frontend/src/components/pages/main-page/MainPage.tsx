@@ -9,7 +9,7 @@ import NameModal from '../../name-modal/NameModal'
 import { toast } from 'react-toastify'
 
 const MainPage = () => {
-    const { categories, addCategory, removeCategory, isLoading, error, initializeCategories } = useCategories();
+    const { categories, addCategory, removeCategory, initializeCategories } = useCategories();
     const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isNameModalOpen, setIsNameModalOpen] = useState<boolean>(false);

@@ -15,5 +15,5 @@ export class CreateCardDto {
 
     @IsOptional()
     @IsUrl({}, { message: 'Invalid URL for image' })
-    imageUrl?: string;
+    hintImageUrl?: string;
 }
