@@ -39,6 +39,8 @@ export const categoryService = {
     async updateCategory(id: string, data: IUpdateCategoryDto): Promise<ICategory> {
         try {
             const response = await api.patch<ICategory>(`/categories/${id}`, data);
+            console.log('Data from category service:', data);
+            console.log('Response from category service:', response)
             return response.data;
         } catch (error: any) {
             console.error('Update category error', error);

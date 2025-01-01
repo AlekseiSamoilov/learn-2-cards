@@ -2,15 +2,21 @@ import React, { useState } from 'react'
 import styles from './category.module.css'
 import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '../confitm-modal/ConfirmModal';
+import { ICategory } from '../../api/types/category.types';
+import { useCategories } from '../context/categoryContext';
+import { toast } from 'react-toastify';
 
 interface ICategoryProps {
     onDelete?: () => void;
+    isEdit?: () => Promise<ICategory>
     title: string;
     id: string;
 
 }
 
-const Category: React.FC<ICategoryProps> = ({ title, onDelete, id }) => {
+const Category: React.FC<ICategoryProps> = ({ title, onDelete, isEdit, id }) => {
+    // const { categories, updateCategory } = useCategories();
+    // const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
     const navigate = useNavigate();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
@@ -28,14 +34,22 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, id }) => {
         setIsDeleteModalOpen(false);
     }
 
+    const handleEditClick = () => {
+    }
+
     return (
         <div className={styles.container} onClick={handleClick}>
             <h3 className={styles.title}>{title}</h3>
             {onDelete && (
-                <button
-                    className={styles.delete_button}
-                    onClick={handleDeleteClick}
-                >✖</button>
+                <div>
+                    <button className={styles.edit_button}
+                        onClick={handleEditClick}
+                    >✎</button>
+                    <button
+                        className={styles.delete_button}
+                        onClick={handleDeleteClick}
+                    >✖</button>
+                </div>
             )}
 
             <ConfirmModal

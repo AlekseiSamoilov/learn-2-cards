@@ -48,14 +48,14 @@ const CategoryPage = () => {
         return <div className={styles.not_found}>Категория не найдена</div>
     }
 
-    const handleAddCard = async (frontside: string, backside: string, hintImageUrl?: string) => {
+    const handleAddCard = async (frontside: string, backside: string, imageUrl?: string) => {
         if (!categoryId) {
             toast.error('Category Id is missing');
             return;
         }
 
         try {
-            await addCard(frontside, backside, categoryId, hintImageUrl);
+            await addCard(frontside, backside, categoryId, imageUrl);
             toast.success('Карточка успешно создана');
             await loadCategoryCards(categoryId);
         } catch (error: any) {
@@ -74,7 +74,7 @@ const CategoryPage = () => {
                 backside: card.backside,
                 totalShows: card.totalShows,
                 correctAnswers: card.correctAnswers,
-                hintImageUrl: card.hintImageUrl
+                imageUrl: card.imageUrl
             }));
             navigate(`/review/${categoryId}`, {
                 state: {
@@ -103,9 +103,9 @@ const CategoryPage = () => {
                                 frontside={card.frontside}
                                 backside={card.backside}
                                 isEditing={isEditing}
-                                hintImageUrl={card.hintImageUrl}
+                                imageUrl={card.imageUrl}
                                 onDelete={() => removeCard(card._id)}
-                                onEdit={(frontside, backside, hintImageUrl) => updateCard(card._id, frontside, backside, hintImageUrl)}
+                                onEdit={(frontside, backside, imageUrl) => updateCard(card._id, frontside, backside, imageUrl)}
                             />
                         ))}
                     </ul>

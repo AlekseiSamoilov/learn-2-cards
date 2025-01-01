@@ -12,7 +12,7 @@ interface ICard {
     backside: string;
     totalShows: number;
     correctAnswers: number;
-    hintImageUrl?: string;
+    imageUrl?: string;
     categoryId: string;
 }
 
@@ -136,7 +136,7 @@ const ReviewPage = () => {
                                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                             >
                                 <img
-                                    src={currentCard.hintImageUrl}
+                                    src={currentCard.imageUrl}
                                     alt='Подсказка'
                                     className={styles.hint_image}
                                 />

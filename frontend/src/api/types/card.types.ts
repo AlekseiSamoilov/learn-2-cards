@@ -5,13 +5,13 @@ export interface ICard {
     categoryId: string;
     totalShows: number;
     correctAnswers: number;
-    hintImageUrl?: string;
+    imageUrl?: string;
 }
 
 export interface ICreateCardDto {
     frontside: string;
     backside: string;
-    hintImageUrl?: string;
+    imageUrl?: string;
 }
 
 export interface IUpdateCardDto extends ICreateCardDto {

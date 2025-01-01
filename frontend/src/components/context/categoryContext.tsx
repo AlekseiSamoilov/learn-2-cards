@@ -14,10 +14,10 @@ interface ICategoryContext {
     addCategory: (title: string) => Promise<void>;
     removeCategory: (id: string) => Promise<void>;
     updateCategory: (id: string, title: string) => Promise<void>;
-    addCard: (categoryId: string, frontside: string, backside: string, hintImageUrl?: string) => Promise<ICard>;
+    addCard: (categoryId: string, frontside: string, backside: string, imageUrl?: string) => Promise<ICard>;
     loadCategoryCards: (categoryId: string) => Promise<void>;
     removeCard: (id: string) => void;
-    updateCard: (id: string, frontside: string, backside: string, hintImageUrl?: string) => Promise<void>;
+    updateCard: (id: string, frontside: string, backside: string, imageUrl?: string) => Promise<void>;
 }
 
 const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
@@ -95,6 +95,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             setIsLoading(true);
             setError(null);
             const updatedCategory = await categoryService.updateCategory(id, { title });
+            console.log('Updated category from CategoryContext:', updatedCategory)
             setCategories(prev => prev.map(cat => cat._id === id ? updatedCategory : cat));
             toast.success('Категория успешно обновлена');
         } catch (error: any) {
@@ -106,11 +107,11 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
     }
 
-    const addCard = async (frontside: string, backside: string, categoryId: string, hintImageUrl?: string) => {
+    const addCard = async (frontside: string, backside: string, categoryId: string, imageUrl?: string) => {
         try {
             setIsLoading(true);
             setError(null);
-            const newCard = await cardService.createCard({ frontside, backside, hintImageUrl: hintImageUrl }, categoryId);
+            const newCard = await cardService.createCard({ frontside, backside, imageUrl: imageUrl }, categoryId);
             setCards(prev => [...prev, newCard]);
             return newCard;
         } catch (error: any) {
@@ -162,16 +163,17 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         }
     };
 
-    const updateCard = async (id: string, frontside: string, backside: string, hintImageUrl?: string) => {
+    const updateCard = async (cardId: string, frontside: string, backside: string, imageUrl?: string) => {
         try {
             setIsLoading(true);
             setError(null);
-            const updatedCard = await cardService.updateCard(id, {
+            const updatedCard = await cardService.updateCard(cardId, {
                 frontside,
                 backside,
-                hintImageUrl: hintImageUrl,
+                imageUrl,
             });
-            setCards(prev => prev.map(card => card._id === id ? updatedCard : card));
+            console.log('Updated card from CategoryContext', updatedCard)
+            setCards(prev => prev.map(card => card._id === cardId ? updatedCard : card));
             toast.success('Карточка успешно обновлена');
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to update card';

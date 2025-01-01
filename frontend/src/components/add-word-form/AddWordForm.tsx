@@ -4,12 +4,12 @@ import Input from '../input/Input';
 import Button from '../button/Button';
 
 interface IAddWordFormProps {
-    onSubmit: (frontside: string, backside: string, hintImageUrl?: string) => void;
+    onSubmit: (frontside: string, backside: string, imageUrl?: string) => void;
     onCancel: () => void;
     initialValues?: {
         frontside: string;
         backside: string;
-        hintImageUrl: string;
+        imageUrl: string;
     };
     isEditing?: boolean;
 }
@@ -17,16 +17,16 @@ interface IAddWordFormProps {
 const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialValues, isEditing = false }) => {
     const [frontside, setFrontside] = useState<string>(initialValues?.frontside || '');
     const [backside, setBackside] = useState<string>(initialValues?.backside || '');
-    const [hintImageUrl, setHintImageUrl] = useState<string>(initialValues?.hintImageUrl || '');
+    const [imageUrl, setImageUrl] = useState<string>(initialValues?.imageUrl || '');
 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (frontside.trim() && backside.trim()) {
-            onSubmit(frontside, backside, hintImageUrl);
+            onSubmit(frontside, backside, imageUrl);
             setFrontside('');
             setBackside('');
-            setHintImageUrl('')
+            setImageUrl('')
         }
     };
 
@@ -48,8 +48,8 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
             />
             <Input
                 title='Ссылка на картинку'
-                value={hintImageUrl}
-                onChange={(e) => setHintImageUrl(e.target.value)}
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
                 placeholder='Введите ссылку на картинку-подсказку'
             />
             <div className={styles.form_buttons}>

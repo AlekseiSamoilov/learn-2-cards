@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import styles from './word-card.module.css'
-// import Input from '../input/Input';
-// import Button from '../button/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import AddWordForm from '../add-word-form/AddWordForm';
 
@@ -9,12 +7,12 @@ export interface IWordCardProps {
     frontside: string;
     backside: string;
     onDelete: () => void;
-    onEdit?: (frontside: string, backside: string, hintImageUrl?: string) => void;
+    onEdit?: (frontside: string, backside: string, imageUrl?: string) => void;
     isEditing: boolean;
-    hintImageUrl?: string;
+    imageUrl?: string;
 }
 
-const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onEdit, isEditing, hintImageUrl }) => {
+const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onEdit, isEditing, imageUrl }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
@@ -31,8 +29,8 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
         setIsImageLoading(false);
     }
 
-    const handleEdit = (frontside: string, backside: string, hintImageUrl?: string) => {
-        onEdit(frontside, backside, hintImageUrl);
+    const handleEdit = (frontside: string, backside: string, imageUrl?: string) => {
+        onEdit(frontside, backside, imageUrl);
         setIsEditMode(false);
         setIsExpanded(false)
     }
@@ -50,7 +48,7 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
                     initialValues={{
                         frontside,
                         backside,
-                        hintImageUrl: hintImageUrl || ''
+                        hintImageUrl: imageUrl || ''
                     }}
                     isEditing={true} />
             </motion.div>
@@ -66,7 +64,7 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
                 <motion.div className={styles.word_container} layout>
                     <span>{frontside} - {backside}</span>
 
-                    {isExpanded && hintImageUrl && (
+                    {isExpanded && imageUrl && (
                         <motion.div
                             className={styles.hint_container}
                             initial={{ opacity: 0, scale: 0 }}
@@ -81,7 +79,7 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
                             )}
                             <img
                                 className={`${styles.hint} ${!isImageLoading ? styles.loaded : ''}`}
-                                src={hintImageUrl}
+                                src={imageUrl}
                                 alt='Подсказка'
                                 loading='lazy'
                                 onLoad={handleImageLoad}
