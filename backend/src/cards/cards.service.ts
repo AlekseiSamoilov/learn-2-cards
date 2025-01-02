@@ -50,7 +50,14 @@ export class CardsService {
 
     async update(id: string, updateCardDto: UpdateCardDto): Promise<Card> {
         try {
-            const updatedCard = await this.cardModel.findByIdAndUpdate(id, { updateCardDto, updatedAt: new Date() }, { new: true });
+            const updatedCard = await this.cardModel.findByIdAndUpdate(
+                id,
+                {
+                    ...updateCardDto,
+                    updatedAt: new Date()
+                },
+                { new: true }
+            );
             if (!updatedCard) {
                 throw new NotFoundException(`Card with id ${id} not found`);
             }
@@ -107,7 +114,7 @@ export class CardsService {
             if (error instanceof NotFoundException) {
                 throw error
             }
-            throw new InternalServerErrorException(`Failed to update shows: ${error.message}`)
+            throw new InternalServerErrorException(`Failed to increment total shows: ${error.message}`)
         }
     }
 
@@ -122,7 +129,7 @@ export class CardsService {
             if (error instanceof NotFoundException) {
                 throw error
             }
-            throw new InternalServerErrorException(`Failed to update card: ${error.message}`)
+            throw new InternalServerErrorException(`Failed to increment correct answers: ${error.message}`)
         }
     }
 

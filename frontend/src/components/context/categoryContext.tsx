@@ -57,7 +57,6 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const addCategory = async (title: string) => {
         try {
             setIsLoading(true);
-            console.log(`categories controller logs:`, title)
             setError(null);
             const newCategory = await categoryService.createCategory({ title });
             setCategories(prev => [...prev, newCategory]);
@@ -95,7 +94,6 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             setIsLoading(true);
             setError(null);
             const updatedCategory = await categoryService.updateCategory(id, { title });
-            console.log('Updated category from CategoryContext:', updatedCategory)
             setCategories(prev => prev.map(cat => cat._id === id ? updatedCategory : cat));
             toast.success('Категория успешно обновлена');
         } catch (error: any) {
@@ -132,8 +130,6 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 console.error('No category ID provided');
                 return;
             }
-
-            console.log('Loading cards for category: ', categoryId)
             const categoryCards = await cardService.getCardsByCategory(categoryId);
             setCards(categoryCards);
         } catch (error: any) {
@@ -172,7 +168,6 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 backside,
                 imageUrl,
             });
-            console.log('Updated card from CategoryContext', updatedCard)
             setCards(prev => prev.map(card => card._id === cardId ? updatedCard : card));
             toast.success('Карточка успешно обновлена');
         } catch (error: any) {

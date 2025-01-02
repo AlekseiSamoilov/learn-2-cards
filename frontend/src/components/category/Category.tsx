@@ -3,20 +3,19 @@ import styles from './category.module.css'
 import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '../confitm-modal/ConfirmModal';
 import { ICategory } from '../../api/types/category.types';
-import { useCategories } from '../context/categoryContext';
-import { toast } from 'react-toastify';
 
 interface ICategoryProps {
     onDelete?: () => void;
-    isEdit?: () => Promise<ICategory>
+    // isEdit?: () => Promise<ICategory>
     title: string;
     id: string;
 
 }
 
-const Category: React.FC<ICategoryProps> = ({ title, onDelete, isEdit, id }) => {
+const Category: React.FC<ICategoryProps> = ({ title, onDelete, id }) => {
     // const { categories, updateCategory } = useCategories();
-    // const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
+    const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
+    const [isEdit, setIsEdit] = useState<boolean>(false);
     const navigate = useNavigate();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
@@ -34,7 +33,10 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, isEdit, id }) => 
         setIsDeleteModalOpen(false);
     }
 
-    const handleEditClick = () => {
+    const handleEditClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsEdit(true)
+        console.log('Hi!')
     }
 
     return (

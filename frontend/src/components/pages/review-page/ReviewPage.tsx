@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styles from './review-page.module.css'
 import Button from '../../button/Button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -90,7 +90,7 @@ const ReviewPage = () => {
                 setShowHint(false);
             }
         } catch (error) {
-            console.error('Failed to update card statistics: error');
+            console.error('Failed to update card statistics:', error);
             throw error;
         }
     };

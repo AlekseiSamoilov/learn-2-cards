@@ -69,7 +69,7 @@ const CategoryPage = () => {
         const count = parseInt(cardsToRepeat);
         if (count > 0 && count <= categoryCards.length) {
             const selectedCards = categoryCards.slice(0, count).map(card => ({
-                id: card._id,
+                _id: card._id,
                 frontside: card.frontside,
                 backside: card.backside,
                 totalShows: card.totalShows,
@@ -105,7 +105,7 @@ const CategoryPage = () => {
                                 isEditing={isEditing}
                                 imageUrl={card.imageUrl}
                                 onDelete={() => removeCard(card._id)}
-                                onEdit={(frontside, backside, imageUrl) => updateCard(card._id, frontside, backside, imageUrl)}
+                                onEdit={(frontside, backside, imageUrl?) => updateCard(card._id, frontside, backside, imageUrl)}
                             />
                         ))}
                     </ul>

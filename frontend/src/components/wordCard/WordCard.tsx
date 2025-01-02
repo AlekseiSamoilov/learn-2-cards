@@ -48,7 +48,7 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
                     initialValues={{
                         frontside,
                         backside,
-                        hintImageUrl: imageUrl || ''
+                        imageUrl: imageUrl || ''
                     }}
                     isEditing={true} />
             </motion.div>

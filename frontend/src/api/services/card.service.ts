@@ -42,8 +42,8 @@ export const cardService = {
     },
 
     async incrementCorrectAnswers(cardId: string): Promise<ICard> {
-
         try {
+            console.log('Card id from card.service.ts:', cardId)
             const response = await api.patch<ICardResponse>(`/cards/${cardId}/correct`);
             return response.data;
         } catch (error) {
@@ -54,9 +54,15 @@ export const cardService = {
 
     async updateCard(cardId: string, data: IUpdateCardDto): Promise<ICard> {
         try {
-            const response = await api.patch<ICard>(`/cards/${cardId}`, data);
+            const requestData = {
+                frontside: data.frontside,
+                backside: data.backside,
+                ...(data.imageUrl && { imageUrl: data.imageUrl })
+            }
+            const response = await api.patch<ICardResponse>(`/cards/${cardId}`, requestData)
+            console.log('id from card.service.ts:', cardId);
             console.log('Data from card.service.ts', data)
-            console.log(response)
+            console.log('response datat from card.service.ts', response.data)
             return response.data;
         } catch (error: any) {
             console.error('Update card error:', error);
