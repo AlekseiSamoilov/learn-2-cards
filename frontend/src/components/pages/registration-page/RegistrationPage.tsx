@@ -9,7 +9,7 @@ import { useAuth } from '../../../hooks/useAuth';
 
 export default function RegistrationPage() {
     const navigate = useNavigate();
-    const { register, error, isLoading } = useAuth();
+    const { register, isLoading } = useAuth();
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -57,14 +57,11 @@ export default function RegistrationPage() {
         }
     };
 
-    const goToLoginPage = () => {
-        navigate('/login');
-    }
-
-
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Регистрация</h1>
+            <p className={styles.logo}>Листай🍃Знай</p>
+            <h2 className={styles.subtitle}>Доброе пожаловать!</h2>
             <Input
                 onChange={(e) => setLogin(e.target.value)}
                 value={login}
@@ -73,7 +70,6 @@ export default function RegistrationPage() {
                 validationRules={loginValidationRules}
                 required
             />
-
             <Input
                 onChange={(e) => setDisplayName(e.target.value)}
                 value={displayName}
@@ -96,12 +92,12 @@ export default function RegistrationPage() {
                 validationRules={createConfirmPasswordRules(password)}
                 required
             />
-            {formError && (
-                <div className={styles.error_message}>{formError}</div>
-            )}
             <Button width='large' onClick={handleSubmit} text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading || password !== confirmPassword} />
-            <p>Уже зарегистрированы?</p>
-            <Button width='large' onClick={goToLoginPage} text='Войти' disabled={isLoading} />
+            <div className={styles.already_register}>
+                <p>Уже зарегистрированы?</p>
+                <a href='/login' className={styles.login_link} >Войти</a>
+            </div>
+
         </div>
     )
 }

@@ -48,12 +48,10 @@ const RecoveryPasswordPage = () => {
         }
     }
 
-    const handleReturnToTheLogin = () => {
-        navigate('/login');
-    }
-
     return (
         <div className={styles.container}>
+            <h1 className={styles.title}>Восстановление пароля</h1>
+            <p className={styles.logo}>Листай🍃Знай</p>
             <Input
                 title='Введите логин'
                 required
@@ -73,8 +71,10 @@ const RecoveryPasswordPage = () => {
                 placeholder='Введите новый пароль'
             />
             <Button onClick={submitNewPassword} width='large' text='Сменить пароль' />
-            <Button onClick={handleReturnToTheLogin} width='large' text='Вернуться на страницу авторизации' />
-
+            <div className={styles.goto}>
+                <p className={styles.remember}>Вспомнили пароль?</p>
+                <a href='/login' className={styles.goto_login}>Войти</a>
+            </div>
         </div>
     )
 }

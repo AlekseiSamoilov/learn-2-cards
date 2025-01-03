@@ -64,7 +64,7 @@ export class UsersService {
         try {
             const user = await this.userModel.findOne({ login });
             if (!user) {
-                throw new NotFoundException(`User with lofin ${login} not found`)
+                throw new NotFoundException(`User with login ${login} not found`)
             }
             return user;
         } catch (error) {

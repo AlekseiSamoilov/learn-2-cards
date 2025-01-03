@@ -23,12 +23,11 @@ const Input: React.FC<IInputProps> = ({
     error,
     placeholder,
     required = false,
-    type = 'text'
+    type = 'text',
 }) => {
 
     const [localError, setLocalError] = useState<string>('');
-    const [isDirty, setIsDirty] = useState(false);
-
+    const [isDirty, setIsDirty] = useState<boolean>(false);
 
     const validateInput = (value: string) => {
 
@@ -82,18 +81,21 @@ const Input: React.FC<IInputProps> = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
-            <AnimatePresence mode="popLayout" initial={true}>
-                {(localError || error) && (
-                    <motion.span
-                        className={styles.errorMessage}
-                        initial={{ y: -10, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -10, opacity: 0 }}
-                        transition={{ duration: 0.3, type: 'spring', bounce: 0.3 }}
-                    >{localError || error}
-                    </motion.span>
-                )}
-            </AnimatePresence>
+            <div className={styles.error_container}>
+                <AnimatePresence mode="popLayout" initial={true}>
+                    {(localError || error) && (
+                        <motion.span
+                            className={styles.errorMessage}
+                            initial={{ y: -10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            transition={{ duration: 0.3, type: 'spring', bounce: 0.3 }}
+                        >{localError || error}
+                        </motion.span>
+                    )}
+                </AnimatePresence>
+            </div>
+
         </div>
     )
 }

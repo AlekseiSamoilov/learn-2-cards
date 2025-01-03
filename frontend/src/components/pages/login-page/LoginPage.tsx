@@ -7,6 +7,7 @@ import PasswordInput from '../../password-input/PasswordInput'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../hooks/useAuth'
 
+
 const LoginPage = () => {
     const navigate = useNavigate();
     const { login, error, isLoading } = useAuth();
@@ -33,43 +34,46 @@ const LoginPage = () => {
                 localStorage.setItem('token', response.token);
                 navigate('/main');
             }
-        } catch (err) {
-            setFormError(error || 'Ошибка при входе');
+        } catch (err: any) {
+            setFormError('Ошибка при входе');
             console.error('Ошибка логина:', err);
         }
     };
 
-    const handleRecoverPassword = () => {
-        navigate('/recovery-password')
-    }
-
-    const goToRegistrationPage = () => {
-        navigate('/register')
-    }
 
     return (
         <div className={styles.container} >
-            {error && <div>{error}</div>}
+            <h1 className={styles.title}>Вход</h1>
+            <p className={styles.logo}>Листай🍃Знай</p>
+            <h2 className={styles.sub_title}>С возвращением!</h2>
             <Input
                 value={loginValue}
-                title='Введите логин'
+                title='Логин'
                 onChange={(e) => setLoginValue(e.target.value)}
+                placeholder='Введите логин'
                 validationRules={loginValidationRules}
                 required
                 error={formError}
             />
             <PasswordInput
-                title='Введите пароль'
+                title='Пароль'
                 value={password}
+                placeholder='Введите пароль'
                 onChange={(e) => setPassword(e.target.value)}
                 validationRules={passwordValidationRules}
                 required
             />
             <div className={styles.buttons_container}>
                 <Button onClick={handleSubmit} width='large' text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading} />
-                <Button onClick={handleRecoverPassword} width='large' text='Восстановить пароль' disabled={isLoading} />
+
             </div>
-            <Button onClick={goToRegistrationPage} width='large' text='Регистрация' disabled={isLoading} />
+            <a className={styles.password_revocery_link} href='/recovery-password'>Забыли пароль?</a>
+            <div className={styles.away_container}>
+                <p className={styles.not_register}>У вас нет аккаунта?</p>
+                <a href='/register' className={styles.goto_register}>Создать аккаунт</a>
+            </div>
+
+
         </div>
     )
 }
