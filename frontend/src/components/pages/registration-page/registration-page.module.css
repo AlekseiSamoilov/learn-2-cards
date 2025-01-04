@@ -4,6 +4,7 @@
     gap: 5px;
     align-items: center;
     position: relative;
+    max-width: 800px;
 }
 
 .title {

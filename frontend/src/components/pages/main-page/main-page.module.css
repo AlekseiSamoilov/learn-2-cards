@@ -2,27 +2,65 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* min-width: 320px; */
     width: 100%;
+    max-width: 800px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.edit_button {
+    background-color: transparent;
+    border: none;
+
+}
+
+.edit_button:hover {
+    transform: scale(1.1);
+    transition: 0.2s ease-in all;
+}
+
+.add_category_button {
+    border: dashed 1px grey;
+    background: transparent;
+    font-size: 20px;
+    width: 100%;
+    min-height: 90px;
+    color: grey;
+    border-radius: 10px;
 }
 
 .welcome {
     margin: 0;
     padding: 0;
-    text-align: center;
     width: 100%;
     box-sizing: border-box;
     font-weight: 300;
     font-size: 25px;
-    padding: 20px 0;
-    margin-bottom: 10px;
+}
+
+.header_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 }
 
 .category_list {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 5px;
+    width: 100%;
+    max-height: 400px;
     margin:40px 0;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: scroll;
 }
 
 .add_category {
@@ -33,9 +71,9 @@
 
 .user_name {
     cursor: pointer;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid rgb(38, 102, 26);
 }
 
 .user_name:hover {
-    background-color: rgba(211, 178, 227, 1);
+    background-color: rgba(19, 97, 71, 0.2);
 }

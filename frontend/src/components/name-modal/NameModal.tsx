@@ -58,18 +58,18 @@ const NameModal: React.FC<INameModalProps> = ({
                 <div className={styles.buttons}>
                     <Button
                         text='Сохранить'
-                        width='medium'
+                        width='small'
                         onClick={handleSubmit}
                     />
                     <Button
                         text='Отмена'
-                        width='medium'
+                        width='small'
                         onClick={onClose}
                     />
                 </div>
                 <Button
                     text='Выйти из аккаунта'
-                    width='large'
+                    width='medium'
                     onClick={handleLogout}
                 />
             </form>

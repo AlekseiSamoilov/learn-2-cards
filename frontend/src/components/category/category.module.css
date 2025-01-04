@@ -1,8 +1,9 @@
 .container {
     background-color: rgb(249, 249, 249);
     border: 1px solid rgb(215, 212, 212);
-    min-width: 300px;
     width: 100%;
+    max-width: 800px;
+    min-width: 300px;
     min-height: 90px;
     border-radius: 10px;
     font-weight: 300;
@@ -16,6 +17,7 @@
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
+
 .title {
     margin: 0;
     padding: 0;
@@ -25,8 +27,16 @@
     z-index: 10;
 }
 
-.container:hover {
-    z-index: 3;
+.main_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 5px
+}
+
+.edit_container {
+    padding-bottom: 5px;
 }
 
 .delete_button {
@@ -38,7 +48,7 @@
     border-radius: 5px;
     z-index: 10;
     transition: 0.3s ease-in-out all;
-    border: 0.5px solid white;
+    border: 0.5px solid rgb(232, 0, 0);
 }
 
 .delete_button:hover {
@@ -53,7 +63,7 @@
     background-color: transparent;
     border-radius: 5px;
     transition: 0.3s ease-in-out all;
-    border: 0.5px solid white;
+    border: 0.5px solid rgb(217, 0, 0);
 }
 
 .edit_button:hover {
