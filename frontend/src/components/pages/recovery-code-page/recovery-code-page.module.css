@@ -3,38 +3,63 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-height: 100vh;
+    gap: 20px;
+    position: relative;
 }
 
 .title {
-    font-weight: 300;
     margin: 0;
+    padding: 0;
+    color: rgba(19, 97, 71, 1);
+    font-weight: 400;
+    max-width: 400px;
     text-align: center;
-    margin-bottom: 50px;
-    background-color: rgba(83, 134, 172, 1);
 }
 
 .subtitle {
     margin: 0;
-    background-color: rgba(83, 134, 172, 1);
-    color: rgba(255, 255, 255, 1);
-    margin-bottom: 8px;
-    text-align: center;
+    padding: 0;
     font-weight: 300;
+    font-size: 18px;
+    text-align: center;
+}
+
+.logo {
+    margin: 0;
+    color: rgba(19, 97, 71, 1);
+    font-weight: 600;
+    position: absolute;
+    font-size: 10px;
+    top: 0%;
+    right: 5%;
 }
 
 .code_display {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    flex-direction: column;
+    gap: 20px;
     width: 50%;
-    height: 100px;
+    height: 100%;
     background-color: rgba(255, 248, 248, 0.702);
-    color: rgba(83, 134, 172, 1);
+    color: rgba(19, 97, 71, 1);
     margin-bottom: 30px;
+    padding: 20px 10px;
     border-radius: 10px;
+    border: 1px solid rgba(19, 97, 71, 1);
 }
 
 .code_word {
     font-size: 20px;
+    margin: 0;
+}
+
+.copy_button {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: 120px;
+    cursor: pointer;
+    border: 1px solid rgba(19, 97, 71, 1);
 }

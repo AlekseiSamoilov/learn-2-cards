@@ -2,13 +2,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
+    /* min-width: 320px; */
+    width: 100%;
 }
 
 .welcome {
     margin: 0;
     padding: 0;
-    background-color: rgba(83, 134, 172, 1);
     text-align: center;
     width: 100%;
     box-sizing: border-box;
@@ -21,7 +21,7 @@
 .category_list {
     display: flex;
     flex-direction: column;
-    position: relative;
+    gap: 5px;
     margin:40px 0;
 }
 

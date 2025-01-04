@@ -68,6 +68,15 @@ const MainPage = () => {
                 onSave={handleNameSave}
                 initialName={displayName}
             />
+            <div className={styles.category_list}>
+                {categories.map(category => (
+                    <Category
+                        key={category._id}
+                        id={category._id}
+                        title={category.title}
+                        onDelete={isEditing ? () => removeCategory(category._id) : undefined} />
+                ))}
+            </div>
 
             {isEditing && (
                 <div className={styles.add_category}>
@@ -80,16 +89,6 @@ const MainPage = () => {
                     <Button onClick={handleAddCategory} text='Добавить' width='large' />
                 </div>
             )}
-
-            <div className={styles.category_list}>
-                {categories.map(category => (
-                    <Category
-                        key={category._id}
-                        id={category._id}
-                        title={category.title}
-                        onDelete={isEditing ? () => removeCategory(category._id) : undefined} />
-                ))}
-            </div>
             <Button
                 width='large'
                 text={isEditing ? 'Готово' : 'Редактировать'}

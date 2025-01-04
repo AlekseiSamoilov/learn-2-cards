@@ -9,7 +9,7 @@
 .title {
     margin: 0;
     padding: 0;
-    color: rgba(23, 175, 97, 1);
+    color: rgba(19, 97, 71, 1);
     font-weight: 400;
 }
 
@@ -23,7 +23,7 @@
 
 .logo {
     margin: 0;
-    color: rgba(23, 175, 97, 1);
+    color: rgba(19, 97, 71, 1);
     font-weight: 600;
     position: absolute;
     font-size: 10px;
@@ -36,7 +36,7 @@
     align-items: center;
     flex-direction: column;
     margin-top: 20px;
-    border-top: 0.7px solid rgba(23, 175, 97, 1);
+    border-top: 0.7px solid rgba(19, 97, 71, 1);
 }
 
 .login_link {
@@ -44,5 +44,5 @@
     font-weight: 500;
     color: inherit;        
     outline: none; 
-    color: rgb(23, 175, 97);
+    color: rgba(19, 97, 71, 1);
 }

@@ -39,7 +39,7 @@ function App() {
           <Route path='/recovery-code' element={<RecoveryCodePage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/recovery-password' element={<RecoveryPasswordPage />} />
-          <Route path='/new-password' element={<NewPasswordPage />} />
+          {/* <Route path='/new-password' element={<NewPasswordPage />} /> */}
           <Route path='/main' element={<MainPage />} />
           <Route path='/category/:categoryId' element={<CategoryPage />} />
           <Route path='/word' element={<WordPage />} />
