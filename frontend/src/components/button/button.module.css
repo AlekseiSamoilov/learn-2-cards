@@ -1,6 +1,6 @@
 .button {
     border: none;
-    background-color: rgba(19, 97, 71, 1); 
+    background-color: #136147; 
     width: 200px;
     height: 45px;
     color: rgb(255, 255, 255);
@@ -34,5 +34,9 @@
 
 .width_full {
     width: 100%;
+}
+
+.button:disabled {
+    background-color: red;
 }
 
