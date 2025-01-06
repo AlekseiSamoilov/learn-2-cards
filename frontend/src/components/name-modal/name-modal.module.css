@@ -21,4 +21,15 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
+    translate: 0.3s ease-in-out all;
+}
+
+.logout:hover {
+    transform: scale(1.1);
+}
+
+@media screen and (max-width: 370px) {
+    .buttons {
+        flex-direction: column;
+    }    
 }

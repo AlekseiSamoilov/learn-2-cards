@@ -14,12 +14,12 @@
 
 .modal {
     background-color: rgb(232, 243, 245);
-    /* width: 100%; */
-    min-width: 300px;
+    min-width: 280px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 10px;
+    margin: 20px;
+    box-sizing: border-box;
 }
 
 .size_small {

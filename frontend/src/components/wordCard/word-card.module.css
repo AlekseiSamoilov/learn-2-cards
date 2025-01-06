@@ -1,5 +1,4 @@
 .container {
-    background-color: rgba(83, 134, 172, 0.9);
     padding: 10px;
     width: 100%;
     text-align: center;
@@ -12,11 +11,12 @@
     min-height: min-content;
     cursor: pointer;
     overflow: hidden;
-    /* transition: 0.2s ease all; */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    border: 0.5px solid rgba(19, 97, 71, 0.4);
 }
 
 .container:hover {
-    background-color: rgba(83, 134, 172, 1);
+    background-color: rgba(19, 97, 71, 0.4);
 }
 
 .word_container {

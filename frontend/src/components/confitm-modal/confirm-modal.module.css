@@ -10,6 +10,12 @@
 }
 
 .message {
-    background-color: rgba(83, 134, 172, 1);
-    
+    text-align: center;
+}
+
+@media screen and (max-width: 321px ) {
+    .button {
+        flex-direction: column;
+        align-items: center;
+    }
 }
