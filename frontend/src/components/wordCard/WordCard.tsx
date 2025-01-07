@@ -62,14 +62,14 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
         >
             <AnimatePresence mode='wait'>
                 <motion.div className={styles.word_container} layout>
-                    <span>{frontside} - {backside}</span>
+                    <span className={styles.word}>{frontside} - {backside}</span>
 
                     {isExpanded && imageUrl && (
                         <motion.div
                             className={styles.hint_container}
-                            initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
                             transition={{ duration: 0.3 }}
                         >
                             {isImageLoading && (
@@ -91,9 +91,11 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
             {
                 isEditing && (
                     <motion.div className={styles.word_action} layout
-                        initial={{ opacity: 0.5, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: isEditing ? 1.2 : 1 }}
-                        transition={{ duration: 0.5 }}>
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: isEditing ? 0 : 20 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    >
                         <button className={styles.edit_button} onClick={(e) => { e.stopPropagation(); setIsEditMode(true) }}>✎</button>
                         <button className={styles.delete_button} onClick={(e) => { e.stopPropagation(); onDelete() }}>✖</button>
                     </motion.div>

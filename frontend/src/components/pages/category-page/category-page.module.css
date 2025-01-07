@@ -6,21 +6,26 @@
     width: 100%;
 }
 
+.header_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 2px solid rgba(19, 97, 71, 0.8);
+}
+
 .title {
     margin: 0;
     width: 100%;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 300;
     padding: 10px;
     box-sizing: border-box;
-    border-bottom: 1px solid rgba(19, 97, 71, 0.8);
 }
 
 .subtitle {
     margin: 0;
-    margin-top: 10px;
     width: 100%;
-    text-align: center;
+    padding-bottom: 10px;
 }
 
 .words_list {
@@ -38,57 +43,60 @@
     justify-content: flex-start;
     background-color: rgba(255, 248, 248, 0.7);
     padding: 20px 5px;
+    margin-bottom: 10px;
     height: 100%;
     border-radius: 10px;
     overflow: scroll;
 }
 
-/* .word {
-    width: 100%;
-    border-radius: 5px;
-    text-align: center;
-    background-color: rgba(83, 134, 172, 1);
-    transition: all 0.3s ease;
-    cursor: pointer;
-} */
-
-/* .word:hover {
-    background-color: rgba(41, 133, 67, 0.7);
-} */
-
 .repeat_container {
+    padding-top: 10px;
+    border-top: 2px solid rgba(19, 97, 71, 0.8);
     width: 100%;
     display: flex;
-    flex-direction: column;
+    gap: 10px;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
 }
 
 .repeat_title {
     margin: 0;
     /* margin-top: 10px; */
-    width: 100%;
-    text-align: center;
+    /* width: 100%; */
+    /* text-align: center; */
     box-sizing: border-box;
+
 
 }
 
 .repeat_input {
     width: 25%;
     text-align: center;
-    background-color: rgba(255, 248, 248, 0.7);
     border: none;
-    font-size: 32px;
+    font-size: 25px;
 }
 
 .buttons {
     display: flex;
-    margin-top: 18px;
-    gap: 5px;
+    align-items: center;
+    gap: 20px;
 }
 
 .not_found {
     background-color: rgba(83, 134, 172, 1);
     border-radius: 10px;
     padding: 30px;
+}
+
+.edit_button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+
+.edit_button:hover {
+    transform: scale(1.2);
+    transition: 0.2s ease-in all;
 }

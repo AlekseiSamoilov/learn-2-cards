@@ -11,8 +11,8 @@
 }
 
 .button:hover {
-    /* background-color: rgba(23, 175, 97, 0.7); */
-    background-color: rgba(19, 97, 71, 0.8);
+    background-color: rgba(23, 175, 97, 0.7);
+    background-color: rgba(19, 97, 71, 0.5);
 }
 
 .button:active {
