@@ -17,6 +17,13 @@
     /* box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); */
 }
 
+.info_container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+}
+
 .title {
     margin: 0;
     padding: 0;
@@ -24,6 +31,14 @@
     font-weight: 500;
     font-size: 15px;
     z-index: 10;
+    margin-bottom: 5px;
+}
+
+.cards_count {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+
 }
 
 .main_content {

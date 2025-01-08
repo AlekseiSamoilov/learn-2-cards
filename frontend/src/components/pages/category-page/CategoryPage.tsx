@@ -89,22 +89,26 @@ const CategoryPage = () => {
         <div className={styles.container}>
             <div className={styles.header_container}>
                 <h1 className={styles.title}>{category.title}</h1>
-                <div className={styles.buttons}>
-                    <button className={styles.edit_button}
-                        onClick={() => navigate('/main')}><svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 24 24" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M21 11L6.414 11 11.707 5.707 10.293 4.293 2.586 12 10.293 19.707 11.707 18.293 6.414 13 21 13z"></path></svg></button>
-                    {!showAddForm && (
+                {!showAddForm && (
+                    <div className={styles.buttons}>
                         <button className={styles.edit_button}
-                            onClick={() => setShowAddForm(true)}
-                        ><svg stroke="currentColor" fill="#136147cc" stroke-width="0" viewBox="0 0 16 16" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 7H3V4H0V3h3V0h1v3h3v1H4v3zm6.5-5.9l3.4 3.5.1.4v8.5l-.5.5h-10l-.5-.5V8h1v5h9V6H9V2H5V1h5.2l.3.1zM10 2v3h2.9L10 2z"></path></svg></button>
-                    )}
-                    <button onClick={() => setIsEditing(!isEditing)} className={styles.edit_button}>{isEditing ?
-                        <svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 24 24" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
-                        :
-                        <svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 16 16" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M13.23 1h-1.46L3.52 9.25l-.16.22L1 13.59 2.41 15l4.12-2.36.22-.16L15 4.23V2.77L13.23 1zM2.41 13.59l1.51-3 1.45 1.45-2.96 1.55zm3.83-2.06L4.47 9.76l8-8 1.77 1.77-8 8z"></path></svg>
+                            onClick={() => navigate('/main')}><svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 24 24" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M21 11L6.414 11 11.707 5.707 10.293 4.293 2.586 12 10.293 19.707 11.707 18.293 6.414 13 21 13z"></path></svg></button>
+                        {!showAddForm && (
+                            <button className={styles.edit_button}
+                                onClick={() => setShowAddForm(true)}
+                            ><svg stroke="currentColor" fill="#136147cc" stroke-width="0" viewBox="0 0 16 16" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 7H3V4H0V3h3V0h1v3h3v1H4v3zm6.5-5.9l3.4 3.5.1.4v8.5l-.5.5h-10l-.5-.5V8h1v5h9V6H9V2H5V1h5.2l.3.1zM10 2v3h2.9L10 2z"></path></svg></button>
+                        )}
+                        <button onClick={() => setIsEditing(!isEditing)} className={styles.edit_button}>{isEditing ?
+                            <svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 24 24" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
+                            :
+                            <svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 16 16" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M13.23 1h-1.46L3.52 9.25l-.16.22L1 13.59 2.41 15l4.12-2.36.22-.16L15 4.23V2.77L13.23 1zM2.41 13.59l1.51-3 1.45 1.45-2.96 1.55zm3.83-2.06L4.47 9.76l8-8 1.77 1.77-8 8z"></path></svg>
 
-                    }
-                    </button>
-                </div>
+                        }
+                        </button>
+                    </div>
+                )
+                }
+
             </div>
 
 
@@ -130,16 +134,17 @@ const CategoryPage = () => {
                     </ul>
                     <p className={styles.subtitle}>Карточек в категории: {categoryCards.length}</p>
                     <div className={styles.repeat_container}>
-
-                        <p className={styles.repeat_title}>Сколько карточек повторим?</p>
-                        <input
-                            className={styles.repeat_input}
-                            type='number'
-                            min='1'
-                            max={categoryCards.length}
-                            value={cardsToRepeat}
-                            onChange={(e) => setCardsToRepeat(e.target.value)}
-                        />
+                        <div className={styles.how_much}>
+                            <p className={styles.repeat_title}>Сколько карточек повторим?</p>
+                            <input
+                                className={styles.repeat_input}
+                                type='number'
+                                min='1'
+                                max={categoryCards.length}
+                                value={cardsToRepeat}
+                                onChange={(e) => setCardsToRepeat(e.target.value)}
+                            />
+                        </div>
                         <Button
                             text='Начать'
                             width='large'

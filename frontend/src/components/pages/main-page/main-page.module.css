@@ -39,6 +39,10 @@
     cursor: pointer;
 }
 
+.add_category_button:hover {
+    background-color: rgba(19, 97, 71, 0.2);
+}
+
 .welcome {
     margin: 0;
     padding: 0;

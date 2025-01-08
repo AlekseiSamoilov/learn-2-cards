@@ -113,7 +113,7 @@ const ReviewPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.title}>{name}</h1>
+                <h1 className={styles.title}>{name}sdsd</h1>
                 <div className={styles.progress}>{reviewedCards.size + 1} из {cardsToRepeat}</div>
             </div>
             <motion.div
@@ -170,8 +170,8 @@ const ReviewPage = () => {
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3, ease: 'easeInOut', type: 'spring', bounce: 0.4 }}
                                 >
-                                    <Button onClick={() => handleAnswer(true)} text='Правильно' width='medium' />
-                                    <Button onClick={() => handleAnswer(false)} text='Неправильно' width='medium' />
+                                    <Button onClick={() => handleAnswer(true)} text='Правильно' width='small' />
+                                    <Button onClick={() => handleAnswer(false)} text='Неправильно' width='small' />
                                 </motion.div>
                             </motion.div>
                         ) : (
