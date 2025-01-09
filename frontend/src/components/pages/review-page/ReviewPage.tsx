@@ -115,6 +115,7 @@ const ReviewPage = () => {
             <div className={styles.header}>
                 <h1 className={styles.title}>{name}sdsd</h1>
                 <div className={styles.progress}>{reviewedCards.size + 1} из {cardsToRepeat}</div>
+                <button onClick={handleBackToList} className={styles.back_btn}></button>
             </div>
             <motion.div
                 className={styles.card_container}
@@ -170,8 +171,8 @@ const ReviewPage = () => {
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3, ease: 'easeInOut', type: 'spring', bounce: 0.4 }}
                                 >
-                                    <Button onClick={() => handleAnswer(true)} text='Правильно' width='small' />
-                                    <Button onClick={() => handleAnswer(false)} text='Неправильно' width='small' />
+                                    <Button onClick={() => handleAnswer(true)} text='Правильно' width='large' />
+                                    <Button onClick={() => handleAnswer(false)} text='Неправильно' width='large' />
                                 </motion.div>
                             </motion.div>
                         ) : (
@@ -183,14 +184,13 @@ const ReviewPage = () => {
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ type: 'spring', bounce: 0.4, duration: 0.3 }}
                             >
-                                <Button onClick={handleFlip} text='Показать ответ' width='medium' />
-                                <Button onClick={toggleHint} text='Подсказка' width='medium' />
+                                <Button onClick={handleFlip} text='Показать ответ' width='large' />
+                                <Button onClick={toggleHint} text='Подсказка' width='large' />
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </div>
             </motion.div >
-            <Button onClick={handleBackToList} text='Назад к списку' width='large' />
         </div >
     )
 }

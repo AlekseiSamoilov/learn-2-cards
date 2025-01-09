@@ -9,8 +9,8 @@
     gap: 10px;
     min-height: fit-content;
     /* height: 90px; */
+    background-color: white;
     cursor: pointer;
-    border: 0.5px solid rgba(19, 97, 71, 0.4);
     justify-content: center;
 }
 

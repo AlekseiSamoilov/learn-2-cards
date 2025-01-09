@@ -1,27 +1,21 @@
 import React, { useState } from 'react'
 import styles from './category.module.css'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '../confitm-modal/ConfirmModal';
-import { ICategory } from '../../api/types/category.types';
-import { useCategories } from '../context/categoryContext';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface ICategoryProps {
     onDelete?: () => void;
     title: string;
     id: string;
+    cardsCount: any;
 
 }
 
-const Category: React.FC<ICategoryProps> = ({ title, onDelete, id }) => {
-    const { categoryId } = useParams<{ categoryId: string }>();
-    const { cards } = useCategories()
-    const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
+const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount }) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const navigate = useNavigate();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-
-    const categoryCards = cards.filter(w => w.categoryId === categoryId);
 
     const handleClick = () => {
         navigate(`/category/${id}`);
@@ -47,7 +41,7 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, id }) => {
             <div className={styles.main_content}>
                 <div className={styles.info_container}>
                     <h3 className={styles.title}>{title}</h3>
-                    <p className={styles.cards_count}>{`Карточек: ${categoryCards.length}`}</p>
+                    <p className={styles.cards_count}>{`Карточек: ${cardsCount}`}</p>
                     <p className={styles.cards_count}>{`Последний раз обновлено: `}</p>
                 </div>
                 <AnimatePresence mode='wait'>

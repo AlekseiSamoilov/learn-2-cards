@@ -14,6 +14,16 @@ export const cardService = {
         }
     },
 
+    async getAllCards(): Promise<ICard[]> {
+        try {
+            const response = await api.get<ICard[]>(`/cards`);
+            return response.data;
+        } catch (error: any) {
+            console.error('Get all cards error:', error);
+            throw error
+        }
+    },
+
     async createCard(data: ICreateCardDto, categoryId: string): Promise<ICard> {
         try {
             const requestData = {

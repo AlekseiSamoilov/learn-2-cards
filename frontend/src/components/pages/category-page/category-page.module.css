@@ -41,7 +41,7 @@
     gap: 10px;
     list-style: none;
     justify-content: flex-start;
-    background-color: rgba(255, 248, 248, 0.7);
+    /* background-color: rgba(255, 248, 248, 0.7); */
     padding: 20px 5px;
     margin-bottom: 10px;
     height: 100%;

@@ -51,6 +51,7 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder='Введите ссылку на картинку-подсказку'
+
             />
             <div className={styles.form_buttons}>
                 <Button text='Добавить' width='medium' />

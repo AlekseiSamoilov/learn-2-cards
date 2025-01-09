@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 const NameModal = React.lazy(() => import('../../name-modal/NameModal'));
 
 const MainPage = () => {
-    const { categories, addCategory, removeCategory, initializeCategories } = useCategories();
+    const { categories, addCategory, removeCategory, initializeCategories, getCardCountByCategory } = useCategories();
     const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isNameModalOpen, setIsNameModalOpen] = useState<boolean>(false);
@@ -20,7 +20,7 @@ const MainPage = () => {
 
     const initialize = useCallback(() => {
         initializeCategories();
-    }, [initializeCategories])
+    }, [initializeCategories]);
 
     const fetchUserData = async () => {
         try {
@@ -30,6 +30,9 @@ const MainPage = () => {
             console.log('Failed to fetch user data', error);
         }
     };
+
+    const countedCategories = categories.map(category => getCardCountByCategory(category._id));
+    console.log('Counted cards from main page:', countedCategories)
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -95,6 +98,7 @@ const MainPage = () => {
                 {categories.map(category => (
                     <Category
                         key={category._id}
+                        cardsCount={countedCategories}
                         id={category._id}
                         title={category.title}
                         onDelete={isEditing ? () => removeCategory(category._id) : undefined} />

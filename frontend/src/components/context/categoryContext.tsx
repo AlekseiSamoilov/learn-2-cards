@@ -18,6 +18,7 @@ interface ICategoryContext {
     loadCategoryCards: (categoryId: string) => Promise<void>;
     removeCard: (id: string) => void;
     updateCard: (id: string, frontside: string, backside: string, imageUrl?: string) => Promise<void>;
+    getCardCountByCategory: (categoryId: string) => number;
 }
 
 const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
@@ -35,8 +36,12 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         try {
             setIsLoading(true);
             setError(null);
-            const fetchedCategories = await categoryService.getAllCategories();
+            const [fetchedCategories, allCards] = await Promise.all([
+                categoryService.getAllCategories(),
+                cardService.getAllCards()
+            ]);
             setCategories(fetchedCategories);
+            setCards(allCards);
         } catch (error: any) {
             if (error.response?.status === 401) {
                 setCategories([]);
@@ -53,6 +58,14 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     useEffect(() => {
         initializeCategories();
     }, []);
+
+    const getCardCountByCategory = (categoryId: string) => {
+        console.log('category id from func param:', categoryId)
+        console.log('Cards array:', cards);
+        const counted = cards.filter(card => card.categoryId === categoryId).length;
+        console.log('Counted cards from contex', counted);
+        return counted;
+    };
 
     const addCategory = async (title: string) => {
         try {
@@ -192,7 +205,8 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             addCard,
             removeCard,
             updateCard,
-            loadCategoryCards
+            loadCategoryCards,
+            getCardCountByCategory
         }}>
             {children}
         </CategoryContext.Provider>
