@@ -129,6 +129,8 @@ const CategoryPage = () => {
                                 imageUrl={card.imageUrl}
                                 onDelete={() => removeCard(card._id)}
                                 onEdit={(frontside, backside, imageUrl?) => updateCard(card._id, frontside, backside, imageUrl)}
+                                totalSHows={card.totalShows}
+                                correctAnswers={card.correctAnswers}
                             />
                         ))}
                     </ul>

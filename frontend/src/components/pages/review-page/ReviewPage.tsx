@@ -1,23 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './review-page.module.css'
 import Button from '../../button/Button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CardSelectionService from '../../../api/services/cardsSelection.service';
 import { cardService } from '../../../api/services/card.service';
-
-interface ICard {
-    _id: string;
-    frontside: string;
-    backside: string;
-    totalShows: number;
-    correctAnswers: number;
-    imageUrl?: string;
-    categoryId: string;
-}
+import { ICard } from '../../../api/types/card.types';
 
 const ReviewPage = () => {
-    const { categoryId } = useParams<{ categoryId: string }>();
+    const { categoryId, title } = useParams<{ categoryId: string, title: string }>();
     const { name } = useParams<{ name: string }>();
     const location = useLocation();
     const navigate = useNavigate();
@@ -27,12 +18,17 @@ const ReviewPage = () => {
     const [reviewedCards, setReviewedCards] = useState<Set<string>>(new Set());
     const { cards: initialCards, cardsToRepeat = 0 } = location.state || {};
     const [cards, setCards] = useState<ICard[]>(initialCards.slice(0, cardsToRepeat));
+    // const [imageHere, setImageHere] = useState<boolean>(false);
     const [studyStats, setStudyStats] = useState<{
         totalAnswers: number;
         correctAnswers: number;
     }>({ totalAnswers: 0, correctAnswers: 0 });
 
     const cardSelectionService = useMemo(() => new CardSelectionService(), []);
+
+    // if (currentCard?.imageUrl) {
+    //     setImageHere(true);
+    // }
 
     useEffect(() => {
         if (!cards.length) {
@@ -113,9 +109,9 @@ const ReviewPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.title}>{name}sdsd</h1>
+                <h1 className={styles.title}>{title}</h1>
                 <div className={styles.progress}>{reviewedCards.size + 1} из {cardsToRepeat}</div>
-                <button onClick={handleBackToList} className={styles.back_btn}></button>
+                <button onClick={handleBackToList} className={styles.back_btn}><svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 24 24" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M21 11L6.414 11 11.707 5.707 10.293 4.293 2.586 12 10.293 19.707 11.707 18.293 6.414 13 21 13z"></path></svg></button>
             </div>
             <motion.div
                 className={styles.card_container}
@@ -171,8 +167,8 @@ const ReviewPage = () => {
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3, ease: 'easeInOut', type: 'spring', bounce: 0.4 }}
                                 >
-                                    <Button onClick={() => handleAnswer(true)} text='Правильно' width='large' />
-                                    <Button onClick={() => handleAnswer(false)} text='Неправильно' width='large' />
+                                    <Button onClick={() => handleAnswer(true)} text='Правильно' width='large' answer='correct' />
+                                    <Button onClick={() => handleAnswer(false)} text='Неправильно' width='large' answer='incorrect' />
                                 </motion.div>
                             </motion.div>
                         ) : (
@@ -185,7 +181,7 @@ const ReviewPage = () => {
                                 transition={{ type: 'spring', bounce: 0.4, duration: 0.3 }}
                             >
                                 <Button onClick={handleFlip} text='Показать ответ' width='large' />
-                                <Button onClick={toggleHint} text='Подсказка' width='large' />
+                                <Button onClick={toggleHint} text='Подсказка' width='large' disabled={!currentCard.imageUrl} />
                             </motion.div>
                         )}
                     </AnimatePresence>

@@ -8,11 +8,11 @@ interface ICategoryProps {
     onDelete?: () => void;
     title: string;
     id: string;
-    cardsCount: any;
-
+    cardsCount: number;
+    updatedAt: string;
 }
 
-const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount }) => {
+const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount, updatedAt }) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const navigate = useNavigate();
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -42,7 +42,7 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount })
                 <div className={styles.info_container}>
                     <h3 className={styles.title}>{title}</h3>
                     <p className={styles.cards_count}>{`Карточек: ${cardsCount}`}</p>
-                    <p className={styles.cards_count}>{`Последний раз обновлено: `}</p>
+                    <p className={styles.cards_count}>{`Последний раз обновлено: ${updatedAt}`}</p>
                 </div>
                 <AnimatePresence mode='wait'>
                     {onDelete && (

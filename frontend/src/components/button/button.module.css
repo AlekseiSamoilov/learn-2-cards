@@ -11,13 +11,11 @@
 }
 
 .button:hover {
-    background-color: rgba(23, 175, 97, 0.7);
     background-color: rgba(19, 97, 71, 0.5);
 }
 
 .button:active {
-    background-color: rgba(83, 134, 172, 0.2);
-    border: 2px solid rgba(83, 134, 172, 1);
+    background-color: rgba(19, 97, 71, 0.3);
 }
 
 .width_small {
@@ -37,6 +35,24 @@
 }
 
 .button:disabled {
-    background-color: red;
+    background-color: rgb(188, 192, 190);
+    cursor: not-allowed;
 }
 
+.correct {
+    background-color: rgba(92, 147, 207, 1);
+}
+
+.incorrect {
+    background-color: rgba(223, 44, 44, 1);
+}
+
+.correct:hover {
+    background-color: rgba(92, 147, 207, 0.6);
+    border: 1px solid blue;
+}
+
+.incorrect:hover {
+    background-color: rgba(223, 44, 44, 0.6);
+    border: 1px solid red;
+}

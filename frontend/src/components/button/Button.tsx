@@ -6,9 +6,10 @@ export interface IButtonProps {
     onClick?: (e: React.FormEvent) => void;
     width?: 'small' | 'medium' | 'large' | 'full';
     disabled?: boolean;
+    answer?: 'correct' | 'incorrect';
 
 }
-const Button: React.FC<IButtonProps> = ({ text, width = '300px', onClick }) => {
+const Button: React.FC<IButtonProps> = ({ text, width = '300px', onClick, disabled, answer }) => {
 
     const getWidthClass = () => {
         switch (width) {
@@ -19,9 +20,18 @@ const Button: React.FC<IButtonProps> = ({ text, width = '300px', onClick }) => {
             default: return styles.width_medium;
         }
     }
+
+
+    const getAnswerClass = () => {
+        switch (answer) {
+            case 'correct': return styles.correct;
+            case 'incorrect': return styles.incorrect;
+            default: return '';
+        }
+    }
     return (
         <div>
-            <button onClick={onClick} className={`${styles.button} ${getWidthClass()}`}>{text}</button>
+            <button onClick={onClick} disabled={disabled} className={`${styles.button} ${getWidthClass()} ${getAnswerClass()}`}>{text}</button>
         </div >
     )
 }

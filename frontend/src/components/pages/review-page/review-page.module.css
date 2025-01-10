@@ -45,9 +45,12 @@
 }
 
 .back_btn {
+    background-color: transparent;
+    border: none;
     width: 30px;
     height: 30px;
     justify-self: flex-end;
+    cursor: pointer;
 }
 
 .front_side {
@@ -76,7 +79,7 @@
     text-align: center;
     padding: 20px 0;
     border-radius: 10px;
-    background-color:  rgba(238, 107, 37, 0.2);
+    background-color:  rgba(238, 107, 37, 0.5);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     width: inherit;
     width: 100%;

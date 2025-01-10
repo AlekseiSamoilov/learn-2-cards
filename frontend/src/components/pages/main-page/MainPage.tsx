@@ -52,6 +52,11 @@ const MainPage = () => {
         }
     };
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU');
+    };
+
     const handleAddCategory = async () => {
         setAddNewCategory(true)
         if (!newCategoryTitle.trim()) {
@@ -98,9 +103,10 @@ const MainPage = () => {
                 {categories.map(category => (
                     <Category
                         key={category._id}
-                        cardsCount={countedCategories}
+                        cardsCount={getCardCountByCategory(category._id)}
                         id={category._id}
                         title={category.title}
+                        updatedAt={`${category.updatedAt ? formatDate(category.updatedAt) : ''}`}
                         onDelete={isEditing ? () => removeCategory(category._id) : undefined} />
                 ))}
             </div>
