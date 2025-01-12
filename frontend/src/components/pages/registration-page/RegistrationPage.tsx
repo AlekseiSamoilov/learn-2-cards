@@ -27,18 +27,9 @@ export default function RegistrationPage() {
                 password,
                 displayName: displayName.trim() || login
             };
-
-            console.log('Sending registration data:', registerData);
-
             const response = await register(registerData);
-            console.log('Registration response:', response);
 
             if (response && response.user && response.user.recoveryCode) {
-                console.log('Navigation to recovery code page with:', {
-                    recoveryCode: response.user.recoveryCode,
-                    login: response.user.login
-                });
-
                 navigate('/recovery-code', {
                     state: {
                         recoveryCode: response.user.recoveryCode,

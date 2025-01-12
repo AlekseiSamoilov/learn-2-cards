@@ -60,10 +60,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }, []);
 
     const getCardCountByCategory = (categoryId: string) => {
-        console.log('category id from func param:', categoryId)
-        console.log('Cards array:', cards);
         const counted = cards.filter(card => card.categoryId === categoryId).length;
-        console.log('Counted cards from contex', counted);
         return counted;
     };
 
@@ -73,7 +70,6 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             setError(null);
             const newCategory = await categoryService.createCategory({ title });
             setCategories(prev => [...prev, newCategory]);
-            console.log(categories)
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to create category';
             setError(errorMessage);
@@ -158,7 +154,6 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         try {
             setIsLoading(true);
             setError(null);
-            console.log(id)
             await cardService.deleteCard(id);
             setCards(prev => prev.filter(card => card._id !== id));
             toast.success('Карточка успешно удалена');

@@ -7,7 +7,7 @@ import MainPage from './components/pages/main-page/MainPage'
 import CategoryPage from './components/pages/category-page/CategoryPage'
 import ReviewPage from './components/pages/review-page/ReviewPage'
 import ResultPage from './components/pages/result-page/ResultPage'
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import { CategoryProvider } from './components/context/categoryContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,6 +34,7 @@ function App() {
             }}
           />
           <Routes>
+            <Route path="/" element={<Navigate to="/register" replace />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path='/recovery-code' element={<RecoveryCodePage />} />
             <Route path='/login' element={<LoginPage />} />

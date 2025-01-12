@@ -31,10 +31,8 @@ export const useAuth = () => {
         try {
             setIsLoading(true);
             setError(null);
-            console.log('Starting registration with:', userData);
             const response = await authService.register(userData);
             localStorage.setItem('token', response.token);
-            console.log('Registration successful:', response);
             return response;
         } catch (err: any) {
             console.log('Registration error in useAuth', err);

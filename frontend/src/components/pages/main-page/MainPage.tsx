@@ -31,9 +31,6 @@ const MainPage = () => {
         }
     };
 
-    const countedCategories = categories.map(category => getCardCountByCategory(category._id));
-    console.log('Counted cards from main page:', countedCategories)
-
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
