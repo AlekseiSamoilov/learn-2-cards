@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Input from '../../input/Input'
 import Button from '../../button/Button'
 import styles from './recovery-password-page.module.css'
@@ -13,7 +13,6 @@ const RecoveryPasswordPage = () => {
     const [login, setLogin] = useState('');
     const [recoveryCode, setRecoveryCode] = useState<string>('');
     const [newPassword, setNewPassword] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const submitNewPassword = async () => {
         if (!login || !recoveryCode || !newPassword) {
@@ -22,7 +21,6 @@ const RecoveryPasswordPage = () => {
         }
 
         try {
-            setIsLoading(true);
             const response = await authService.resetPassword({
                 login,
                 recoveryCode,
@@ -43,8 +41,6 @@ const RecoveryPasswordPage = () => {
         } catch (error: any) {
             const message = error.response?.data?.message || 'Ошибка при восстановлении пароля';
             toast.error(message);
-        } finally {
-            setIsLoading(false);
         }
     }
 

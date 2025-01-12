@@ -14,13 +14,10 @@ export default function RegistrationPage() {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [displayName, setDisplayName] = useState<string>('');
-    const [formError, setFormError] = useState<string>('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setFormError('');
         if (password !== confirmPassword) {
-            setFormError('Пароли не совпадают');
             return;
         };
 
@@ -50,7 +47,6 @@ export default function RegistrationPage() {
                 });
             } else {
                 console.log('Invalid response format:', response);
-                setFormError('Ошибка при регистрации, неверный формат ответа');
             }
         } catch (err) {
             console.error('Ошибка регистрации', err)

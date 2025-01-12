@@ -27,7 +27,6 @@ const Input: React.FC<IInputProps> = ({
 }) => {
 
     const [localError, setLocalError] = useState<string>('');
-    const [isDirty, setIsDirty] = useState<boolean>(false);
 
     const validateInput = (value: string) => {
 
@@ -54,7 +53,6 @@ const Input: React.FC<IInputProps> = ({
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange?.(e);
         validateInput(e.target.value);
-        setIsDirty(true);
     }
 
     useEffect(() => {
@@ -62,13 +60,6 @@ const Input: React.FC<IInputProps> = ({
             validateInput(value);
         }
     }, []);
-
-    const handleBlur = () => {
-        setIsDirty(true);
-        if (value) {
-            validateInput(value);
-        }
-    }
 
     return (
         <div className={styles.container}>

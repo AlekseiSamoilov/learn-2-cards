@@ -14,7 +14,7 @@ interface IAddWordFormProps {
     isEditing?: boolean;
 }
 
-const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialValues, isEditing = false }) => {
+const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialValues }) => {
     const [frontside, setFrontside] = useState<string>(initialValues?.frontside || '');
     const [backside, setBackside] = useState<string>(initialValues?.backside || '');
     const [imageUrl, setImageUrl] = useState<string>(initialValues?.imageUrl || '');

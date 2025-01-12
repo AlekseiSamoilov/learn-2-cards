@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './recovery-code-page.module.css'
 import Button from '../../button/Button'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -8,7 +8,7 @@ const RecoveryCodePage = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const { recoveryCode, login } = location.state || {};
+    const { recoveryCode } = location.state || {};
     const [isCopied, setIsCopied] = useState<boolean>(false);
 
     useEffect(() => {

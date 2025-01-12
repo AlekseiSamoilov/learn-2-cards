@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './category-page.module.css';
 import Button from '../../button/Button';
 import { useNavigate, useParams } from 'react-router-dom';

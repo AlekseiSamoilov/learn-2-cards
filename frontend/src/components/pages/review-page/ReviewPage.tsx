@@ -9,7 +9,6 @@ import { ICard } from '../../../api/types/card.types';
 
 const ReviewPage = () => {
     const { categoryId, title } = useParams<{ categoryId: string, title: string }>();
-    const { name } = useParams<{ name: string }>();
     const location = useLocation();
     const navigate = useNavigate();
     const [currentCard, setCurrentCard] = useState<ICard | null>(null);
@@ -17,18 +16,13 @@ const ReviewPage = () => {
     const [showHint, setShowHint] = useState<boolean>(false);
     const [reviewedCards, setReviewedCards] = useState<Set<string>>(new Set());
     const { cards: initialCards, cardsToRepeat = 0 } = location.state || {};
-    const [cards, setCards] = useState<ICard[]>(initialCards.slice(0, cardsToRepeat));
-    // const [imageHere, setImageHere] = useState<boolean>(false);
+    const [cards] = useState<ICard[]>(initialCards.slice(0, cardsToRepeat));
     const [studyStats, setStudyStats] = useState<{
         totalAnswers: number;
         correctAnswers: number;
     }>({ totalAnswers: 0, correctAnswers: 0 });
 
     const cardSelectionService = useMemo(() => new CardSelectionService(), []);
-
-    // if (currentCard?.imageUrl) {
-    //     setImageHere(true);
-    // }
 
     useEffect(() => {
         if (!cards.length) {

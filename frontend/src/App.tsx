@@ -5,7 +5,6 @@ import RecoveryPasswordPage from './components/pages/recovery-password-page/Reco
 import RegistrationPage from './components/pages/registration-page/RegistrationPage'
 import MainPage from './components/pages/main-page/MainPage'
 import CategoryPage from './components/pages/category-page/CategoryPage'
-import WordPage from './components/pages/word-page/WordPage'
 import ReviewPage from './components/pages/review-page/ReviewPage'
 import ResultPage from './components/pages/result-page/ResultPage'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
@@ -41,7 +40,6 @@ function App() {
             <Route path='/recovery-password' element={<RecoveryPasswordPage />} />
             <Route path='/main' element={<MainPage />} />
             <Route path='/category/:categoryId' element={<CategoryPage />} />
-            <Route path='/word' element={<WordPage />} />
             <Route path='/review/:categoryId' element={<ReviewPage />} />
             <Route path='/result' element={<ResultPage />} />
           </Routes>
