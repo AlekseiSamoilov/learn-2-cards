@@ -33,7 +33,7 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
     return (
         <form className={styles.container} onSubmit={handleSubmit}>
             <Input
-                title='Слово'
+                title='Лицевая сторона'
                 value={frontside}
                 onChange={(e) => setFrontside(e.target.value)}
                 placeholder='Введите слово'
@@ -55,7 +55,7 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
             />
             <div className={styles.form_buttons}>
                 <Button text='Добавить' width='medium' />
-                <Button text='Закончить' onClick={onCancel} width='medium' />
+                <Button text='Отмена' onClick={onCancel} width='medium' />
             </div>
         </form>
     )

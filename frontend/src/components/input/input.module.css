@@ -34,7 +34,6 @@
 }
 
 .input:focus {
-    /* outline-color: rgba(23, 175, 97, 0.7); */
     outline-color: rgba(19, 97, 71, 0.7);
     outline-width: 1px;
 }
@@ -43,7 +42,6 @@
     min-height: 18px; 
     display: flex;
     align-items: center;
-    /* align-self: center; */
 }
 
 .errorMessage {

@@ -15,10 +15,11 @@
 }
 
 .logo {
-    font-size: 22px;
+    color: rgba(19, 97, 71, 1);
+    font-size: 16px;
     padding: 5px;
     align-self: flex-end;
-    border-bottom: 1px solid green;
+    text-decoration: none;
 }
 
 .edit_button:hover {
@@ -27,7 +28,6 @@
 }
 
 .add_category_button {
-    /* margin-top: 26px; */
     border: dashed 1px grey;
     background: transparent;
     font-size: 20px;
@@ -60,7 +60,6 @@
     background-color: white;
     padding: 20px;
     box-sizing: border-box;
-    /* box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); */
     border-radius: 10px;
 }
 

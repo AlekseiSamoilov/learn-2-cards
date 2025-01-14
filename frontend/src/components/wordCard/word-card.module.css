@@ -1,7 +1,6 @@
 .container {
     padding: 10px 20px;
     width: 100%;
-    text-align: center;
     border-radius: 5px;
     display: flex;
     align-items: center;
@@ -12,6 +11,12 @@
     background-color: white;
     cursor: pointer;
     justify-content: center;
+    position: relative;
+}
+
+.test {
+    display: flex;
+    width: 100%;
 }
 
 .card_box {
@@ -25,8 +30,8 @@
 
 .hint_pic {
     position: absolute;
-    top: 0px;
-    right: 10px;
+    top: 3px;
+    right: 5px;
 }
 
 
@@ -55,7 +60,7 @@
 }
 
 .container:hover {
-    background-color: rgba(19, 97, 71, 0.1);
+    background-color: rgba(37, 88, 71, 0.1);
 }
 
 .word_container {
@@ -81,16 +86,13 @@
 }
 
 .delete_button {
-    width: 25px;
-    height: 25px;
-    /* margin: 5px; */
     border: none;
     background-color: transparent;
     border-radius: 5px;
     z-index: 10;
     transition: 0.3s ease-in-out all;
     color: rgba(19, 97, 71, 0.8);
-    border: 2px solid rgba(19, 97, 71, 0.8);
+    border: 1px solid rgba(19, 97, 71, 0.8);
 }
 
 .delete_button:hover {
@@ -98,28 +100,17 @@
 }
 
 .edit_button {
-    width: 25px;
-    height: 25px;
-    /* margin: 5px; */
     border: none;
     color: rgba(19, 97, 71, 0.8);
     background-color: transparent;
     border-radius: 5px;
     transition: 0.3s ease-in-out all;
-    border: 2px solid rgba(19, 97, 71, 0.8);
+    border: 1px solid rgba(19, 97, 71, 0.8);
 }
 
 .edit_button:hover {
     transform: scale(1.2);
  }
-
-.buttons {
-    background-color: rgba(211, 178, 227, 1);
-    display: flex;
-    gap: 5px;
-    padding: 5px;
-    border-radius: 5px;
-}
 
 .hint {
     width: 100%;
@@ -132,12 +123,19 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 321px) {
+@media (max-width: 520px) {
     .word_container {
         flex-direction: column;
     }
-}
 
+    .word_action {
+        flex-direction: column;
+    }
+
+    .statistic {
+        max-width: 70%;
+    }
+}
 
 .hint.loaded {
     opacity: 1;

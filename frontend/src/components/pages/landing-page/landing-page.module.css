@@ -23,6 +23,10 @@
     line-height: 1.2;
 }
 
+.logo {
+    font-size:2rem ;
+}
+
 .subtitle {
     font-size: 1.25rem;
     margin-bottom: 2rem;

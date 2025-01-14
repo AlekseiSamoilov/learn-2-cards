@@ -13,63 +13,88 @@ class CardSelectionService {
     }
 
     // Группировка карточек по сложости
-    private groupCardsByDifficelty(cards: ICard[]): {
+    private groupCardsByDifficulty(cards: ICard[]): {
         hard: ICard[];
         medium: ICard[];
         easy: ICard[];
+        new: ICard[];
     } {
         return cards.reduce((acc, card) => {
-            const difficulty = this.calculateDifficult(card);
-
-            if (difficulty < 0.3) {
-                acc.hard.push(card)
-            } else if (difficulty < 0.7) {
-                acc.medium.push(card);
+            if (card.totalShows < this.MIN_SHOWS_THRESHOLD) {
+                acc.new.push(card);
             } else {
-                acc.easy.push(card);
+                const difficulty = this.calculateDifficult(card);
+                if (difficulty < 0.3) {
+                    acc.hard.push(card);
+                } else if (difficulty < 0.7) {
+                    acc.medium.push(card);
+                } else {
+                    acc.easy.push(card);
+                }
             }
             return acc;
         }, {
             hard: [] as ICard[],
             medium: [] as ICard[],
             easy: [] as ICard[],
+            new: [] as ICard[],
         });
     }
 
-    // Выбор случайной карточки
-    private selectRandomCard(groupedCards: {
-        hard: ICard[],
-        medium: ICard[],
-        easy: ICard[]
-    }): ICard | null {
-        const random = Math.random();
-        let selectedGroup: ICard[];
-
-        if (random < 0.5 && groupedCards.hard.length > 0) {
-            selectedGroup = groupedCards.hard;
-        } else if (random < 0.8 && groupedCards.medium.length > 0) {
-            selectedGroup = groupedCards.medium;
-        } else if (groupedCards.easy.length > 0) {
-            selectedGroup = groupedCards.easy;
-        } else {
-            selectedGroup = groupedCards.hard.length > 0 ? groupedCards.hard :
-                groupedCards.medium.length > 0 ? groupedCards.medium :
-                    groupedCards.easy.length > 0 ? groupedCards.easy : [];
+    // Случайное перемешивание массива 
+    private shuffleArray(array: ICard[]): ICard[] {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
-
-        if (selectedGroup.length === 0) return null;
-
-        const randomIndex = Math.floor(Math.random() * selectedGroup.length);
-        return selectedGroup[randomIndex];
+        return shuffled;
     }
 
+    private getRandomCard(cards: ICard[]): ICard | null {
+        if (cards.length === 0) return null;
+        const randomIndex = Math.floor(Math.random() * cards.length);
+        return cards[randomIndex]
+    }
 
     //Метод для получения случайной карточки
+    public selectNextCard(groupedCards: {
+        hard: ICard[];
+        medium: ICard[];
+        easy: ICard[];
+        new: ICard[];
+    }): ICard | null {
+
+        let cardPool: ICard[] = [];
+
+        if (groupedCards.hard.length > 0) {
+            cardPool.push(...this.shuffleArray(groupedCards.hard));
+            cardPool.push(...this.shuffleArray(groupedCards.hard));
+        }
+
+        if (groupedCards.medium.length > 0) {
+            cardPool.push(...this.shuffleArray(groupedCards.medium));
+        }
+
+        if (groupedCards.easy.length > 0) {
+            cardPool.push(...this.shuffleArray(groupedCards.easy));
+        }
+
+        if (groupedCards.new.length > 0) {
+            const shuffledNew = this.shuffleArray(groupedCards.new);
+
+            const halfPoint = Math.floor(cardPool.length / 2);
+            cardPool.splice(halfPoint, 0, ...shuffledNew);
+        }
+
+        return this.getRandomCard(cardPool);
+    }
+
     public getNextCard(cards: ICard[]): ICard | null {
         if (cards.length === 0) return null;
 
-        const groupedCards = this.groupCardsByDifficelty(cards);
-        return this.selectRandomCard(groupedCards);
+        const groupedCards = this.groupCardsByDifficulty(cards);
+        return this.selectNextCard(groupedCards);
     }
 
     //Метод для получения статистики 
