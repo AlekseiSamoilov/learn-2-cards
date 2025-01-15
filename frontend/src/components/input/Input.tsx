@@ -70,7 +70,6 @@ const Input: React.FC<IInputProps> = ({
                 placeholder={placeholder}
                 className={styles.input}
                 onChange={handleChange}
-            // onBlur={handleBlur}
             />
             <div className={styles.error_container}>
                 <AnimatePresence mode="popLayout" initial={true}>

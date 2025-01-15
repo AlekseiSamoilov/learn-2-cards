@@ -3,7 +3,8 @@
     flex-direction: column;
     gap: 8px;
     width: 100%;
-    color: rgba(75, 85, 99, 1);
+    /* color:  #8B4513; */
+    color: black;
     position: relative;
     z-index: 1;
     font-size: 16px;
@@ -22,9 +23,8 @@
     font-size: inherit;
     margin: 0;
     padding: 0;
-    background-color: rgba(249, 250, 251, 1);
+    background-color: #F5F0E6 ;
     padding: 10px 5px;
-    border: 1px solid rgba(229, 231, 235, 1);
     border-radius: 10px;
     color: inherit;
 }
@@ -34,7 +34,7 @@
 }
 
 .input:focus {
-    outline-color: rgba(19, 97, 71, 0.7);
+    outline-color: #2D5E2E ;
     outline-width: 1px;
 }
 

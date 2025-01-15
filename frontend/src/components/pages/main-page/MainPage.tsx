@@ -49,11 +49,6 @@ const MainPage = () => {
         }
     };
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('ru-RU');
-    };
-
     const handleAddCategory = async () => {
         setAddNewCategory(true)
         if (!newCategoryTitle.trim()) {
@@ -80,9 +75,9 @@ const MainPage = () => {
                 <h1 className={styles.welcome}>Добро пожаловать, <span className={styles.user_name} onClick={() => setIsNameModalOpen(true)}>{displayName}!</span></h1>
                 <div className={styles.header_buttons_container}>
                     <button onClick={() => setIsEditing(!isEditing)} className={styles.edit_button}>{isEditing ?
-                        <svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 24 24" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
+                        <svg stroke="black" fill="black" stroke-width="0" viewBox="0 0 24 24" height="22px" width="22px" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                         :
-                        <svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 16 16" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M13.23 1h-1.46L3.52 9.25l-.16.22L1 13.59 2.41 15l4.12-2.36.22-.16L15 4.23V2.77L13.23 1zM2.41 13.59l1.51-3 1.45 1.45-2.96 1.55zm3.83-2.06L4.47 9.76l8-8 1.77 1.77-8 8z"></path></svg>
+                        <svg stroke="black" fill="black" stroke-width="0" viewBox="0 0 16 16" height="22px" width="22px" xmlns="http://www.w3.org/2000/svg"><path d="M13.23 1h-1.46L3.52 9.25l-.16.22L1 13.59 2.41 15l4.12-2.36.22-.16L15 4.23V2.77L13.23 1zM2.41 13.59l1.51-3 1.45 1.45-2.96 1.55zm3.83-2.06L4.47 9.76l8-8 1.77 1.77-8 8z"></path></svg>
 
                     }
                     </button>
@@ -103,7 +98,6 @@ const MainPage = () => {
                         cardsCount={getCardCountByCategory(category._id)}
                         id={category._id}
                         title={category.title}
-                        updatedAt={`${category.updatedAt ? formatDate(category.updatedAt) : ''}`}
                         onDelete={isEditing ? () => removeCategory(category._id) : undefined} />
                 ))}
             </div>

@@ -4,7 +4,7 @@
     align-items: center;
     width: 100%;
     max-width: 620px;
-    padding: 5px;
+    padding: 10px;
     box-sizing: border-box;
 }
 
@@ -17,7 +17,8 @@
 .header {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
     gap: 30px;
     padding: 20px 0;
     width: 100%;
@@ -26,7 +27,7 @@
 .title {
     margin: 0;
     font-weight: 300;
-    font-size: 28px;
+    font-size: 26px;
 }
 
 .progress {
@@ -54,11 +55,10 @@
 }
 
 .front_side {
-    font-size: 24px;
+    font-size: 20px;
     text-align: center;
-    padding: 20px 0;
-    /* background-color: white; */
-    background-color: rgba(19, 97, 71, 0.2);
+    padding: 20px 5px;
+    background-color: rgba(245, 240, 230, 0.9);
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     width: 100%;
@@ -74,15 +74,13 @@
 }
 
 .back_side {
-    font-size: 24px;
+    font-size: 20px;
     width: 100%;
     text-align: center;
-    padding: 20px 0;
+    padding: 20px 5px;
     border-radius: 10px;
-    background-color:  rgba(238, 107, 37, 0.5);
+    background-color: #F5F0E6;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    width: inherit;
-    width: 100%;
     transform-origin: top center;
 }
 
@@ -110,3 +108,20 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+@media screen and (max-width: 500px) {
+    .front_side {
+        font-size: 16px;
+    }
+
+    .back_side {
+        font-size: 16px;
+    }
+
+    .progress {
+        font-size: 20px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+}

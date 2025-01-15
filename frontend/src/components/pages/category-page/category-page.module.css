@@ -6,19 +6,20 @@
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
+    color: black;
 }
 
 .header_container {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    border-bottom: 2px solid rgba(19, 97, 71, 0.8);
+    border-bottom: 1px solid rgba(3, 3, 3, 1);
 }
 
 .title {
     margin: 0;
     width: 100%;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 300;
     padding: 10px;
     box-sizing: border-box;
@@ -52,7 +53,7 @@
 
 .repeat_container {
     padding-top: 10px;
-    border-top: 2px solid rgba(19, 97, 71, 0.8);
+    border-top: 1px solid rgba(3, 3, 3, 1);
     width: 100%;
     display: flex;
     gap: 10px;
@@ -67,12 +68,13 @@
 } 
 
 .repeat_input {
+    color: black;
     width: 100px;
     text-align: center;
     border: none;
-    font-size: 25px;
-    border: 1px solid rgba(19, 97, 71, 0.8);
+    font-size: 22px;
     border-radius: 10px;
+    background-color: #F5F0E6 ;
 }
 
 .buttons {
@@ -96,8 +98,7 @@
 }
 
 .edit_button:hover {
-    transform: scale(1.2);
-    transition: 0.2s ease-in all;
+    color: #4A8B4D;
 }
 
 .how_much {
@@ -106,7 +107,12 @@
     gap: 10px;
 }
 
-@media screen and (max-width: 768px) {
+.btn_box {
+    display: flex;
+    gap: 10px;
+}
+
+@media screen and (max-width: 520px) {
     .repeat_container{
         flex-direction: column;
         gap: 10px;
@@ -123,4 +129,9 @@
     .how_much {
         flex-direction: column;
     }
+
+    .btn_box {
+        flex-direction: column;
+    }
 }
+

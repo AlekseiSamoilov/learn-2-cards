@@ -7,16 +7,11 @@
     box-sizing: border-box;
     gap: 10px;
     min-height: fit-content;
-    /* height: 90px; */
-    background-color: white;
     cursor: pointer;
     justify-content: center;
     position: relative;
-}
-
-.test {
-    display: flex;
-    width: 100%;
+    background-color: #F5F0E6;
+    background-image: url("../../../public/rice-paper-3.png");
 }
 
 .card_box {
@@ -34,7 +29,6 @@
     right: 5px;
 }
 
-
 .word {
     margin: 0;
     padding-bottom: 5px;
@@ -43,13 +37,15 @@
 }
 
 .frontside {
-    background-color: rgba(19, 97, 71, 0.2);
+    padding: 5px 5px;
     font-size: 18px;
+    color: #1A1A1A;
 }
 
 .backside {
-    background-color:  rgba(238, 107, 37, 0.2);
+    padding: 5px 5px;
     font-size: 18px;
+    color: #1E3A8A;
 }
 
 
@@ -60,7 +56,8 @@
 }
 
 .container:hover {
-    background-color: rgba(37, 88, 71, 0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    background-color: #F8F4EA;
 }
 
 .word_container {
@@ -79,38 +76,24 @@
     overflow: hidden;
 }
 
-
 .word_action {
     display: flex;
     gap: 15px;
 }
 
-.delete_button {
+.button {
+    border-radius: 4px;
     border: none;
-    background-color: transparent;
-    border-radius: 5px;
-    z-index: 10;
-    transition: 0.3s ease-in-out all;
-    color: rgba(19, 97, 71, 0.8);
-    border: 1px solid rgba(19, 97, 71, 0.8);
+    background-color: #4A8B4D;
+    color: white;
+    box-shadow: 0 4px 6px rgba(74, 139, 77, 0.2);
+    cursor: pointer;
 }
 
-.delete_button:hover {
-    transform: scale(1.2);
+.button:hover {
+    background-color: #7AB97D;
+    box-shadow: 0 6px 8px rgba(74, 139, 77, 0.3);
 }
-
-.edit_button {
-    border: none;
-    color: rgba(19, 97, 71, 0.8);
-    background-color: transparent;
-    border-radius: 5px;
-    transition: 0.3s ease-in-out all;
-    border: 1px solid rgba(19, 97, 71, 0.8);
-}
-
-.edit_button:hover {
-    transform: scale(1.2);
- }
 
 .hint {
     width: 100%;

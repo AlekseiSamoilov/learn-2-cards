@@ -1,13 +1,16 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Roboto Slab", Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-  color: rgba(75, 85, 99, 1);
-  /* background-color: rgb(236, 173, 119); */
-  background-color: rgb(232, 243, 245);
-
-
+  color: rgb(0, 0, 0);
+  background-color: rgb(243, 226, 193);
+  background-image: url(../public/paper-2.png);
+  background-size: 400px 400px; 
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+  min-height: 100%;
+  display: flex;
+  align-items: center;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,13 +19,6 @@
 
 body {
   margin: 0 auto;
-  /* place-items: center; */
-  /* min-width: 320px; */
   width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 

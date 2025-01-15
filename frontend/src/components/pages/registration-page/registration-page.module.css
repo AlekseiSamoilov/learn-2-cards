@@ -5,12 +5,12 @@
     align-items: center;
     position: relative;
     max-width: 800px;
+    height: 100%;
 }
 
 .title {
     margin: 0;
     padding: 0;
-    color: rgba(19, 97, 71, 1);
     font-weight: 400;
 }
 
@@ -33,12 +33,13 @@
 
 .logo {
     margin: 0;
-    color: rgba(19, 97, 71, 1);
+    color: #4A8B4D;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 22px;
     top: 0%;
     right: 5%;
     text-decoration: none;
+    font-family: "Caveat";
 }
 
 .already_register {
@@ -46,7 +47,7 @@
     align-items: center;
     flex-direction: column;
     margin-top: 20px;
-    border-top: 0.7px solid rgba(19, 97, 71, 1);
+    border-top: 0.7px solid #2D5E2E;
 }
 
 .login_link {
@@ -54,5 +55,5 @@
     font-weight: 500;
     color: inherit;        
     outline: none; 
-    color: rgba(19, 97, 71, 1);
+    color: #4A8B4D ;
 }
