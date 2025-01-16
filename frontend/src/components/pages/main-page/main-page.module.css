@@ -82,7 +82,7 @@
     padding: 10px;
     box-sizing: border-box;
     overflow: scroll;
-    position: relative;
+    /* position: relative; */
 }
 
 .add_category {

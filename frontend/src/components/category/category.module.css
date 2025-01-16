@@ -9,12 +9,10 @@
     justify-content: space-between;
     padding: 10px;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
     cursor: pointer;
     width: 100%;
     box-sizing: border-box;
-    background-image: url("../../../public/rice-paper-3.png");
+    background-image: url("/rice-paper-3.png");
     background-size: 300px 300px;
     background-color: #F5F0E6;
     border-radius: 12px;

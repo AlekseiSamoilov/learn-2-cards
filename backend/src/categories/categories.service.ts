@@ -73,7 +73,7 @@ export class CategoriesService {
 
     async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
         try {
-            const updatedCategory = await this.categoryModel.findByIdAndUpdate(id, { updateCategoryDto, updatedAt: new Date() }, { new: true })
+            const updatedCategory = await this.categoryModel.findByIdAndUpdate(id, { ...updateCategoryDto, updatedAt: new Date() }, { new: true })
             if (!updatedCategory) {
                 throw new NotFoundException(`Category with id ${id} not found`);
             }

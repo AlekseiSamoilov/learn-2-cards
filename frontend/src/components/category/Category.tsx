@@ -1,19 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './category.module.css'
 import { useNavigate } from 'react-router-dom';
-import ConfirmModal from '../confitm-modal/ConfirmModal';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface ICategoryProps {
-    onDelete?: () => void;
+    onDelete?: (id: string) => void;
+    onEdit?: (id: string) => void;
     title: string;
     id: string;
     cardsCount: number;
 }
 
-const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount }) => {
+const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cardsCount }) => {
     const navigate = useNavigate();
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
     const handleClick = () => {
         navigate(`/category/${id}`);
@@ -21,17 +20,17 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount })
 
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setIsDeleteModalOpen(true);
+        if (onDelete) {
+            onDelete(id)
+        }
     };
-
-    const handleDelete = () => {
-        onDelete?.();
-        setIsDeleteModalOpen(false);
-    }
 
     const handleEditClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-    }
+        if (onEdit) {
+            onEdit(id);
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -39,7 +38,6 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount })
                 <div className={styles.info_container} onClick={handleClick}>
                     <h3 className={styles.title}>{title}</h3>
                     <p className={styles.cards_count}>{`Карточек: ${cardsCount}`}</p>
-                    {/* <p className={styles.cards_count}>{`Последний раз обновлено: ${updatedAt}`}</p> */}
                 </div>
                 <AnimatePresence mode='wait'>
                     {onDelete && (
@@ -62,15 +60,6 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, id, cardsCount })
                     )}
                 </AnimatePresence>
             </div>
-            <ConfirmModal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onConfirm={handleDelete}
-                title='Удаление категории'
-                message='Вы уверены, что хотите удалить эту категория? Все карточки в этой категории так же будут удалены'
-                confirmText='Удалить'
-                cancelText='Отмена'
-            />
         </div>
     )
 }
