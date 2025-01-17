@@ -53,7 +53,6 @@ const NameModal: React.FC<INameModalProps> = ({
                 <Input title='Введите ваше имя:'
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder={initialName}
                     required
                 />
                 <div className={styles.buttons}>

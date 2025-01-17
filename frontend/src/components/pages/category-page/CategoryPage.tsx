@@ -7,7 +7,6 @@ import AddWordForm from '../../add-word-form/AddWordForm';
 import WordCard from '../../wordCard/WordCard';
 import { toast } from 'react-toastify';
 import LoadingSpinner from '../../loading-spinner/LoadingSpinner';
-import { all } from 'axios';
 
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();

@@ -98,10 +98,10 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
             {
                 isEditing && (
                     <motion.div className={styles.word_action} layout
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ type: 'spring', duration: 0.2 }}
                     >
                         <button className={styles.button} onClick={(e) => { e.stopPropagation(); setIsEditMode(true) }}>Изменить</button>
                         <button className={styles.button} onClick={(e) => { e.stopPropagation(); onDelete() }}>Удалить</button>

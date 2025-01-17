@@ -13,7 +13,6 @@ export default function RegistrationPage() {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [displayName, setDisplayName] = useState<string>('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,7 +24,7 @@ export default function RegistrationPage() {
             const registerData = {
                 login,
                 password,
-                displayName: displayName.trim() || login
+                displayName: login
             };
             const response = await register(registerData);
 
@@ -58,12 +57,6 @@ export default function RegistrationPage() {
                 placeholder='Введите логин, от 4 до 10 символов'
                 validationRules={loginValidationRules}
                 required
-            />
-            <Input
-                onChange={(e) => setDisplayName(e.target.value)}
-                value={displayName}
-                title='Введите имя'
-                placeholder='Введите имя для отображения'
             />
             <PasswordInput
                 title='Пароль'

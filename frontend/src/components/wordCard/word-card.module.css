@@ -37,13 +37,13 @@
 }
 
 .frontside {
-    padding: 5px 5px;
+    /* padding: 5px 5px; */
     font-size: 18px;
     color: #1A1A1A;
 }
 
 .backside {
-    padding: 5px 5px;
+    /* padding: 5px 5px; */
     font-size: 18px;
     color: #1E3A8A;
 }
@@ -107,17 +107,22 @@
 }
 
 @media (max-width: 520px) {
+    .container {
+        flex-direction: column;
+    }
+
     .word_container {
         flex-direction: column;
     }
 
     .word_action {
-        flex-direction: column;
+        margin-bottom: 5px;
     }
 
     .statistic {
         max-width: 70%;
     }
+
 }
 
 .hint.loaded {

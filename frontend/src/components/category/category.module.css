@@ -62,6 +62,8 @@
     padding-bottom: 5px;
     display: flex;
     gap: 10px;
+    margin-top: 5px;
+    /* flex-direction: column; */
 }
 
 .delete_button {
@@ -71,6 +73,7 @@
     color: white;
     box-shadow: 0 4px 6px rgba(74, 139, 77, 0.2);
     cursor: pointer;
+    width: 100%;
 }
 
 .delete_button:hover {
@@ -79,6 +82,10 @@
 }
 
  @media screen and (max-width: 520px) {
+
+    .container {
+        flex-direction: column;
+    }
     .main_content {
         flex-direction: column;
         gap: 10px;

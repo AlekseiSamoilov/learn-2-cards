@@ -33,34 +33,37 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
     };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.main_content}>
-                <div className={styles.info_container} onClick={handleClick}>
+        <motion.div className={styles.container}>
+
+            <motion.div className={styles.main_content} layout>
+                <motion.div className={styles.info_container} onClick={handleClick}>
                     <h3 className={styles.title}>{title}</h3>
                     <p className={styles.cards_count}>{`Карточек: ${cardsCount}`}</p>
-                </div>
-                <AnimatePresence mode='wait'>
-                    {onDelete && (
-                        <motion.div
-                            className={styles.edit_container}
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                        >
+                </motion.div>
 
-                            <button className={styles.delete_button}
-                                onClick={handleEditClick}
-                            >Изменить</button>
-                            <button
-                                className={styles.delete_button}
-                                onClick={handleDeleteClick}
-                            >Удалить</button>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        </div>
+
+            </motion.div>
+            <AnimatePresence mode='wait'>
+                {onDelete && (
+                    <motion.div
+                        key="edit-container"
+                        className={styles.edit_container}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    >
+                        <button className={styles.delete_button}
+                            onClick={handleEditClick}
+                        >Изменить</button>
+                        <button
+                            className={styles.delete_button}
+                            onClick={handleDeleteClick}
+                        >Удалить</button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div >
     )
 }
 

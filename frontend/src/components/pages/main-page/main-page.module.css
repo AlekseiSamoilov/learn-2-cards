@@ -18,9 +18,9 @@
     color: #4A8B4D ;
     font-size: 22px;
     padding: 5px;
-    align-self: flex-end;
     text-decoration: none;
     font-family: "Caveat";
+    margin-bottom: 30px;
 }
 
 .edit_button:hover {
