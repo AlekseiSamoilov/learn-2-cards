@@ -61,7 +61,8 @@
     background-color: rgba(245, 240, 230, 0.9);
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    width: 100%;
+    width: 95%;
+    color: #1A1A1A;
 }
 
 .answer_container {
@@ -75,13 +76,14 @@
 
 .back_side {
     font-size: 20px;
-    width: 100%;
+    width: 95%;
     text-align: center;
     padding: 20px 5px;
     border-radius: 10px;
     background-color: #F5F0E6;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transform-origin: top center;
+    color: #1E3A8A;
 }
 
 .buttons {

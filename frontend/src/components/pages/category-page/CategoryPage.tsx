@@ -131,7 +131,6 @@ const CategoryPage = () => {
 
             </div>
 
-
             {showAddForm ? (
                 <AddWordForm
                     onSubmit={handleAddCard}

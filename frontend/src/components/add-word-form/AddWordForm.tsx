@@ -9,7 +9,7 @@ interface IAddWordFormProps {
     initialValues?: {
         frontside: string;
         backside: string;
-        imageUrl: string;
+        imageUrl?: string;
     };
     isEditing?: boolean;
 }
@@ -37,6 +37,8 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
                 value={frontside}
                 onChange={(e) => setFrontside(e.target.value)}
                 placeholder='Введите слово'
+                multiline={true}
+                rows={3}
                 required
             />
             <Input
@@ -45,6 +47,8 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
                 onChange={(e) => setBackside(e.target.value)}
                 placeholder='Введите обратную сторону'
                 required
+                multiline={true}
+                rows={3}
             />
             <Input
                 title='Ссылка на картинку'

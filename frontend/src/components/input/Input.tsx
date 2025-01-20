@@ -12,6 +12,8 @@ export interface IInputProps {
     className?: string;
     validationRules?: TValidationRule[];
     error?: string;
+    multiline?: boolean;
+    rows?: number;
     required?: boolean;
 }
 
@@ -24,6 +26,8 @@ const Input: React.FC<IInputProps> = ({
     placeholder,
     required = false,
     type = 'text',
+    multiline = false,
+    rows = 3,
 }) => {
 
     const [localError, setLocalError] = useState<string>('');
@@ -50,7 +54,7 @@ const Input: React.FC<IInputProps> = ({
         return true;
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: any) => {
         onChange?.(e);
         validateInput(e.target.value);
     }
@@ -64,13 +68,24 @@ const Input: React.FC<IInputProps> = ({
     return (
         <div className={styles.container}>
             <label className={styles.label}>{title}</label>
-            <input
-                type={type}
-                value={value}
-                placeholder={placeholder}
-                className={styles.input}
-                onChange={handleChange}
-            />
+            {multiline ? (
+                <textarea
+                    value={value}
+                    placeholder={placeholder}
+                    className={`${styles.input} ${styles.textarea}`}
+                    onChange={handleChange}
+                    rows={rows}
+                />
+            ) : (
+                <input
+                    type={type}
+                    value={value}
+                    placeholder={placeholder}
+                    className={styles.input}
+                    onChange={handleChange}
+                />
+            )}
+
             <div className={styles.error_container}>
                 <AnimatePresence mode="popLayout" initial={true}>
                     {(localError || error) && (

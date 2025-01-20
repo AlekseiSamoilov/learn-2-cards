@@ -12,6 +12,7 @@
     position: relative;
     background-color: #F5F0E6;
     background-image: url("/rice-paper-3.png");
+    font-size: 18px;
 }
 
 .card_box {
@@ -33,12 +34,12 @@
     margin: 0;
     padding-bottom: 5px;
     text-align: start;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .frontside {
     /* padding: 5px 5px; */
-    font-size: 18px;
+    /* font-size: 18px; */
     color: #1A1A1A;
 }
 
@@ -107,6 +108,7 @@
 }
 
 @media (max-width: 520px) {
+
     .container {
         flex-direction: column;
     }
@@ -121,6 +123,15 @@
 
     .statistic {
         max-width: 70%;
+        font-size: 12px;
+    }
+
+    .frontside {
+        font-size: 16px;
+    }
+
+    .backside {
+        font-size: 16px;
     }
 
 }

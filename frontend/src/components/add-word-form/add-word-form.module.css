@@ -6,7 +6,8 @@
     padding: 10px;
     box-sizing: border-box;
     border-radius: 10px;
-    background-color: #f7e4bd;
+    background-color: rgba(247, 228, 189, 0.3);
+    width: 100%;
 }
 
 .form_buttons {
@@ -14,4 +15,14 @@
     gap: 5px;
     margin-top: 5px;
     justify-content: flex-end;
+}
+
+@media screen and (max-width: 400px) {
+.container {
+    align-items: center;
+}
+
+    .form_buttons {
+        flex-direction: column;
+    }
 }

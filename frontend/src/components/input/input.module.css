@@ -3,7 +3,6 @@
     flex-direction: column;
     gap: 8px;
     width: 100%;
-    /* color:  #8B4513; */
     color: black;
     position: relative;
     z-index: 1;
@@ -29,6 +28,15 @@
     color: inherit;
 }
 
+.textarea {
+    height: auto;
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+    padding: 10px;
+}
+
 .input::placeholder {
     font-size: 13px;
 }
@@ -49,4 +57,11 @@
     color: #ffffff;
     background-color: rgba(245, 62, 68, 0.7);
 
+}
+
+@media screen and (max-width: 400px) {
+    .container {
+        font-size: 14px;
+        gap: 4px;
+    }
 }

@@ -35,7 +35,7 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
     return (
         <motion.div className={styles.container}>
 
-            <motion.div className={styles.main_content} layout>
+            <motion.div className={styles.main_content}>
                 <motion.div className={styles.info_container} onClick={handleClick}>
                     <h3 className={styles.title}>{title}</h3>
                     <p className={styles.cards_count}>{`Карточек: ${cardsCount}`}</p>
@@ -45,13 +45,12 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
             </motion.div>
             <AnimatePresence mode='wait'>
                 {onDelete && (
-                    <motion.div
-                        key="edit-container"
+                    <motion.div layout
                         className={styles.edit_container}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                        transition={{ type: 'spring', duration: 0.3 }}
                     >
                         <button className={styles.delete_button}
                             onClick={handleEditClick}

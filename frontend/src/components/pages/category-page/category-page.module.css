@@ -126,6 +126,7 @@
 
     .title {
         text-align: center;
+        font-size: 20px;
     }
     .how_much {
         flex-direction: column;

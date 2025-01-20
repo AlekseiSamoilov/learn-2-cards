@@ -8,7 +8,7 @@ import { cardService } from '../../../api/services/card.service';
 import { ICard } from '../../../api/types/card.types';
 
 const ReviewPage = () => {
-    const { categoryId, title } = useParams<{ categoryId: string, title: string }>();
+    const { categoryId } = useParams<{ categoryId: string }>();
     const location = useLocation();
     const navigate = useNavigate();
     const [currentCard, setCurrentCard] = useState<ICard | null>(null);
@@ -104,7 +104,7 @@ const ReviewPage = () => {
         <div className={styles.container}>
             <div className={styles.header}>
                 <button onClick={handleBackToList} className={styles.back_btn}><svg stroke="#136147cc" fill="#136147cc" stroke-width="0" viewBox="0 0 24 24" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M21 11L6.414 11 11.707 5.707 10.293 4.293 2.586 12 10.293 19.707 11.707 18.293 6.414 13 21 13z"></path></svg></button>
-                <h1 className={styles.title}>{title}Category Name</h1>
+                <h1 className={styles.title}>Category Name</h1>
                 <div className={styles.progress}>{reviewedCards.size + 1} из {cardsToRepeat}</div>
 
             </div>
