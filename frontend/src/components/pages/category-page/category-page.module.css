@@ -49,6 +49,7 @@
     height: 100%;
     border-radius: 10px;
     overflow: scroll;
+    position: relative;
 }
 
 .repeat_container {
@@ -111,6 +112,17 @@
 .btn_box {
     display: flex;
     gap: 10px;
+}
+
+.gradient_top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 40px;
+    pointer-events: none;
+    z-index: 10;
+    top: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
 }
 
 @media screen and (max-width: 520px) {

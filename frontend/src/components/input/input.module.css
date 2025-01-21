@@ -3,7 +3,6 @@
     flex-direction: column;
     gap: 8px;
     width: 100%;
-    color: black;
     position: relative;
     z-index: 1;
     font-size: 16px;
@@ -57,6 +56,14 @@
     color: #ffffff;
     background-color: rgba(245, 62, 68, 0.7);
 
+}
+
+.blue_font {
+    color: #1E3A8A;
+}
+
+.blue_black {
+    color: black;
 }
 
 @media screen and (max-width: 400px) {

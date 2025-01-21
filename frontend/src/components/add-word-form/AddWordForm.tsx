@@ -49,6 +49,7 @@ const AddWordForm: React.FC<IAddWordFormProps> = ({ onSubmit, onCancel, initialV
                 required
                 multiline={true}
                 rows={3}
+                color='blue'
             />
             <Input
                 title='Ссылка на картинку'

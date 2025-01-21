@@ -62,6 +62,8 @@ const CategoryPage = () => {
             error.response?.data?.message || 'Failed to create card';
             toast.error(error);
             console.error('Create card error:', error)
+        } finally {
+            setShowAddForm(false);
         }
     };
 
@@ -80,6 +82,7 @@ const CategoryPage = () => {
                 state: {
                     cards: selectedCards,
                     cardsToRepeat: count,
+                    categoryTitle: category.title,
                 }
             });
         }
@@ -95,11 +98,11 @@ const CategoryPage = () => {
                 correctAnswers: card.correctAnswers,
                 imageUrl: card.imageUrl
             }));
-            console.log(allCards)
             navigate(`/review/${categoryId}`, {
                 state: {
                     cards: allCards,
-                    cardsToRepeat: categoryCards.length
+                    cardsToRepeat: categoryCards.length,
+                    categoryTitle: category.title,
                 }
             });
         }
@@ -153,6 +156,7 @@ const CategoryPage = () => {
                             />
                         ))}
                     </ul>
+                    <div className={styles.gradient_bot}></div>
                     <p className={styles.subtitle}>Карточек в категории: {categoryCards.length}</p>
                     <div className={styles.repeat_container}>
                         <div className={styles.how_much}>

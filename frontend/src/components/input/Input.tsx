@@ -15,6 +15,7 @@ export interface IInputProps {
     multiline?: boolean;
     rows?: number;
     required?: boolean;
+    color?: 'black' | 'blue';
 }
 
 const Input: React.FC<IInputProps> = ({
@@ -28,6 +29,7 @@ const Input: React.FC<IInputProps> = ({
     type = 'text',
     multiline = false,
     rows = 3,
+    color = 'black',
 }) => {
 
     const [localError, setLocalError] = useState<string>('');
@@ -65,6 +67,14 @@ const Input: React.FC<IInputProps> = ({
         }
     }, []);
 
+    const getColorClass = () => {
+        switch (color) {
+            case 'blue': return styles.blue_font;
+            case 'black': return styles.blue_black;
+            default: return styles.black_font;
+        }
+    }
+
     return (
         <div className={styles.container}>
             <label className={styles.label}>{title}</label>
@@ -72,7 +82,7 @@ const Input: React.FC<IInputProps> = ({
                 <textarea
                     value={value}
                     placeholder={placeholder}
-                    className={`${styles.input} ${styles.textarea}`}
+                    className={`${styles.input} ${styles.textarea} ${getColorClass()}`}
                     onChange={handleChange}
                     rows={rows}
                 />
@@ -83,6 +93,7 @@ const Input: React.FC<IInputProps> = ({
                     placeholder={placeholder}
                     className={styles.input}
                     onChange={handleChange}
+
                 />
             )}
 

@@ -18,21 +18,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    align-items: center;
     gap: 30px;
     padding: 20px 0;
-    width: 100%;
+    width: 95%;
 }
 
 .title {
     margin: 0;
     font-weight: 300;
-    font-size: 26px;
+    font-size: 22px;
+    text-align: end;
 }
 
 .progress {
-    font-size: 28px;
+    font-size: 22px;
     text-align: center;
+    font-weight: 300;
 }
 
 .card_container {
@@ -50,7 +51,7 @@
     border: none;
     width: 30px;
     height: 30px;
-    justify-self: flex-end;
+    justify-self: flex-start;
     cursor: pointer;
 }
 
@@ -110,7 +111,20 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.active_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 @media screen and (max-width: 500px) {
+    .header {
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+    }
+
     .front_side {
         font-size: 16px;
     }
