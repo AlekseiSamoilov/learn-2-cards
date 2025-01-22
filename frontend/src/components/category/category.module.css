@@ -88,5 +88,9 @@
         flex-direction: column;
         gap: 10px;
     }
+
+    .delete_button {
+        margin-top: 10px;
+    }
     
 }

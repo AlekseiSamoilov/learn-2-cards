@@ -49,7 +49,7 @@ const NameModal: React.FC<INameModalProps> = ({
             title={initialName ? 'Изменить имя' : 'Как вас называть?'}
         >
             <form onSubmit={handleSubmit} className={styles.form}>
-                <button onClick={handleLogout} className={styles.logout}><svg stroke="#136147" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></button>
+                <button onClick={handleLogout} className={styles.logout}><svg stroke="black" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></button>
                 <Input title='Введите ваше имя:'
                     value={name}
                     onChange={(e) => setName(e.target.value)}
