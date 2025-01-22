@@ -8,9 +8,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Circle Center Calculator',
-        short_name: 'CircleCalc',
-        description: 'Calculator for finding circle center',
+        start_url: '/main',
+        name: 'Listaz-znay',
+        short_name: 'Listoztay',
+        description: 'Easy learning everuthing',
         theme_color: '#ffffff',
         icons: [
           {

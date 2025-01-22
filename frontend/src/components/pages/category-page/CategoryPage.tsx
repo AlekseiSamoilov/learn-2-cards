@@ -7,6 +7,8 @@ import AddWordForm from '../../add-word-form/AddWordForm';
 import WordCard from '../../wordCard/WordCard';
 import { toast } from 'react-toastify';
 import LoadingSpinner from '../../loading-spinner/LoadingSpinner';
+import CardSelectionService from '../../../api/services/cardsSelection.service';
+import ConfirmModal from '../../confitm-modal/ConfirmModal';
 
 const CategoryPage = () => {
     const { categoryId } = useParams<{ categoryId: string }>();
@@ -16,10 +18,12 @@ const CategoryPage = () => {
     const [showAddForm, setShowAddForm] = useState<boolean>(false);
     const [cardsToRepeat, setCardsToRepeat] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [cardToDelete, setCardToDelete] = useState<string | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
     const categoryCards = cards.filter(w => w.categoryId === categoryId);
 
-
+    const cardSelectionService = new CardSelectionService();
 
     useEffect(() => {
         const loadData = async () => {
@@ -70,14 +74,29 @@ const CategoryPage = () => {
     const handleStartRepeat = () => {
         const count = parseInt(cardsToRepeat);
         if (count > 0 && count <= categoryCards.length) {
-            const selectedCards = categoryCards.slice(0, count).map(card => ({
-                _id: card._id,
-                frontside: card.frontside,
-                backside: card.backside,
-                totalShows: card.totalShows,
-                correctAnswers: card.correctAnswers,
-                imageUrl: card.imageUrl
-            }));
+            const selectedCards: any = [];
+
+            const remainingCards = [...categoryCards];
+
+            while (selectedCards.length < count && remainingCards.length > 0) {
+                const nextCard = cardSelectionService.getNextCard(remainingCards);
+                if (nextCard) {
+                    selectedCards.push({
+                        _id: nextCard._id,
+                        frontside: nextCard.frontside,
+                        backside: nextCard.backside,
+                        totalShows: nextCard.totalShows,
+                        correctAnswers: nextCard.correctAnswers,
+                        imageUrl: nextCard.imageUrl
+                    });
+
+                    const index = remainingCards.findIndex(card => card._id === nextCard._id);
+                    if (index > -1) {
+                        remainingCards.splice(index, 1);
+                    }
+                }
+            }
+
             navigate(`/review/${categoryId}`, {
                 state: {
                     cards: selectedCards,
@@ -90,22 +109,49 @@ const CategoryPage = () => {
 
     const hadnleStartRepeatAll = () => {
         if (categoryCards.length > 0) {
-            const allCards = categoryCards.map(card => ({
-                _id: card._id,
-                frontside: card.frontside,
-                backside: card.backside,
-                totalShows: card.totalShows,
-                correctAnswers: card.correctAnswers,
-                imageUrl: card.imageUrl
-            }));
+            const selectedCards = [];
+            const remainingCards = [...categoryCards];
+
+            while (remainingCards.length > 0) {
+                const nextCard = cardSelectionService.getNextCard(remainingCards);
+                if (nextCard) {
+                    selectedCards.push({
+                        _id: nextCard._id,
+                        frontside: nextCard.frontside,
+                        backside: nextCard.backside,
+                        totalShows: nextCard.totalShows,
+                        correctAnswers: nextCard.correctAnswers,
+                        imageUrl: nextCard.imageUrl
+                    });
+                    const index = remainingCards.findIndex(card => card._id === nextCard._id);
+                    if (index > -1) {
+                        remainingCards.splice(index, 1);
+                    }
+                }
+            }
+
             navigate(`/review/${categoryId}`, {
                 state: {
-                    cards: allCards,
+                    cards: selectedCards,
                     cardsToRepeat: categoryCards.length,
                     categoryTitle: category.title,
                 }
             });
         }
+    };
+
+    const handleDeleteClick = (cardId: string) => {
+        setCardToDelete(cardId);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (cardToDelete) {
+            await removeCard(cardToDelete);
+            setCardToDelete(null);
+            setIsDeleteModalOpen(false);
+            setIsEditing(false);
+        };
     };
 
     return (
@@ -145,11 +191,12 @@ const CategoryPage = () => {
                         {categoryCards.map(card => (
                             <WordCard
                                 key={card._id}
+                                id={card._id}
                                 frontside={card.frontside}
                                 backside={card.backside}
                                 isEditing={isEditing}
                                 imageUrl={card.imageUrl}
-                                onDelete={() => removeCard(card._id)}
+                                onDelete={handleDeleteClick}
                                 onEdit={(frontside, backside, imageUrl?) => updateCard(card._id, frontside, backside, imageUrl)}
                                 totalSHows={card.totalShows}
                                 correctAnswers={card.correctAnswers}
@@ -187,6 +234,16 @@ const CategoryPage = () => {
                     </div>
                 </>
             )}
+
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                title='Удаление карточки'
+                message='Вы уверены, что хотите удалить эту карточку?'
+                confirmText='Удалить'
+                cancelText='Отмена'
+            />
         </div>
     )
 }

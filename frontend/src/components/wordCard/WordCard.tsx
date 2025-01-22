@@ -4,9 +4,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import EditCardModal from '../edit-card-modal/EditCardModal';
 
 export interface IWordCardProps {
+    id: string;
     frontside: string;
     backside: string;
-    onDelete: () => void;
+    onDelete: (id: string) => void;
     onEdit?: (frontside: string, backside: string, imageUrl?: string) => void;
     isEditing: boolean;
     imageUrl?: string;
@@ -14,7 +15,7 @@ export interface IWordCardProps {
     correctAnswers?: number;
 }
 
-const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onEdit, isEditing, imageUrl, totalSHows, correctAnswers }) => {
+const WordCard: React.FC<IWordCardProps> = ({ id, frontside, backside, onDelete, onEdit, isEditing, imageUrl, totalSHows, correctAnswers }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [isImageLoading, setIsImageLoading] = useState<boolean>(true);
@@ -35,6 +36,11 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
         onEdit(frontside, backside, imageUrl);
         setIsEditModalOpen(false);
         setIsExpanded(false)
+    }
+
+    const handleDeleteClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onDelete(id);
     }
 
     return (
@@ -79,13 +85,13 @@ const WordCard: React.FC<IWordCardProps> = ({ frontside, backside, onDelete, onE
                 {
                     isEditing && (
                         <motion.div className={styles.word_action} layout
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0 }}
                             transition={{ type: 'spring', duration: 0.2 }}
                         >
                             <button className={styles.button} onClick={(e) => { e.stopPropagation(); setIsEditModalOpen(true) }}>Изменить</button>
-                            <button className={styles.button} onClick={(e) => { e.stopPropagation(); onDelete() }}>Удалить</button>
+                            <button className={styles.button} onClick={handleDeleteClick}>Удалить</button>
                         </motion.div>
                     )
                 }

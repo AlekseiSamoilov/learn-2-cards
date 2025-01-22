@@ -7,11 +7,13 @@ import MainPage from './components/pages/main-page/MainPage'
 import CategoryPage from './components/pages/category-page/CategoryPage'
 import ReviewPage from './components/pages/review-page/ReviewPage'
 import ResultPage from './components/pages/result-page/ResultPage'
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import { CategoryProvider } from './components/context/categoryContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './components/pages/landing-page/LandingPage'
+import RequireNoAuth from './components/require-no-auth/RequireNoAuth'
+import RequireAuth from './components/require-auth/RequireAuth'
 
 function App() {
   return (
@@ -35,15 +37,51 @@ function App() {
             }}
           />
           <Routes>
-            <Route path='/' element={<LandingPage />} />
-            <Route path="/register" element={<RegistrationPage />} />
-            <Route path='/recovery-code' element={<RecoveryCodePage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/recovery-password' element={<RecoveryPasswordPage />} />
-            <Route path='/main' element={<MainPage />} />
-            <Route path='/category/:categoryId' element={<CategoryPage />} />
-            <Route path='/review/:categoryId' element={<ReviewPage />} />
-            <Route path='/result' element={<ResultPage />} />
+            <Route path='/' element={
+              localStorage.getItem('token') ? <Navigate to='/main' replace /> : <LandingPage />
+            } />
+            <Route path="/register" element={
+              <RequireNoAuth>
+                <RegistrationPage />
+              </RequireNoAuth>
+            } />
+            <Route path='/recovery-code' element={
+              <RequireNoAuth>
+                <RecoveryCodePage />
+              </RequireNoAuth>
+            } />
+            <Route path='/login' element={
+              <RequireNoAuth>
+                <LoginPage />
+              </RequireNoAuth>
+            } />
+            <Route path='/recovery-password' element={
+              <RequireNoAuth>
+                <RecoveryPasswordPage />
+              </RequireNoAuth>
+            } />
+
+
+            <Route path='/main' element={
+              <RequireAuth>
+                <MainPage />
+              </RequireAuth>
+            } />
+            <Route path='/category/:categoryId' element={
+              <RequireAuth>
+                <CategoryPage />
+              </RequireAuth>
+            } />
+            <Route path='/review/:categoryId' element={
+              <RequireAuth>
+                <ReviewPage />
+              </RequireAuth>
+            } />
+            <Route path='/result' element={
+              <RequireAuth>
+                <ResultPage />
+              </RequireAuth>
+            } />
           </Routes>
         </CategoryProvider>
       </BrowserRouter>

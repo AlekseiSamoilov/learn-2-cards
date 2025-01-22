@@ -47,9 +47,9 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
                 {onDelete && (
                     <motion.div layout
                         className={styles.edit_container}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
                         transition={{ type: 'spring', duration: 0.3 }}
                     >
                         <button className={styles.delete_button}
