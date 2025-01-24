@@ -220,13 +220,13 @@ const CategoryPage = () => {
                         <div className={styles.btn_box}>
                             <Button
                                 text='Начать'
-                                width='medium'
+                                width='large'
                                 onClick={handleStartRepeat}
                                 disabled={!cardsToRepeat || categoryCards.length === 0}
                             />
                             <Button
                                 text='Все сразу!'
-                                width='medium'
+                                width='large'
                                 onClick={hadnleStartRepeatAll}
                                 disabled={categoryCards.length === 0}
                             />

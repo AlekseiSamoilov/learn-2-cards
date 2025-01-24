@@ -9,19 +9,14 @@ export default defineConfig({
       registerType: 'autoUpdate',
       manifest: {
         start_url: '/main',
-        name: 'Listaz-znay',
-        short_name: 'Listoztay',
-        description: 'Easy learning everuthing',
+        name: 'Листай-Знай',
+        short_name: 'Листай-знай',
+        description: 'Учи легко всё',
         theme_color: '#ffffff',
         icons: [
           {
-            src: '/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/icon-512x512.png',
-            sizes: '512x512',
+            src: 'icons8-leaf-96.png',
+            sizes: '96x96',
             type: 'image/png'
           }
         ]
