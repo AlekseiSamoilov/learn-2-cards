@@ -1,134 +1,208 @@
 .container {
     min-height: 100vh;
-    background-color: #ffffff;
-    color: #1a1a1a;
-}
-
-.hero {
-    background: linear-gradient(135deg, rgb(83, 172, 89) 0%, rgb(74, 139, 77) 100%);
-    color: rgb(255, 255, 255);
-    padding: 4rem 1rem;
-}
-
-.hero_content {
+    /* background: linear-gradient(to bottom, #c1dcdc, #FFFFFF); */
+    overflow: hidden;
+    position: relative;
+    
+  }
+  
+  .particle_container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: rgb(37, 141, 65);
+    /* border-radius: 50%; */
+  }
+  
+  .progress_bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(to right, #31ce49, #d5975a);
+    z-index: 50;
+  }
+  
+  .grid_pattern {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(66, 153, 225, 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(66, 153, 225, 0.5) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.5;
+  }
+  
+  .navbar {
+    position: fixed;
+    width: 100%;
+    background-color: rgba(245, 240, 230, 0.8);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+  }
+  
+  .nav_content {
     max-width: 1200px;
     margin: 0 auto;
-    text-align: center;
-}
-
-.title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
-}
-
-.logo {
-    font-size:2rem;
-    font-family: "Caveat";
-}
-
-.subtitle {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    max-width: 42rem;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.9;
-}
-
-.button_group {
+    padding: 1rem;
     display: flex;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.primary_btn {
-    background-color: #ffffff;
-    color: rgb(19, 97, 71);
-    padding: 0.75rem 2rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    /* justify-content: space-between; */
+    gap: 30px;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #4a8b4d, #f69f3c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: rgb(74, 139, 77);
+    font-family: "Caveat";
+  }
+  
+  .start_button {
+    background: linear-gradient(to right, #4a8b4d, #0f0f0f);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
     border: none;
     cursor: pointer;
-}
-
-.primary_btn:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-    transform: translateY(-2px);
-}
-
-.secondary_btn {
-    background-color: transparent;
-    color: #ffffff;
-    padding: 0.75rem 2rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: 2px solid #ffffff;
-    cursor: pointer;
-}
-
-.secondary_btn:hover {
-    background-color: rgba(19, 97, 71, 0.1);
-    transform: translateY(-2px);
-}
-
-.section {
-    padding: 4rem 1rem;
-    background-image: url(../../../../public/rice-paper-3.png);
-}
-
-.section_dark {
-    background-color: rgba(83, 134, 172, 0.1);
-}
-
-.section_title {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 3rem;
-    color: rgb(19, 97, 71);
-}
-
-.feature_grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 2rem;
+    transition: transform 0.2s;
+  }
+  
+  .main {
+    padding-top: 6rem;
+  }
+  
+  .hero_section {
     max-width: 1200px;
     margin: 0 auto;
-}
-
-.cta_section {
-    background: linear-gradient(135deg, rgb(83, 172, 89) 0%, rgb(19, 97, 71) 100%);
-    color: white;
-    text-align: center;
     padding: 4rem 1rem;
-}
-
-@media (min-width: 768px) {
-    .feature_grid {
-        grid-template-columns: repeat(2, 1fr);
+    position: relative;
+  }
+  
+  .hero_content {
+    text-align: center;
+  }
+  
+  .hero_title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    background: #4a8b4d;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero_text {
+    font-size: 1.25rem;
+    color: #000000;
+    max-width: 36rem;
+    margin: 0 auto 2rem;
+    font-weight: 400;
+  }
+  
+  .features_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+  
+  .feature_card {
+    background-color: rgba(245, 240, 230, 0.8);
+    backdrop-filter: blur(8px);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(66, 153, 225, 0.1);
+    transition: all 0.3s;
+  }
+  
+  .feature_icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .feature_title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: #4a8b4d;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+  }
+  
+  .feature_description {
+    color: #4A5568;
+  }
+  
+  .cta_section {
+    padding: 3rem 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cta_section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(66, 153, 225, 0.05), rgba(128, 90, 213, 0.05));
+    opacity: 0.5;
+  }
+  
+  .cta_content {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .cta_wrapper {
+    text-align: center;
+  }
+  
+  .cta_title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: #4a8b4d;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 3rem;
+  }
+  
+  .cta_button {
+    background: linear-gradient(to right, #4a8b4d, #0f0f0f);
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+  }
+  
+  @media (max-width: 768px) {
+    .hero_title {
+      font-size: 2.5rem;
     }
-}
-
-@media (min-width: 1024px) {
-    .feature_grid {
-        grid-template-columns: repeat(3, 1fr);
+  
+    .features_grid {
+      grid-template-columns: 1fr;
     }
-}
-
-@media screen and (max-width: 321px) {
-    .title {
-        font-size: 1.5rem;
+  
+    .cta_title {
+      font-size: 2rem;
     }
-
-    .section_title {
-        font-size: 1.5rem;
-    }
-
-    .logo {
-        font-size: 1.5rem;
-    }
-}
+  }

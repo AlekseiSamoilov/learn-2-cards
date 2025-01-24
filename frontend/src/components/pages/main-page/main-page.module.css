@@ -6,7 +6,7 @@
     max-width: 800px;
     padding: 0 20px;
     box-sizing: border-box;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     position: relative;
 }
 
@@ -34,8 +34,8 @@
     border: dashed 1px grey;
     background: transparent;
     font-size: 20px;
-    width: 70%;
-    height: 70px;
+    width: 90%;
+    height: 50px;
     color: grey;
     border-radius: 10px;
     box-sizing: border-box;
@@ -81,6 +81,7 @@
     margin:20px 0;
     padding: 10px;
     box-sizing: border-box;
+    max-height: 350px;
     overflow-y: auto; 
     flex: 1; 
     max-height: calc(100vh - 300px);
@@ -99,6 +100,7 @@
     justify-content: center;
     gap: 10px;
     box-sizing: border-box;
+    width: 80%;
 }
 
 .add_buttons {
@@ -128,7 +130,7 @@
     .category_list {
         padding: 5px;
         margin: 10px 0;
-        max-height: calc(100vh - 250px); 
+        max-height: calc(100vh - 320px); 
     }
 
     .header_buttons_container {
@@ -137,7 +139,6 @@
 
     .add_category {
         flex-direction: column;
-        /* align-items: flex-start; */
     }
 
     .logo {
