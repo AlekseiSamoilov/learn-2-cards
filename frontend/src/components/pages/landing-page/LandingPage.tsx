@@ -1,7 +1,4 @@
-// import FeatureCard from '../../feature-card/FeatureCard';
-// import UseCaseCard from '../../use-case-card/UseCaseCard';
-// import styles from './landing-page.module.css';
-import { Brain, BookOpen, Package, BookCheck, Sparkles } from 'lucide-react';
+import { Brain, BookOpen, Package, BookCheck } from 'lucide-react';
 
 import { motion } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
@@ -104,7 +101,7 @@ const LandingPage = () => {
 
     return (
         <div className={styles.container} onMouseMove={handleMouseMove}>
-            {/* <ParticleEffect /> */}
+            <ParticleEffect />
 
             <div className={styles.grid_pattern} />
 
