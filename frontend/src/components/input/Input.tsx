@@ -20,7 +20,7 @@ export interface IInputProps {
 
 const Input: React.FC<IInputProps> = ({
     title,
-    value,
+    value = '',
     onChange,
     validationRules = [],
     error,
@@ -33,21 +33,34 @@ const Input: React.FC<IInputProps> = ({
 }) => {
 
     const [localError, setLocalError] = useState<string>('');
+    const [isDirty, setIsDirty] = useState<boolean>(false);
 
-    const validateInput = (value: string) => {
+    console.log('Input render:', {
+        title,
+        value,
+        localError,
+        isDirty,
+        hasValidationRules: validationRules.length > 0
+    });
 
-        if (required && value.trim() === '') {
+    const validateInput = (value: string | undefined) => {
+
+
+
+        const valueToValidate = value ?? '';
+
+        if (required && valueToValidate.trim() === '') {
             setLocalError('Поле обязательно для заполнения');
             return false;
         }
 
-        if (!required && value.trim() === '') {
+        if (!required && valueToValidate.trim() === '') {
             setLocalError('');
             return false;
         }
 
         for (const rule of validationRules) {
-            if (!rule.validate(value)) {
+            if (!rule.validate(valueToValidate)) {
                 setLocalError(rule.errorMessage);
                 return false;
             }
@@ -55,6 +68,14 @@ const Input: React.FC<IInputProps> = ({
         setLocalError('');
         return true;
     }
+
+
+
+    useEffect(() => {
+        if (isDirty || value) {
+            validateInput(value);
+        }
+    }, [value, validationRules, isDirty])
 
     const handleChange = (e: any) => {
         onChange?.(e);
@@ -66,6 +87,11 @@ const Input: React.FC<IInputProps> = ({
             validateInput(value);
         }
     }, []);
+
+    const handleBlur = () => {
+        setIsDirty(true);
+        validateInput(value);
+    }
 
     const getColorClass = () => {
         switch (color) {
@@ -93,6 +119,7 @@ const Input: React.FC<IInputProps> = ({
                     placeholder={placeholder}
                     className={styles.input}
                     onChange={handleChange}
+                    onBlur={handleBlur}
 
                 />
             )}

@@ -13,6 +13,8 @@ export default function RegistrationPage() {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const confirmPasswordRules = createConfirmPasswordRules(password);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,10 +73,10 @@ export default function RegistrationPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder='Повторите введенный пароль'
-                validationRules={createConfirmPasswordRules(password)}
+                validationRules={confirmPasswordRules}
                 required
             />
-            <Button width='large' onClick={handleSubmit} text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading || password !== confirmPassword} />
+            <Button width='large' onClick={handleSubmit} text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading || password !== confirmPassword || !login || !password} />
             <div className={styles.already_register}>
                 <p>Уже зарегистрированы?</p>
                 <a href='/login' className={styles.login_link} >Войти</a>

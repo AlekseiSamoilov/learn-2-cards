@@ -25,6 +25,8 @@ const CategoryPage = () => {
 
     const cardSelectionService = new CardSelectionService();
 
+    const shouldUseVirtualization = cards.length > 100;
+
     useEffect(() => {
         const loadData = async () => {
             setIsLoading(true);
