@@ -6,6 +6,7 @@ import Button from '../button/Button';
 import { authService } from '../../api/services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { nameValidationRules } from '../utils/validation-rules';
 
 interface INameModalProps {
     isOpen: boolean;
@@ -54,12 +55,15 @@ const NameModal: React.FC<INameModalProps> = ({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    placeholder='Введите новое имя'
+                    validationRules={nameValidationRules}
                 />
                 <div className={styles.buttons}>
                     <Button
                         text='Сохранить'
                         width='medium'
                         onClick={handleSubmit}
+                        disabled={name.length < 2 || name.length > 25}
                     />
                     <Button
                         text='Отмена'

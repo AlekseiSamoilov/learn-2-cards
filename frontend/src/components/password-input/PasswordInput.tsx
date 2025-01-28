@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Input, { IInputProps } from "../input/Input";
 import styles from './passwordInput.module.css'
-import { createConfirmPasswordRules, passwordValidationRules } from "../utils/validation-rules";
+import { passwordValidationRules } from "../utils/validation-rules";
 
 interface IPasswordInputProps extends IInputProps {
     confirm?: boolean;
@@ -13,13 +13,9 @@ const PasswordInput: React.FC<IPasswordInputProps> = ({
     value = '',
     onChange,
     placeholder,
+
 }) => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
-
-    console.log('PasswordInput render:', {
-        title,
-        value,
-    });
 
     return (
         <div className={styles.password_container}>
@@ -30,7 +26,7 @@ const PasswordInput: React.FC<IPasswordInputProps> = ({
                 placeholder={placeholder}
                 type={showPassword ? 'text' : 'password'}
                 required
-                validationRules={createConfirmPasswordRules(value)}
+                validationRules={passwordValidationRules}
             />
 
             <button className={styles.show_password}

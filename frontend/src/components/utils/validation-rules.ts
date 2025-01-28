@@ -29,7 +29,7 @@ export const createConfirmPasswordRules = (compareWith: string): TValidationRule
     }
 ];
 
-export const recoveryCodeValidationRules: TValidationRule[] = [
+export const recoveryCodeValidationRules = (): TValidationRule[] => [
     {
         validate: (value: string) => value.length >= 6,
         errorMessage: 'Код должен содержать 6 символов'
@@ -37,5 +37,16 @@ export const recoveryCodeValidationRules: TValidationRule[] = [
     {
         validate: (value: string) => /^[A-Z0-9]+$/.test(value),
         errorMessage: 'Код должен содержаь только заглавные буквы и цифры'
+    }
+];
+
+export const nameValidationRules: TValidationRule[] = [
+    {
+        validate: (value: string) => value.length <= 25,
+        errorMessage: 'Имя не должно быть длиннее 25 символов'
+    },
+    {
+        validate: (value: string) => value.length >= 2,
+        errorMessage: 'Имя должно быть длинее 2 символов'
     }
 ];

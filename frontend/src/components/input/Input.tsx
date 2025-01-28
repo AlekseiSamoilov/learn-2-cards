@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TValidationRule } from '../../types/validationRule';
 import styles from './input.module.css'
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,7 +8,7 @@ export interface IInputProps {
     type?: string;
     placeholder?: string;
     value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     className?: string;
     validationRules?: TValidationRule[];
     error?: string;
@@ -33,19 +33,8 @@ const Input: React.FC<IInputProps> = ({
 }) => {
 
     const [localError, setLocalError] = useState<string>('');
-    const [isDirty, setIsDirty] = useState<boolean>(false);
-
-    console.log('Input render:', {
-        title,
-        value,
-        localError,
-        isDirty,
-        hasValidationRules: validationRules.length > 0
-    });
 
     const validateInput = (value: string | undefined) => {
-
-
 
         const valueToValidate = value ?? '';
 
@@ -69,27 +58,13 @@ const Input: React.FC<IInputProps> = ({
         return true;
     }
 
-
-
-    useEffect(() => {
-        if (isDirty || value) {
-            validateInput(value);
-        }
-    }, [value, validationRules, isDirty])
-
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const newValue = e.target.value;
         onChange?.(e);
-        validateInput(e.target.value);
+        validateInput(newValue);
     }
 
-    useEffect(() => {
-        if (value) {
-            validateInput(value);
-        }
-    }, []);
-
     const handleBlur = () => {
-        setIsDirty(true);
         validateInput(value);
     }
 

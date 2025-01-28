@@ -144,5 +144,9 @@
     .logo {
         margin: 10px 0;
     }
+
+    .welcome {
+        font-size: 16px;
+    }
     
 }

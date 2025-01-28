@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from '../../input/Input'
 import PasswordInput from '../../password-input/PasswordInput';
 import styles from './registration-page.module.css'
@@ -13,14 +13,11 @@ export default function RegistrationPage() {
     const [login, setLogin] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [passError, setPassError] = useState<boolean>(false);
     const confirmPasswordRules = createConfirmPasswordRules(password);
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (password !== confirmPassword) {
-            return;
-        };
 
         try {
             const registerData = {
@@ -44,6 +41,14 @@ export default function RegistrationPage() {
             console.error('Ошибка регистрации', err)
         }
     };
+
+    useEffect(() => {
+        if (password !== confirmPassword) {
+            setPassError(true);
+        } else {
+            setPassError(false)
+        }
+    }, [password, confirmPassword])
 
     return (
         <div className={styles.container}>
@@ -76,7 +81,8 @@ export default function RegistrationPage() {
                 validationRules={confirmPasswordRules}
                 required
             />
-            <Button width='large' onClick={handleSubmit} text={isLoading ? 'Загрузка' : 'Далее'} disabled={isLoading || password !== confirmPassword || !login || !password} />
+
+            <Button width='large' onClick={handleSubmit} text={passError ? 'Пароли не совпадают' : 'Далее'} disabled={isLoading || passError || !login || !password} />
             <div className={styles.already_register}>
                 <p>Уже зарегистрированы?</p>
                 <a href='/login' className={styles.login_link} >Войти</a>

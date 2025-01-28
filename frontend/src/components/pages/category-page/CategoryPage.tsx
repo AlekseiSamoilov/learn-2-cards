@@ -25,8 +25,6 @@ const CategoryPage = () => {
 
     const cardSelectionService = new CardSelectionService();
 
-    const shouldUseVirtualization = cards.length > 100;
-
     useEffect(() => {
         const loadData = async () => {
             setIsLoading(true);
@@ -222,13 +220,13 @@ const CategoryPage = () => {
                         <div className={styles.btn_box}>
                             <Button
                                 text='Начать'
-                                width='large'
+                                width='medium'
                                 onClick={handleStartRepeat}
                                 disabled={!cardsToRepeat || categoryCards.length === 0}
                             />
                             <Button
                                 text='Все сразу!'
-                                width='large'
+                                width='medium'
                                 onClick={hadnleStartRepeatAll}
                                 disabled={categoryCards.length === 0}
                             />
