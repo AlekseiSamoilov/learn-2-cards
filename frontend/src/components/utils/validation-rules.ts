@@ -29,7 +29,7 @@ export const createConfirmPasswordRules = (compareWith: string): TValidationRule
     }
 ];
 
-export const recoveryCodeValidationRules = (): TValidationRule[] => [
+export const recoveryCodeValidationRules: TValidationRule[] = [
     {
         validate: (value: string) => value.length >= 6,
         errorMessage: 'Код должен содержать 6 символов'
