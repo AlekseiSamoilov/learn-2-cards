@@ -10,6 +10,7 @@ import LoadingSpinner from '../../loading-spinner/LoadingSpinner'
 import { AnimatePresence, motion } from 'framer-motion'
 import ConfirmModal from '../../confitm-modal/ConfirmModal'
 import EditCategoryModal from '../../edit-category-modal/EditCategoryModal'
+import { categoryNameValidation } from '../../utils/validation-rules'
 
 const NameModal = React.lazy(() => import('../../name-modal/NameModal'));
 
@@ -57,7 +58,7 @@ const MainPage = () => {
     };
 
     const handleAddCategory = async () => {
-        setAddNewCategory(true)
+        setAddNewCategory(true);
         if (!newCategoryTitle.trim()) {
             toast.error('Необходимо ввести имя категории');
             return;
@@ -204,6 +205,7 @@ const MainPage = () => {
                                 value={newCategoryTitle}
                                 onChange={(e) => setNewCategoryTitle(e.target.value)}
                                 placeholder='Название категории'
+                                validationRules={categoryNameValidation}
                             />
                         </motion.div>
                         <motion.div
@@ -212,7 +214,7 @@ const MainPage = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <Button onClick={handleAddCategory} text='Добавить' width='medium' />
+                            <Button onClick={handleAddCategory} disabled={newCategoryTitle.length <= 1 || newCategoryTitle.length > 25} text='Добавить' width='medium' />
                             <Button onClick={() => setAddNewCategory(false)} text='Отмена' width='medium' />
                         </motion.div>
 

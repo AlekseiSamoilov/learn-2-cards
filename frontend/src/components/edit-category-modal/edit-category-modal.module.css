@@ -5,6 +5,7 @@
 }
 
 .buttons {
+    padding-top: 8px;
     display: flex;
     justify-content: space-between;
     gap: 10px;

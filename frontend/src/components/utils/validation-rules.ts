@@ -50,3 +50,14 @@ export const nameValidationRules: TValidationRule[] = [
         errorMessage: 'Имя должно быть длинее 2 символов'
     }
 ];
+
+export const categoryNameValidation: TValidationRule[] = [
+    {
+        validate: (value: string) => value.length >= 2,
+        errorMessage: 'Не менее 2 символов!'
+    },
+    {
+        validate: (value: string) => value.length <= 30,
+        errorMessage: 'Не больше 30 символов!'
+    }
+]

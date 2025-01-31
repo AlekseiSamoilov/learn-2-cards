@@ -3,6 +3,7 @@ import Input from '../input/Input';
 import Modal from '../modal/modal';
 import styles from './edit-category-modal.module.css'
 import Button from '../button/Button';
+import { categoryNameValidation } from '../utils/validation-rules';
 
 interface IEditCategoryModalProps {
     isOpen: boolean;
@@ -32,9 +33,10 @@ const EditCategoryModal: React.FC<IEditCategoryModalProps> = ({
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder='Введите новое название'
+                validationRules={categoryNameValidation}
             />
             <div className={styles.buttons}>
-                <Button onClick={handleSave} text='Сохранить' width='medium' />
+                <Button onClick={handleSave} disabled={newTitle.length <= 1 || newTitle.length > 25} text='Сохранить' width='medium' />
                 <Button onClick={onClose} text='Отмена' width='medium' />
             </div>
         </Modal>
