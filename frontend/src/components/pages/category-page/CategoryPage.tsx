@@ -20,6 +20,7 @@ const CategoryPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [cardToDelete, setCardToDelete] = useState<string | null>(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+    const [isFlipped, setIsFlipped] = useState<boolean>(false);
 
     const categoryCards = cards.filter(w => w.categoryId === categoryId);
 
@@ -83,8 +84,8 @@ const CategoryPage = () => {
                 if (nextCard) {
                     selectedCards.push({
                         _id: nextCard._id,
-                        frontside: nextCard.frontside,
-                        backside: nextCard.backside,
+                        frontside: isFlipped ? nextCard.backside : nextCard.frontside,
+                        backside: isFlipped ? nextCard.frontside : nextCard.backside,
                         totalShows: nextCard.totalShows,
                         correctAnswers: nextCard.correctAnswers,
                         imageUrl: nextCard.imageUrl
@@ -96,7 +97,6 @@ const CategoryPage = () => {
                     }
                 }
             }
-
             navigate(`/review/${categoryId}`, {
                 state: {
                     cards: selectedCards,
@@ -177,9 +177,7 @@ const CategoryPage = () => {
                     </div>
                 )
                 }
-
             </div>
-
             {showAddForm ? (
                 <AddWordForm
                     onSubmit={handleAddCard}
@@ -207,7 +205,7 @@ const CategoryPage = () => {
                     <p className={styles.subtitle}>Карточек в категории: {categoryCards.length}</p>
                     <div className={styles.repeat_container}>
                         <div className={styles.how_much}>
-                            <p className={styles.repeat_title}>Сколько карточек повторим?</p>
+                            <label className={styles.repeat_title}>Сколько карточек повторим?</label>
                             <input
                                 className={styles.repeat_input}
                                 type='number'
@@ -216,13 +214,22 @@ const CategoryPage = () => {
                                 value={cardsToRepeat}
                                 onChange={(e) => setCardsToRepeat(e.target.value)}
                             />
+                            <div className={styles.checkbox_box}>
+                                <label className={styles.repeat_checkbox}>Поменять стороны</label>
+                                <input
+                                    type='checkbox'
+                                    className={styles.flip_checkbox}
+                                    checked={isFlipped}
+                                    onChange={(e) => setIsFlipped(e.target.checked)}
+                                />
+                            </div>
                         </div>
                         <div className={styles.btn_box}>
                             <Button
                                 text='Начать'
                                 width='medium'
                                 onClick={handleStartRepeat}
-                                disabled={!cardsToRepeat || categoryCards.length === 0}
+                                disabled={!cardsToRepeat || categoryCards.length === 0 || categoryCards.length < Number(cardsToRepeat)}
                             />
                             <Button
                                 text='Все сразу!'

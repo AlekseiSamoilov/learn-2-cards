@@ -125,6 +125,21 @@
     background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
 }
 
+.flip_checkbox {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.checkbox_box {
+    display: flex;
+
+}
+
+.repeat_checkbox {
+    font-size: 14px;
+    /* width: 50%; */
+}
+
 @media screen and (max-width: 520px) {
     .repeat_container{
         flex-direction: column;
