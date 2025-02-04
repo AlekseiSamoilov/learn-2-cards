@@ -79,6 +79,17 @@
     box-shadow: 0 6px 8px rgba(74, 139, 77, 0.3);
 }
 
+.grip_handle {
+    cursor: grab;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.grip_handle:active {
+    cursor: grabbing;
+}
+
  @media screen and (max-width: 520px) {
 
     .container {

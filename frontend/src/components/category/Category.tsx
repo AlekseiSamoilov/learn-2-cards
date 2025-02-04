@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './category.module.css'
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { GripVertical } from "lucide-react"
 
 interface ICategoryProps {
     onDelete?: (id: string) => void;
@@ -12,7 +14,20 @@ interface ICategoryProps {
 }
 
 const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cardsCount }) => {
+    const [dragging, setDragging] = useState<boolean>(false);
+    const ref = useRef<HTMLDivElement | null>(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+
+        return draggable({
+            element: el,
+            onDragStart: () => setDragging(true),
+            onDrop: () => setDragging(false),
+        });
+    }, []);
 
     const handleClick = () => {
         navigate(`/category/${id}`);
@@ -33,8 +48,7 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
     };
 
     return (
-        <motion.div className={styles.container}>
-
+        <motion.div className={styles.container} ref={ref}>
             <motion.div className={styles.main_content}>
                 <motion.div className={styles.info_container} onClick={handleClick}>
                     <h3 className={styles.title}>{title}</h3>
@@ -62,6 +76,9 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
                     </motion.div>
                 )}
             </AnimatePresence>
+            <motion.div className={styles.grip_handle}>
+                <GripVertical size={20} />
+            </motion.div>
         </motion.div >
     )
 }
