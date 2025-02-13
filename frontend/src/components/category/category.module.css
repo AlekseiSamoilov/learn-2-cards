@@ -4,6 +4,7 @@
     border-radius: 10px;
     font-weight: 300;
     min-height: fit-content;
+    /* height: 150px; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -12,12 +13,16 @@
     cursor: pointer;
     width: 100%;
     box-sizing: border-box;
-    background-image: url("/rice-paper-3.png");
     background-size: 300px 300px;
     background-color: #F5F0E6;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     color: black;
+}
+
+.drag {
+    background-color: rgba(245, 240, 230, 0.3);
+    color: rgba(0, 0, 0, 0.3);
 }
 
 .info_container {
@@ -92,9 +97,6 @@
 
  @media screen and (max-width: 520px) {
 
-    .container {
-        flex-direction: column;
-    }
     .main_content {
         flex-direction: column;
         gap: 10px;

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './main-page.module.css'
 import Category from '../../category/Category'
 import Button from '../../button/Button'
@@ -11,11 +11,12 @@ import { AnimatePresence, motion } from 'framer-motion'
 import ConfirmModal from '../../confitm-modal/ConfirmModal'
 import EditCategoryModal from '../../edit-category-modal/EditCategoryModal'
 import { categoryNameValidation } from '../../utils/validation-rules'
+import { dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 
 const NameModal = React.lazy(() => import('../../name-modal/NameModal'));
 
 const MainPage = () => {
-    const { categories, addCategory, removeCategory, initializeCategories, getCardCountByCategory, updateCategory } = useCategories();
+    const { categories, addCategory, removeCategory, initializeCategories, getCardCountByCategory, updateCategory, reorderCategories } = useCategories();
     const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isNameModalOpen, setIsNameModalOpen] = useState<boolean>(false);
@@ -25,6 +26,53 @@ const MainPage = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [categoryToEdit, setCategoryToEdit] = useState<{ id: string, title: string } | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+    const ref = useRef(null);
+    const [isDraggedOver, setIsDraggedOver] = useState<boolean>(false);
+    const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+
+        return dropTargetForElements({
+            element: el,
+            onDragEnter: () => setIsDraggedOver(true),
+            onDragLeave: () => setIsDraggedOver(false),
+            onDrop: () => setIsDraggedOver(false),
+            getData: () => ({ location }),
+        })
+    }, []);
+
+    useEffect(() => {
+        return monitorForElements({
+            onDragStart({ location }) {
+                const target = location.current.dropTargets[0];
+                if (target) {
+                    setDropTargetIndex(target.data.index as number);
+                }
+            },
+            onDrag({ location }) {
+                const target = location.current.dropTargets[0];
+                if (target) {
+                    setDropTargetIndex(target.data.index as number);
+                }
+            },
+            onDrop({ source, location }) {
+                const destination = location.current.dropTargets[0];
+                if (!destination) return;
+
+                const sourceIndex = source.data.index as number;
+                const destinationIndex = destination.data.index as number;
+
+                if (typeof sourceIndex === 'number' &&
+                    typeof destinationIndex === 'number' &&
+                    sourceIndex !== destinationIndex) {
+                    reorderCategories(sourceIndex, destinationIndex);
+                }
+                setDropTargetIndex(null)
+            }
+        })
+    }, [categories, reorderCategories])
 
     const initialize = useCallback(() => {
         initializeCategories();
@@ -136,15 +184,29 @@ const MainPage = () => {
                 />
             </React.Suspense>
             <div className={styles.category_list}>
-                {categories.map(category => (
-                    <Category
+                {categories.map((category, index) => (
+                    <div
                         key={category._id}
-                        cardsCount={getCardCountByCategory(category._id)}
-                        id={category._id}
-                        title={category.title}
-                        onDelete={isEditing ? handleDeleteClick : undefined}
-                        onEdit={isEditing ? handleEditClick : undefined}
-                    />
+                        ref={el => {
+                            if (el) {
+                                dropTargetForElements({
+                                    element: el,
+                                    getData: () => ({ index }),
+                                });
+                            }
+                        }}
+                        className={`${styles.category_wrapeer} ${dropTargetIndex === index ? styles.drop_target : ''
+                            }`}
+                    >
+                        <Category
+                            cardsCount={getCardCountByCategory(category._id)}
+                            id={category._id}
+                            index={index}
+                            title={category.title}
+                            onDelete={isEditing ? handleDeleteClick : undefined}
+                            onEdit={isEditing ? handleEditClick : undefined}
+                        />
+                    </div>
                 ))}
             </div>
             <ConfirmModal
@@ -157,17 +219,19 @@ const MainPage = () => {
                 cancelText='Отмена'
             />
 
-            {categoryToEdit && (
-                <EditCategoryModal
-                    isOpen={isEditModalOpen}
-                    onClose={() => {
-                        setIsEditModalOpen(false);
-                        setCategoryToEdit(null);
-                    }}
-                    onSave={handleEditSave}
-                    initialTitle={categoryToEdit.title}
-                />
-            )}
+            {
+                categoryToEdit && (
+                    <EditCategoryModal
+                        isOpen={isEditModalOpen}
+                        onClose={() => {
+                            setIsEditModalOpen(false);
+                            setCategoryToEdit(null);
+                        }}
+                        onSave={handleEditSave}
+                        initialTitle={categoryToEdit.title}
+                    />
+                )
+            }
 
             <AnimatePresence mode='wait'>
                 {!addNewCategory ? (

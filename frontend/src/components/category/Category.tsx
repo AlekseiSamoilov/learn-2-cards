@@ -11,9 +11,10 @@ interface ICategoryProps {
     title: string;
     id: string;
     cardsCount: number;
+    index: number;
 }
 
-const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cardsCount }) => {
+const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cardsCount, index }) => {
     const [dragging, setDragging] = useState<boolean>(false);
     const ref = useRef<HTMLDivElement | null>(null);
     const navigate = useNavigate();
@@ -26,8 +27,12 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
             element: el,
             onDragStart: () => setDragging(true),
             onDrop: () => setDragging(false),
+            getInitialData: () => ({
+                id,
+                index: Number(index),
+            })
         });
-    }, []);
+    }, [id, index]);
 
     const handleClick = () => {
         navigate(`/category/${id}`);
@@ -48,7 +53,7 @@ const Category: React.FC<ICategoryProps> = ({ title, onDelete, onEdit, id, cards
     };
 
     return (
-        <motion.div className={styles.container} ref={ref}>
+        <motion.div className={`${styles.container} ${dragging ? styles.drag : ""}`} ref={ref}>
             <motion.div className={styles.main_content}>
                 <motion.div className={styles.info_container} onClick={handleClick}>
                     <h3 className={styles.title}>{title}</h3>

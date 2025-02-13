@@ -19,6 +19,7 @@ interface ICategoryContext {
     removeCard: (id: string) => void;
     updateCard: (id: string, frontside: string, backside: string, imageUrl?: string) => Promise<void>;
     getCardCountByCategory: (categoryId: string) => number;
+    reorderCategories: (sourceIndex: number, destinationIndex: number) => void;
 }
 
 const CategoryContext = createContext<ICategoryContext | undefined>(undefined);
@@ -63,6 +64,15 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const counted = cards.filter(card => card.categoryId === categoryId).length;
         return counted;
     };
+
+    const reorderCategories = (sourceIndex: number, destinationIndex: number) => {
+        setCategories(prevCategories => {
+            const newCategories = [...prevCategories];
+            const [removed] = newCategories.splice(sourceIndex, 1);
+            newCategories.splice(destinationIndex, 0, removed);
+            return newCategories;
+        })
+    }
 
     const addCategory = async (title: string) => {
         try {
@@ -201,7 +211,8 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             removeCard,
             updateCard,
             loadCategoryCards,
-            getCardCountByCategory
+            getCardCountByCategory,
+            reorderCategories
         }}>
             {children}
         </CategoryContext.Provider>
